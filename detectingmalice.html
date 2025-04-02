@@ -1,0 +1,454 @@
+<html>
+  <head>
+    <title>Detecting Malice - Fraud Loss Prevention</title>
+    <META NAME="Author" CONTENT="Robert Hansen">
+    <META NAME="Keywords" CONTENT="detecting malice, detect malice, detect online fraud, detect hackers, find hackers, stop hackers, protect websites, identify hack attempts, eBook, Robert Hansen, RSnake, ha.ckers.org">
+    <META NAME="Description" CONTENT="300+ page preventing fraud loss ebook, written by world renowned web application security expert, Robert Hansen.">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+body {
+  background: #FFFFFF url('assets/images/background2.jpg') no-repeat scroll center top;
+}
+.title {
+  margin-top: 120px;
+  width: 100%;
+  text-align: center;
+  min-width: 600px;
+}
+.header {
+  width: 600px;
+  text-align: center;
+  font-family: Arial;
+  font-weight: bold;
+  font-size: 18px;
+  color: #000000;
+}
+div.main {
+  width: 100%;
+  text-align: center;
+}
+p.mainbody {
+  text-align: left;
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+blockquote {
+  text-align: left;
+  width: 600px;
+  padding-left: 50px;
+  margin-left: auto;
+  margin-right: auto;
+}
+div.contentbox{
+  align: left;
+  display: block;
+  border-width: 1px;
+  border-style: solid;
+  border-color: 000;
+  padding: 5px;
+  margin-top: 5px;
+  width: 580px;
+  height: 300px;
+  overflow: scroll;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+}
+.footer {
+  text-align: center;
+  font-family: Arial;
+  font-size: 10px;
+  color: #6666666;
+}
+ul {
+  text-align: center;
+  width: 500px;
+}
+li {
+  text-align: left;
+  list-style: disc;
+  width: 500px;
+  padding: 0;
+  list-type: none;
+}
+span.order {
+  font-family: Arial;
+  font-weight: bold;
+  font-size: 18px;
+  color: #0000bb;
+}
+    </style>
+  </head>
+  <body>
+    <div class="title">
+      <span class="header"><h1>Fraud Loss Prevention eBook</h1></span>
+    </div>
+    <div class="main">
+      <p class="mainbody">
+        <img src="assets/images/2D_Cover2-med.png" height="190" width="146" align="right"><b>Every day hackers are stealing millions from websites and this is the book that will help you detect it happening on yours.</b> Detecting Malice was written to help website administrators, developers, operations personelle and security product managers in building and maintaining a higher security posture.  Understanding user intent is the cornerstone for reducing fraud ratios in modern web applications.  From retail to government, this book covers many different realms of fraud and how to detect it at many different technical layers.  From DNS and TCP to embedded content and browser fingerprinting techniques it is possible to identify users who are most likely to become dangerous often before it actually happens.  A plethora of techniques and examples are all available to you within the <u>300+</u> pages of this book. And best of all, I've finally made it completely FREE!
+      </p>
+    </div>
+    <div class="main">
+      <b>Table of Contents:</b>
+      <div class="contentbox" align="left">
+        <pre>
+  Detecting Malice: Preface
+    User Disposition
+    Deducing Without Knowing
+    Book Overview
+    Who Should Read This Book?
+    Why Now?
+    A Note on Style
+    Working Without a Silver Bullet
+    Special Thanks
+  Chapter 1 - DNS and TCP: The Foundations of Application Security
+    In the Beginning Was DNS
+    Same-Origin Policy and DNS Rebinding
+    DNS Zone Transfers and Updates
+    DNS Enumeration
+    TCP/IP
+    Spoofing and the Three-Way Handshake
+    Passive OS Fingerprinting with pOf
+    TCP Timing Analysis
+    Network DoS and DDoS Attacks
+    Attacks Against DNS
+    TCP DoS
+    Low Bandwidth DoS
+    Using DoS As Self-Defense
+    Motives for DoS Attacks
+    DoS Conspiracies
+    Port Scanning
+    With That Out of the Way...
+  Chapter 2 - IP Address Forensics
+    What Can an IP Address Tell You?
+    Reverse DNS Resolution
+    WHOIS Database
+    Geolocation
+    Real-Time Block Lists and IP Address Reputation
+    Related IP Addresses
+    When IP Address Is A Server
+    Web Servers as Clients
+    Dealing with Virtual Hosts
+    Proxies and Their Impact on IP Address Forensics
+    Network-Level Proxies
+    HTTP Proxies
+    AOL Proxies
+    Anonymization Services
+    Tor Onion Routing
+    Obscure Ways to Hide IP Address
+    IP Address Forensics
+    To Block or Not?
+  Chapter 3 - Time
+    Traffic Patterns
+    Event Correlation
+    Daylight Savings
+    Forensics and Time Synchronization
+    Humans and Physical Limitations
+    Gold Farming
+    CAPTCHA Breaking
+    Holidays and Prime Time
+    Risk Mitigation Using Time Locks
+    The Future is a Fog
+  Chapter 4 - Request Methods and HTTP Protocols
+    Request Methods
+    GET
+    POST
+    PUT and DELETE
+    OPTIONS
+    CONNECT
+    HEAD
+    TRACE
+    Invalid Request Methods
+    Random Binary Request Methods
+    Lowercase Method Names
+    Extraneous White Space on the Request Line
+    HTTP Protocols
+    Missing Protocol Information
+    HTTP 1.0 vs. HTTP 1.1
+    Invalid Protocols and Version Numbers
+    Newlines and Carriage Returns
+    Summary
+  Chapter 5 - Referring URL
+    Referer Header
+    Information Leakage through Referer
+    Disclosing Too Much
+    Spot the Phony Referring URL
+    Third-Party Content Referring URL Disclosure
+    What Lurks in Your Logs
+    Referer and Search Engines
+    Language, Location, and the Politics That Comes With It
+    Google Dorks
+    Natural Search Strings
+    Vanity Search
+    Black Hat Search Engine Marketing and Optimization
+    Referring URL Availability
+    Direct Page Access
+    Meta Refresh
+    Links from SSL/TLS Sites
+    Links from Local Pages
+    Users' Privacy Concerns
+    Determining Why Referer Isn't There
+    Referer Reliability
+    Redirection
+    Impact of Cross-Site Request Forgery
+    Is the Referring URL a Fake?
+    Referral Spam
+    Last thoughts
+  Chapter 6 - Request URL
+    What Does A Typical HTTP Request Look Like?
+    Watching For Things That Don't Belong
+    Domain Name in the Request Field
+    Proxy Access Attempts
+    Anchor Identifiers
+    Common Request URL Attacks
+    Remote File Inclusion
+    SQL Injection
+    HTTP Response Splitting
+    NUL Byte Injection
+    Pipes and System Command Execution
+    Cross-Site Scripting
+    Web Server Fingerprinting
+    Invalid URL Encoding
+    Well-Known Server Files
+    Easter Eggs
+    Admin Directories
+    Automated Application Discovery
+    Well-Known Files
+    Crossdomain.xml
+    Robots.txt
+    Google Sitemaps
+    Summary
+  Chapter 7 - User-Agent Identification
+    What is in a User-Agent Header?
+    Malware and Plugin Indicators
+    Software Versions and Patch Levels
+    User-Agent Spoofing
+    Cross Checking User-Agent against Other Headers
+    User-Agent Spam
+    Indirect Access Services
+    Google Translate
+    Traces of Application Security Tools
+    Common User-Agent Attacks
+    Search Engine Impersonation
+    Summary
+  Chapter 8 - Request Header Anomalies
+    Hostname
+    Requests Missing Host Header
+    Mixed-Case Hostnames in Host and Referring URL Headers
+    Cookies
+    Cookie Abuse
+    Cookie Fingerprinting
+    Cross Site Cooking
+    Assorted Request Header Anomalies
+    Expect Header XSS
+    Headers Sent by Application Vulnerability Scanners
+    Cache Control Headers
+    Accept CSRF Deterrent
+    Language and Character Set Headers
+    Dash Dash Dash
+    From Robot Identification
+    Content-Type Mistakes
+    Common Mobile Phone Request Headers
+    X-Moz Prefetching
+    Summary
+  Chapter 9 - Embedded Content
+    Embedded Styles
+    Detecting Robots
+    Detecting CSRF Attacks
+    Embedded JavaScript
+    Embedded Objects
+    Request Order
+    Cookie Stuffing
+    Impact of Content Delivery Networks on Security
+    Asset File Name Versioning
+    Summary
+  Chapter 10 - Attacks Against Site Functionality
+    Attacks Against Sign-In
+    Brute-Force Attacks Against Sign-In
+    Phishing Attacks
+    Registration
+    Username Choice
+    Brute Force Attacks Against Registration
+    Account Pharming
+    What to Learn from the Registration Data
+    Fun With Passwords
+    Forgot Password
+    Password DoS Attacks
+    Don't Show Anyone Their Passwords
+    User to User Communication
+    Summary
+  Chapter 11 - History
+    Our Past
+    History Repeats Itself
+    Cookies
+    JavaScript Database
+    Internet Explorer Persistence
+    Flash Cookies
+    CSS History
+    Refresh
+    Same Page, Same IP, Different Headers
+    Cache and Translation Services
+    Uniqueness
+    DNS Pinning Part Two
+    Biometrics
+    Breakout Fraud
+    Summary
+  Chapter 12 - Denial of Service
+    What Are Denial Of Service Attacks?
+    Distributed DoS Attacks
+    My First Denial of Service Lesson
+    Request Flooding
+    Identifying Reaction Strategies
+    Database DoS
+    Targeting Search Facilities
+    Unusual DoS Vectors
+    Banner Advertising DoS
+    Chargeback DoS
+    The Great Firewall of China
+    Email Blacklisting
+    Dealing With Denial Of Service Attacks
+    Detection
+    Mitigation
+    Summary
+  Chapter 13 - Rate of Movement
+    Rates
+    Timing Differences
+    CAPTCHAs
+    Click Fraud
+    Warhol or Flash Worm
+    Samy Worm
+    Inverse Waterfall
+    Pornography Duration
+    Repetition
+    Scrapers
+    Spiderweb
+    Summary
+  Chapter 14 - Ports, Services, APIs, Protocols and 3rd Parties
+    Ports, Services, APIs, Protocols, 3rd Parties, oh my!
+    SSL and Man in the middle Attacks
+    Performance
+    SSL/TLS Abuse
+    FTP
+    Webmail Compromise
+    Third Party APIs and Web Services
+    2nd Factor Authentication and Federation
+    Other Ports and Services
+    Summary
+  Chapter 15 - Browser Sniffing
+    Browser Detection
+    Black Dragon, Master Reconnaissance Tool and BeEF
+    Java Internal IP Address
+    MIME Encoding and MIME Sniffing
+    Windows Media Player "Super Cookie"
+    Virtual Machines, Machine Fingerprinting and Applications
+    Monkey See Browser Fingerprinting Software - Monkey Do Malware
+    Malware and Machine Fingerprinting Value
+    Unmasking Anonymous Users
+    Java Sockets
+    De-cloaking Techniques
+    Persistence, Cookies and Flash Cookies Redux
+    Additional Browser Fingerprinting Techniques
+    Summary
+  Chapter 16 - Uploaded Content
+    Content
+    Images
+    Hashing
+    Image Watermarking
+    Image Steganography
+    EXIF Data In Images
+    GDI+ Exploit
+    Warez
+    Child Pornography
+    Copyrights and Nefarious Imagery
+    Sharm el Sheikh Case Study
+    Imagecrash
+    Text
+    Text Stenography
+    Blog and Comment Spam
+    Power of the Herd
+    Profane Language
+    Localization and Internationalization
+    HTML
+    Summary
+  Chapter 17 - Loss Prevention
+    Lessons From The Offline World
+    Subliminal Imagery
+    Security Badges
+    Prevention Through Fuzzy Matching
+    Manual Fraud Analysis
+    Honeytokens
+    Summary
+  Chapter 18 - Wrapup
+    Mood Ring
+    Insanity
+    Blocking and the 4th Wall Problem
+    Booby Trapping Your Application
+    Heuristics Age
+    Know Thy Enemy
+    Race, Sex, Religion
+    Profiling
+    Ethnographic Landscape
+    Calculated Risks
+    Correlation and Causality
+    Conclusion
+  About Robert Hansen
+        </pre>
+      </div>
+    </div>
+    <br />
+    <div class="main">
+      <p class="mainbody">
+        <img src="assets/images/headshot2.png" width="219" height="205" align="left">Detecting Malice is written by Robert "RSnake" Hansen, the author of the noted ha.ckers.org web application security lab.  Mr. Hansen has spoken at industry conferences around the world and is widely considered to be a foremost expert in web application security and online fraud.  Drawing on well over two decades of web application security experience, the book was written to be a relevant look into the deep technical nuances of user interaction.  By being extremely observant and having the correct logging in place it is possible to dramatically reduce online fraud.  Whether you are simply an enthusiast or are in charge of a Fortune 500, you will gain deep insights into the tools and techniques available to improve fraud loss prevention.  Using practical and real-world examples, the book walks through the different layers in a highly digestable way, that is valuable to practitioners at almost every level of technical abilities.
+      </p>
+    </div>
+    <div class="main">
+      <p class="mainbody">
+        <br />Read what other experts are saying about Detecting Malice:<br />
+          <blockquote>
+          - "<b>I can tell you that it is, without a doubt, the best web security book I have ever had the pleasure to read.</b>" - David Mortman, <i>CSO - Echelon One</i><br /><br />
+          - "<b>Detecting Malice is a must-read resource for anyone tasked with  protecting a website. It is incredibly detailed and comprehensive, without all the usual cruft you see filling up other books on the topic. If you have a website, have logs, and want to know what the bad  guys are trying to do to you (and trust me, we're all targets), then  this is the only resource out there to help you understand what they're doing, how to defend yourself, and how to turn the tables and  unmask your attacker. It's written in a very accessible informal style, yet still loaded with content and practical examples.</b>" - Rich Mogull, <i>CEO - Securosis</i><br /><br />
+          - "<b>It approached security from a different perspective than I usually do.  As an application developer, I'm usually razor focused on what can break, how it can break, and how to prevent it.  I'd never really thought to identify suspicious users or had time to sift through logs and see the interesting and/or aberrant trends. The CSRF detection examples do a great job of illustrating how careful log analysis of strange behavior can help identify known attacks to which your site is vulnerable as well as help identify users worth watching for new attack methods.  The focus on what common attacks look like on the server rather than how they work is also useful. It's influenced what I log, how I watch logs, and how I mitigate detected attacks.</b>" - Nick Sivo, <i>CTO/Founder - Loopt</i><br /><br />
+
+          - "<b>If you spend millions on Search Marketing or even just a few hundred dollars this book is a must read, don't let your efforts go to waste by being caught out.</b>" - David Naylor, <i>CEO - <a href="http://www.bronco.co.uk/"><span style="color:#000000">Bronco Web Design</span></a></i><br /><br />
+          - "<b>"Detecting Malice" really is a fantastic opus of WebAppSec wisdom.</b>" - Chris Hoff, <i>Director, Cloud & Virtualization Solutions - Cisco</i><br /><br />
+          - "<b>This book leaves the reader with the conclusion why some web-based attacks go unnoticed.  It illustrates why our current tools and techniques are not built to detect them...yet! But just wait until the web security vendors read Detecting Malice!</b>" - Quincy Jackson, <i>IT Security Manager</i><br /><br />
+          - "<b>Shell out the $39 for the 300 page e-Book Detecting Malice, written by Robert Hansen (aka RSnake, on Twitter at @RSnake) and actually read it. I can't believe I'm actually endorsing a freaking e-Book, but its really that good. I don't know Robert personally, I'm not endorsing it as a favor or because I like him as a person. For all I know he eats puppies for breakfast. But his book is fantastic.</b>" - Alison Gianotto, <i>Author of <a href="http://www.amazon.com/gp/product/B0000B0T13/ref=as_li_tf_tl?ie=UTF8&tag=marketslant-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B0000B0T13"><span style="color:#000000">Professional PHP4 Web Development Solutions</span></a></i><br /><br />
+          - "<b>'He does a great job of covering the landscape, talking in plain language without a lot of technical jargon and with many clear examples.... I highly recommend this book, well worth the time and money. It will stimulate your thinking and certainly raise your level of paranoia, and perhaps level of motivation, to lock things down.'</b>" - David Strom - <i>Owner - David Strom Inc.</i><br /><br />
+          - "<b>'Detecing Malice' by Robert 'RSnake' Hansen is a must read for security technologists, especially incident responders attempting to deal with the constantly advancing threats to web applications.  'Detecting Malice' uses simple language to help readers build a complex technical foundation to understand the most current web attack methodologies. More importantly however, Hansen provides real-world examples of attacks and provides methods to determine the intent of an attacker from a seemingly benign piece of information. This blend of technical know-how and psycho-analysis allows the reader a rare opportunity to understand the art of web application security.</b>" - Michael Montecillo, <i>Threat Research and Intelligence Principal - IBM Security Services</i><br /><br />
+          - "<b>Anyone I bring it up to first complains about the $40 eBook, but it's the best technical book I've bought in a while.</b>" - David Meier, <i>Consultant - Aeritae Consulting Group</i><br />
+        </blockquote>
+      </p>
+    </div>
+    <hr width="500">
+    <div class="main">
+      <p class="mainbody">
+        By purchasing the Detecting Malice anti-fraud eBook you'll get immediate access to:
+        <blockquote>
+      <img src="assets/images/3d_lay-med.jpg" align="right">
+          * 300+ pages of highly technical detail and insights<br />
+          * Deep de-composition of threats at multiple OSI layers<br />
+          * Useful examples and real-world vignettes<br />
+          * Industry insights on detection of malicious activity<br />
+          * Useful analysis on isolating hack attempts<br />
+          * Written for businesses and websites of all sizes<br />
+          * Security content found nowhere else<br />
+          * Hundreds of examples and pictures<br />
+          * Written in small bite-sized anecdotes<br />
+          * Adobe PDF format for easy portability and readability<br />
+          * Extremely detailed real-life deconstructed hack attempts<br />
+          * DRM free, allowing you to convert and read it as you see fit<br />
+        </blockquote>
+      </p>
+    </div>
+    <div class="main">
+      <p class="mainbody">
+        <center><span class="order"><a href="assets/dl/Detecting-Malice.pdf">Download your FREE copy of Detecting Malice today</a></span><br />
+      </p>
+    </div>
+    <div class="footer">
+      <p>Please <a href="https://twitter.com/RSnake/">contact me</a> if you have any questions, comments or errata.<br />
+      Copyright &copy; 2001-2025 Robert Hansen - All Rights Reserved. All Wrongs Observed.</font></p>
+    <div>
+  </body>
+</html>
