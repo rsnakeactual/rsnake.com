@@ -359,7 +359,7 @@ If you want to know more about how I made this preso itself, let me know. It's k
     <body></body>
 </html>```
 
-You'll be able to download the whole project and play with it. Just rename your .md file as .txt to avoid issues with Github YAML Markdown and place it next to the HTML and JS file and you're off to the races. Here's the whole preso: [https://rsnake.com/presos/?page=seoktoberfest2025.txt#slide=1](https://rsnake.com/presos/?page=seoktoberfest2025.txt#slide=1)
+You'll be able to download the whole project and play with it. Just rename your .md file as .txt to avoid issues with Github YAML Markdown and place it next to the HTML and JS file and you're off to the races. Here's the whole preso: [https://rsnake.com/presos/?page=seoktoberfest2025.txt#slide=1](https://rsnake.com/presos/?page=seoktoberfest2025.txt#slide=1) but here is the .txt file that drives it: [https://rsnake.com/presos/seoktoberfest2025.txt](https://rsnake.com/presos/seoktoberfest2025.txt)
 
 ---
 
