@@ -6,6 +6,9 @@ author: Robert "RSnake" Hansen
 bgcolor: FFFFFF
 bgimage: 2025_SEOktoberfest/bgimage.jpg
 published: True
+versions:
+  fpt: '*'
+  ghes: '*'
 ---
 
 # Scraping in the age of AI
