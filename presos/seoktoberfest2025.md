@@ -1,12 +1,9 @@
----
-
 Frontmatter: True
 Refresh: 3600
 Title: SEOktoberfest 2025
 Author: Robert "RSnake" Hansen
 Bgcolor: #FFFFFF
 Bgimage: 2025_SEOktoberfest/bgimage.jpg
-
 ---
 
 # Scraping in the age of AI
