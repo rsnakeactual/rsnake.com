@@ -5,6 +5,7 @@ title: SEOktoberfest 2025
 author: Robert "RSnake" Hansen
 bgcolor: #FFFFFF
 bgimage: 2025_SEOktoberfest/bgimage.jpg
+published: True
 ---
 
 # Scraping in the age of AI
