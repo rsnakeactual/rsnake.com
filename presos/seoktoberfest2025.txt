@@ -354,7 +354,7 @@ If you want to know more about how I made this preso itself, let me know. It's k
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script src="mdtopreso.js"></script>
+        <script src="/assets/js/mdtopreso.js"></script>
     </head>
     <body></body>
 </html>```
