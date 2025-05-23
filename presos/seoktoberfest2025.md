@@ -359,7 +359,7 @@ If you want to know more about how I made this preso itself, let me know. It's k
     <body></body>
 </html>```
 
-You'll be able to download the whole project and play with it. Just plas your .md file next to the HTML and JS file and you're off to the races. Here's the whole preso: [https://rsnake.com/presos/?page=seoktoberfest2025.md#slide=1](https://rsnake.com/presos/?page=seoktoberfest2025.md#slide=1) but here is the .txt file that drives it: [https://rsnake.com/presos/seoktoberfest2025.md](https://rsnake.com/presos/seoktoberfest2025.md). If you use Cloudflare pages, add a .nojekyll file, or frontmatter will get removed.
+You'll be able to download the whole project and play with it. Just plas your .md file next to the HTML and JS file and you're off to the races. Here's the whole preso: [https://rsnake.com/presos/?page=seoktoberfest2025.md#slide=1](https://rsnake.com/presos/?page=seoktoberfest2025.md) but here is the .md file that drives it: [https://rsnake.com/presos/seoktoberfest2025.md](https://rsnake.com/presos/seoktoberfest2025.md). If you use Cloudflare pages, add a .nojekyll file, or frontmatter will get removed.
 
 ---
 
