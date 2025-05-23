@@ -121,13 +121,13 @@ class MarkdownPresentation {
             }
             
             // Process frontmatter settings
-            if (frontmatter['Frontmatter'] === 'True') {
+            if (frontmatter['frontmatter'] === 'True') {
                 // Remove the frontmatter from content
                 content = content.replace(/^---\n[\s\S]*?\n---\n/, '');
                 
                 // Apply frontmatter settings
-                if (frontmatter['Refresh']) {
-                    const refreshSeconds = parseInt(frontmatter['Refresh']);
+                if (frontmatter['refresh']) {
+                    const refreshSeconds = parseInt(frontmatter['refresh']);
                     if (!isNaN(refreshSeconds)) {
                         setInterval(() => {
                             window.location.reload();
@@ -135,13 +135,13 @@ class MarkdownPresentation {
                     }
                 }
                 
-                if (frontmatter['Title']) {
-                    document.title = frontmatter['Title'];
+                if (frontmatter['title']) {
+                    document.title = frontmatter['title'];
                 }
                 
-                if (frontmatter['Author']) {
+                if (frontmatter['author']) {
                     // Handle author name with quotes
-                    const author = frontmatter['Author'].replace(/^["']|["']$/g, '');
+                    const author = frontmatter['author'].replace(/^["']|["']$/g, '');
                     const metaAuthor = document.querySelector('meta[name="author"]');
                     if (metaAuthor) {
                         metaAuthor.content = author;
@@ -153,12 +153,12 @@ class MarkdownPresentation {
                     }
                 }
                 
-                if (frontmatter['Bgcolor']) {
-                    document.body.style.backgroundColor = frontmatter['Bgcolor'];
+                if (frontmatter['bgcolor']) {
+                    document.body.style.backgroundColor = frontmatter['bgcolor'];
                 }
                 
-                if (frontmatter['Bgimage']) {
-                    document.body.style.backgroundImage = `url('${frontmatter['Bgimage']}')`;
+                if (frontmatter['bgimage']) {
+                    document.body.style.backgroundImage = `url('${frontmatter['bgimage']}')`;
                     document.body.style.backgroundSize = 'cover';
                     document.body.style.backgroundPosition = 'center';
                     document.body.style.backgroundRepeat = 'no-repeat';
