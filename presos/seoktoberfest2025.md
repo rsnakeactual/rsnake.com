@@ -11,7 +11,7 @@ bgimage: seoktoberfest2025/bgimage.jpg
 
 ## By Robert Hansen
 
-![](/seoktoberfest2025/Picture1.png)
+![](seoktoberfest2025/Picture1.png)
 
 ---
 
