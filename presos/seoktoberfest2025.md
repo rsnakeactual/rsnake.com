@@ -344,6 +344,14 @@ And the eBay DRM story
 
 ---
 
+# Then there is calling out the LLM usage when you see it
+
+There's a tool for that
+
+![](seoktoberfest2025/a16z.png)
+
+---
+
 ## And now for something completely different
 
 If you want to know more about how I made this preso itself, let me know. It's kinda cool if you are a nerd and like static websites, markdown, mermaid and shiki. Seriously, view-source and here is what it looks like:
