@@ -786,6 +786,7 @@ style.textContent = `
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
+        font-size: clamp(0.875rem, 3vw, 1.25rem); /* Reduced max size */
     }
 
     .presentation-content {
@@ -908,8 +909,120 @@ style.textContent = `
         border-radius: 4px;
     }
 
-    h1, h2, h3 {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    /* Responsive font sizes with more reasonable maximums */
+    h1 {
+        font-size: clamp(1.25rem, 6vw, 2.5rem);
+        margin-top: 0;
+        padding-top: 0;
+        word-wrap: break-word;
+        max-width: 100%;
+    }
+
+    h2 {
+        font-size: clamp(1.1rem, 5vw, 2rem);
+        word-wrap: break-word;
+        max-width: 100%;
+    }
+
+    h3 {
+        font-size: clamp(1rem, 4vw, 1.75rem);
+        word-wrap: break-word;
+        max-width: 100%;
+    }
+
+    p {
+        font-size: clamp(0.875rem, 3vw, 1.25rem);
+        word-wrap: break-word;
+        max-width: 100%;
+    }
+
+    /* Adjust list font sizes */
+    .markdown-list {
+        font-size: clamp(0.875rem, 3vw, 1.25rem);
+        margin: 0.5rem 0;
+        padding-left: 2rem;
+    }
+
+    /* Adjust blockquote font size */
+    blockquote {
+        font-size: clamp(0.875rem, 3vw, 1.25rem);
+        border-left: 4px solid #007bff;
+        margin: 1rem 0;
+        padding: 0.5rem 1rem;
+        background-color: rgba(0, 123, 255, 0.05);
+        font-style: italic;
+        color: #555;
+    }
+
+    /* Adjust table font size */
+    .markdown-table {
+        font-size: clamp(0.75rem, 2.5vw, 1.1rem);
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1rem 0;
+    }
+
+    /* Adjust code block font size */
+    .shiki {
+        font-size: clamp(0.75rem, 2.5vw, 1.1rem);
+        background-color: #0d1117;
+        border-radius: 6px;
+        padding: 1rem;
+        padding-bottom: 0;
+        margin: 1rem 0;
+        overflow-x: auto;
+        font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        line-height: 1.5;
+    }
+
+    /* Adjust Mermaid diagram font sizes */
+    .mermaid {
+        font-size: clamp(0.75rem, 2.5vw, 1.1rem);
+        width: 100%;
+        min-height: 300px;
+        margin: 1rem 0;
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .mermaid .label {
+        font-size: clamp(0.7rem, 2vw, 1rem);
+    }
+
+    .mermaid .section {
+        font-size: clamp(0.75rem, 2.5vw, 1.1rem);
+        font-weight: bold;
+    }
+
+    .mermaid .title {
+        font-size: clamp(0.875rem, 3vw, 1.25rem);
+        font-weight: bold;
+    }
+
+    /* Adjust navigation font sizes */
+    .presentation-nav button {
+        font-size: clamp(0.75rem, 2.5vw, 1.1rem);
+        padding: 0.5rem 1rem;
+        border: none;
+        background: #007bff;
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.2s ease;
+    }
+
+    #slideSelect {
+        font-size: clamp(0.75rem, 2.5vw, 1.1rem);
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-family: inherit;
+        background-color: white;
+        cursor: pointer;
+        min-width: 100px;
     }
 
     /* Add container for slide content */
@@ -917,23 +1030,6 @@ style.textContent = `
         max-width: calc(100vw - 2rem);
         height: auto;
         position: relative;
-    }
-
-    h1 {
-        margin-top: 0;
-        padding-top: 0;
-        word-wrap: break-word;
-        max-width: 100%;
-    }
-
-    h2, h3 {
-        word-wrap: break-word;
-        max-width: 100%;
-    }
-
-    p {
-        word-wrap: break-word;
-        max-width: 100%;
     }
 
     img {
@@ -1068,28 +1164,6 @@ style.textContent = `
         align-items: center;
         gap: 0.5rem;
         font-family: inherit;
-    }
-
-    #slideSelect {
-        padding: 0.5rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-family: inherit;
-        font-size: 1rem;
-        background-color: white;
-        cursor: pointer;
-        min-width: 100px;
-    }
-
-    #slideSelect:focus {
-        outline: none;
-        border-color: #007bff;
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-    }
-
-    #slideSelect option {
-        font-family: inherit;
-        padding: 0.5rem;
     }
 
     /* Add styles for list groups */
