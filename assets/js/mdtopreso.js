@@ -104,6 +104,49 @@ class MarkdownPresentation {
 
     async parseMarkdown() {
         let content = this.rawMarkdown || document.body.innerHTML;
+
+        // Handle Obsidian-style transclusions: ![[filename]] (non-recursive, one pass only)
+        const transclusionRegex = /!\[\[([^\]]+)\]\]/g;
+        let transclusionMatches = [];
+        let transclusionMatch;
+        // Collect all unique transclusion markers in the original content only
+        let seenTransclusions = new Set();
+        while ((transclusionMatch = transclusionRegex.exec(content)) !== null) {
+            if (!seenTransclusions.has(transclusionMatch[0])) {
+                transclusionMatches.push({
+                    full: transclusionMatch[0],
+                    filename: transclusionMatch[1]
+                });
+                seenTransclusions.add(transclusionMatch[0]);
+            }
+        }
+        for (const t of transclusionMatches) {
+            // Only fetch .md files, add .md if not present
+            let fileToFetch = t.filename.endsWith('.md') ? t.filename : t.filename + '.md';
+            try {
+                const transcluded = await new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', fileToFetch, true);
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 200) {
+                                resolve(xhr.responseText);
+                            } else {
+                                resolve(`[Could not load: ${fileToFetch}]`);
+                            }
+                        }
+                    };
+                    xhr.onerror = function() {
+                        resolve(`[Could not load: ${fileToFetch}]`);
+                    };
+                    xhr.send();
+                });
+                // Replace all instances in the original content only (not recursively)
+                content = content.split(t.full).join(transcluded);
+            } catch (e) {
+                content = content.split(t.full).join(`[Could not load: ${fileToFetch}]`);
+            }
+        }
         
         // Check for frontmatter
         const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---\n/);
@@ -157,11 +200,48 @@ class MarkdownPresentation {
                     document.body.style.backgroundColor = frontmatter['bgcolor'];
                 }
                 
+                // Add support for font color
+                if (frontmatter['font-color']) {
+                    const fontColor = frontmatter['font-color'].startsWith('#') ? 
+                        frontmatter['font-color'] : 
+                        `#${frontmatter['font-color']}`;
+                    document.body.style.color = fontColor;
+                }
+                
                 if (frontmatter['bgimage']) {
                     document.body.style.backgroundImage = `url('${frontmatter['bgimage']}')`;
                     document.body.style.backgroundSize = 'cover';
                     document.body.style.backgroundPosition = 'center';
                     document.body.style.backgroundRepeat = 'no-repeat';
+                    
+                    // Add support for background opacity
+                    if (frontmatter['bgopacity']) {
+                        const opacity = parseFloat(frontmatter['bgopacity']) / 100;
+                        if (!isNaN(opacity) && opacity >= 0 && opacity <= 1) {
+                            // Create a pseudo-element for the background with opacity
+                            const style = document.createElement('style');
+                            style.textContent = `
+                                body::before {
+                                    content: '';
+                                    position: fixed;
+                                    top: 0;
+                                    left: 0;
+                                    width: 100%;
+                                    height: 100%;
+                                    background-image: url('${frontmatter['bgimage']}');
+                                    background-size: cover;
+                                    background-position: center;
+                                    background-repeat: no-repeat;
+                                    opacity: ${opacity};
+                                    z-index: -1;
+                                }
+                                body {
+                                    background-image: none !important;
+                                }
+                            `;
+                            document.head.appendChild(style);
+                        }
+                    }
                 }
             }
         }
@@ -634,6 +714,12 @@ class MarkdownPresentation {
     }
 
     createNavigationButtons() {
+        // Remove any existing navigation elements
+        const existingNav = document.querySelector('.presentation-nav');
+        if (existingNav) {
+            existingNav.remove();
+        }
+        
         const nav = document.createElement('div');
         nav.className = 'presentation-nav';
         if (this.isNavMinimized) {
@@ -724,7 +810,24 @@ class MarkdownPresentation {
             // Create main content container
             const mainContent = document.createElement('div');
             mainContent.className = 'presentation-content';
-            mainContent.innerHTML = this.slides[index].content;
+            
+            // Create a temporary container to parse the content
+            const tempContainer = document.createElement('div');
+            tempContainer.innerHTML = this.slides[index].content;
+            
+            // Remove any duplicate content blocks
+            const seenContent = new Set();
+            const contentBlocks = tempContainer.querySelectorAll('.content-block');
+            contentBlocks.forEach(block => {
+                const content = block.innerHTML.trim();
+                if (seenContent.has(content)) {
+                    block.remove();
+                } else {
+                    seenContent.add(content);
+                }
+            });
+            
+            mainContent.innerHTML = tempContainer.innerHTML;
             
             // Create bottom bar container
             const bottomBar = document.createElement('div');
