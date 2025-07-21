@@ -1,5 +1,172 @@
 // mdtopreso.js - A simple markdown to presentation converter
 // Written by: @rsnake
+
+(async () => {
+// Dynamically inject sql.js and papaparse scripts
+function injectScript(src) {
+    return new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${src}"]`)) return resolve();
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+
+await injectScript('https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js');
+await injectScript('https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js');
+
+// --- Begin mdtopreso-helper.js code (integrated) ---
+// Utility to fetch a file (CSV or JSON) via XMLHttpRequest
+async function fetchAndParseFile(url, type = null, jsonPath = '$') {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.onreadystatechange = async function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    try {
+                        let result;
+                        let fileType = type;
+                        if (!fileType) {
+                            if (url.endsWith('.csv')) fileType = 'csv';
+                            else if (url.endsWith('.json') || url.endsWith('.json5')) fileType = 'json';
+                        }
+                        if (fileType === 'csv') {
+                            result = parseCsvToTable(xhr.responseText);
+                        } else if (fileType === 'json') {
+                            result = await parseJsonToTable(xhr.responseText, jsonPath);
+                        } else {
+                            throw new Error('Unknown file type');
+                        }
+                        resolve(result);
+                    } catch (e) {
+                        reject(e);
+                    }
+                } else {
+                    reject(new Error(`Failed to load file: ${xhr.statusText}`));
+                }
+            }
+        };
+        xhr.onerror = function() {
+            reject(new Error('Network error while loading file'));
+        };
+        xhr.send();
+    });
+}
+
+function parseCsvToTable(csvString) {
+    const parsed = window.Papa.parse(csvString, {
+        header: true,
+        dynamicTyping: false,
+        skipEmptyLines: true
+    });
+    const columns = (parsed.meta.fields || []).map(f => ({ name: f, type: 'auto' }));
+    return { columns, data: parsed.data };
+}
+
+async function parseJsonToTable(jsonString, jsonPath = '$') {
+    const data = window.json5 ? window.json5.parse(jsonString) : JSON.parse(jsonString);
+    let result = data;
+    if (window.jsonpath && jsonPath && jsonPath !== '$') {
+        result = window.jsonpath.query(data, jsonPath);
+    }
+    if (!Array.isArray(result)) {
+        throw new Error('Resulting data is not an array');
+    }
+    const columns = Array.from(new Set(result.flatMap(row => Object.keys(row)))).map(c => ({ name: c, type: 'auto' }));
+    return { columns, data: result };
+}
+
+function renderTable({ columns, data }) {
+    if (!columns.length) return '<div>No data</div>';
+    let html = '<table class="markdown-table"><thead><tr>';
+    html += columns.map(col => `<th>${escapeHtml(col.name)}</th>`).join('');
+    html += '</tr></thead><tbody>';
+    for (const row of data) {
+        html += '<tr>' + columns.map(col => `<td>${escapeHtml(row[col.name] !== undefined ? row[col.name] : '')}</td>`).join('') + '</tr>';
+    }
+    html += '</tbody></table>';
+    return html;
+}
+
+function escapeHtml(text) {
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+async function processSqlBlock(sqlBlock) {
+    const tableDefRegex = /^TABLE\s+(\w+)\s*=\s*file\(['"]([^'"\)]+)['"]\)/gim;
+    let match;
+    const tables = [];
+    let sql = sqlBlock;
+    while ((match = tableDefRegex.exec(sqlBlock)) !== null) {
+        tables.push({ alias: match[1], file: match[2] });
+        sql = sql.replace(match[0], '');
+    }
+    sql = sql.trim();
+    if (!sql.toLowerCase().startsWith('select')) {
+        const selectIdx = sql.toLowerCase().indexOf('select');
+        if (selectIdx >= 0) sql = sql.slice(selectIdx);
+    }
+    if (!window.initSqlJs) throw new Error('sql.js not loaded');
+    const SQL = await window.initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
+    const db = new SQL.Database();
+    for (const t of tables) {
+        let ext = t.file.split('.').pop().toLowerCase();
+        let columns, data;
+        if (ext === 'csv') {
+            const parsed = parseCsvToTable(await fetchText(t.file));
+            columns = parsed.columns;
+            data = parsed.data;
+        } else if (ext === 'json' || ext === 'json5') {
+            const parsed = await parseJsonToTable(await fetchText(t.file));
+            columns = parsed.columns;
+            data = parsed.data;
+        } else {
+            throw new Error('Unsupported file type: ' + ext);
+        }
+        const colDefs = columns.map(c => `"${c.name}" TEXT`).join(', ');
+        db.run(`CREATE TABLE "${t.alias}" (${colDefs});`);
+        const stmt = db.prepare(`INSERT INTO "${t.alias}" VALUES (${columns.map(() => '?').join(',')})`);
+        for (const row of data) {
+            stmt.run(columns.map(c => row[c.name]));
+        }
+        stmt.free();
+    }
+    let result;
+    try {
+        result = db.exec(sql);
+    } catch (e) {
+        return `<div class="error">SQL Error: ${escapeHtml(e.message)}</div>`;
+    }
+    if (!result.length) return '<div>No results</div>';
+    const columns = result[0].columns.map(name => ({ name, type: 'auto' }));
+    const data = result[0].values.map(row => Object.fromEntries(row.map((v, i) => [columns[i].name, v])));
+    return renderTable({ columns, data });
+}
+
+async function fetchText(url) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) resolve(xhr.responseText);
+                else reject(new Error('Failed to fetch ' + url));
+            }
+        };
+        xhr.onerror = () => reject(new Error('Network error fetching ' + url));
+        xhr.send();
+    });
+}
+// --- End mdtopreso-helper.js code (integrated) ---
+
 class MarkdownPresentation {
     constructor() {
         this.currentSlide = 0;
@@ -310,13 +477,32 @@ class MarkdownPresentation {
 
             // Extract code blocks and replace with placeholders
             const codeBlocks = []; // Local array for this slide
-            content = content.replace(/```\s*(\w+)?(?:\s*\{[^}]*\})?\n((?:.|\n)*?)```/g, (match, lang, code) => {
-                const id = 'code-' + Math.random().toString(36).substr(2, 9);
-                // Store the exact code and language without any modifications
-                console.log("This should have <DOCTYPE IN IT: " + code);
-                codeBlocks.push({ id, lang, code: code });
-                return `@@CODE-BLOCK-${codeBlocks.length - 1}@@`;
-            });
+            // Use async replace for code blocks
+            async function replaceCodeBlocksAsync(content, highlighter, codeBlocks) {
+                // Replace code blocks one by one
+                const regex = /```\s*(\w+)?(?:\s*\{[^}]*\})?\n([\s\S]*?)```/g;
+                let result = '';
+                let lastIndex = 0;
+                let match;
+                while ((match = regex.exec(content)) !== null) {
+                    result += content.slice(lastIndex, match.index);
+                    const lang = match[1];
+                    const code = match[2];
+                    if (lang && lang.trim().toLowerCase() === 'sql') {
+                        // Process SQL code block immediately
+                        const tableHtml = await processSqlBlock(code);
+                        result += `<div class="content-block">${tableHtml}</div>`;
+                    } else {
+                        const id = 'code-' + Math.random().toString(36).substr(2, 9);
+                        codeBlocks.push({ id, lang, code });
+                        result += `@@CODE-BLOCK-${codeBlocks.length - 1}@@`;
+                    }
+                    lastIndex = regex.lastIndex;
+                }
+                result += content.slice(lastIndex);
+                return result;
+            }
+            content = await replaceCodeBlocksAsync(content, this.highlighter, codeBlocks);
 
             // Convert the main content to HTML
             let html = await this.convertMarkdownToHtml(content);
@@ -394,6 +580,16 @@ class MarkdownPresentation {
     }
 
     async convertMarkdownToHtml(markdown) {
+        // Step 0: Replace SQL code blocks in the raw markdown before any other processing
+        markdown = await replaceAsync(
+            markdown,
+            /```sql\s*([\s\S]*?)```/g,
+            async (match, sqlCode) => {
+                const tableHtml = await processSqlBlock(sqlCode);
+                return `<div class="content-block">${tableHtml}</div>`;
+            }
+        );
+
         // Step 1: Process the markdown as usual
         const markdownLines = markdown.split('\n');
         let processedMarkdownLines = [];
@@ -672,6 +868,18 @@ class MarkdownPresentation {
 
         // Convert remaining text to paragraphs, but only if it's not already wrapped in a div
         html = html.replace(/^(?!<div class="content-block">)(.*$)/gm, '<div class="content-block"><p>$1</p></div>');
+
+        // Helper for async string replacement
+        async function replaceAsync(str, regex, asyncFn) {
+            const promises = [];
+            str.replace(regex, (match, ...args) => {
+                const promise = asyncFn(match, ...args);
+                promises.push(promise);
+                return match;
+            });
+            const data = await Promise.all(promises);
+            return str.replace(regex, () => data.shift());
+        }
 
         return html;
     }
@@ -1526,7 +1734,11 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Initialize the presentation when the script loads
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        new MarkdownPresentation();
+    });
+} else {
     new MarkdownPresentation();
-}); 
+}
+})(); 
