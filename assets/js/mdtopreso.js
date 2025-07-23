@@ -17,6 +17,20 @@ function injectScript(src) {
 await injectScript('https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js');
 await injectScript('https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js');
 
+// Dynamically inject Plotly.js if needed
+async function injectPlotly() {
+    if (!window.Plotly) {
+        await injectScript('https://cdn.plot.ly/plotly-2.26.0.min.js');
+    }
+}
+
+// Dynamically inject js-yaml if needed
+async function injectJsYaml() {
+    if (!window.jsyaml) {
+        await injectScript('https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js');
+    }
+}
+
 // --- Begin mdtopreso-helper.js code (integrated) ---
 // Utility to fetch a file (CSV or JSON) via XMLHttpRequest
 async function fetchAndParseFile(url, type = null, jsonPath = '$') {
@@ -57,13 +71,18 @@ async function fetchAndParseFile(url, type = null, jsonPath = '$') {
 }
 
 function parseCsvToTable(csvString) {
+    if (!csvString.endsWith('\n')) csvString += '\n';
     const parsed = window.Papa.parse(csvString, {
         header: true,
         dynamicTyping: false,
-        skipEmptyLines: true
+        skipEmptyLines: true,
+        newline: ''
     });
     const columns = (parsed.meta.fields || []).map(f => ({ name: f, type: 'auto' }));
-    return { columns, data: parsed.data };
+    // Filter out rows that are completely empty
+    const data = parsed.data.filter(row => Object.values(row).some(v => v !== null && v !== undefined && v !== ''));
+    console.log('Parsed CSV data:', data);
+    return { columns, data };
 }
 
 async function parseJsonToTable(jsonString, jsonPath = '$') {
@@ -145,9 +164,14 @@ async function processSqlBlock(sqlBlock) {
     } catch (e) {
         return `<div class="error">SQL Error: ${escapeHtml(e.message)}</div>`;
     }
-    if (!result.length) return '<div>No results</div>';
+    console.log('SQL result:', result);
+    if (!result.length) {
+        window._lastSqlResult = [];
+        return '<div>No results</div>';
+    }
     const columns = result[0].columns.map(name => ({ name, type: 'auto' }));
     const data = result[0].values.map(row => Object.fromEntries(row.map((v, i) => [columns[i].name, v])));
+    window._lastSqlResult = data;
     return renderTable({ columns, data });
 }
 
@@ -480,20 +504,88 @@ class MarkdownPresentation {
             // Use async replace for code blocks
             async function replaceCodeBlocksAsync(content, highlighter, codeBlocks) {
                 // Replace code blocks one by one
-                const regex = /```\s*(\w+)?(?:\s*\{[^}]*\})?\n([\s\S]*?)```/g;
+                const regex = /```\s*([^\n]*)\n([\s\S]*?)```/g;
                 let result = '';
                 let lastIndex = 0;
                 let match;
                 while ((match = regex.exec(content)) !== null) {
                     result += content.slice(lastIndex, match.index);
-                    const lang = match[1];
+                    let lang = (match[1] || '').trim().toLowerCase();
                     const code = match[2];
-                    if (lang && lang.trim().toLowerCase() === 'sql') {
-                        // Process SQL code block immediately
+                    const sqlBlockMatch = typeof lang === 'string' ? lang.match(/^sql(?:\s+table:([\w-]+))?/i) : null;
+                    const plotlyBlockMatch = typeof lang === 'string' ? lang.match(/^plotly(?:\s+sql:([\w-]+))?/i) : null;
+
+                    if (plotlyBlockMatch) {
+                        await injectPlotly();
+                        await injectJsYaml();
+                        const plotId = 'plotly-' + Math.random().toString(36).substr(2, 9);
+                        const sqlName = plotlyBlockMatch[1];
+                        let sqlData = sqlName ? (window._sqlResults[sqlName] || []) : (window._lastSqlResult || []);
+                        console.log('Plotly YAML code:', code);
+                        let plotSpec;
+                        try {
+                            plotSpec = window.jsyaml.load(code);
+                        } catch (e) {
+                            console.error('YAML parse error:', e, code);
+                            plotSpec = {};
+                        }
+                        console.log('Parsed plotSpec:', plotSpec);
+                        // Substitute $column with arrays from sqlData
+                        if (sqlData && sqlData.length && plotSpec.data) {
+                            const columns = Object.keys(sqlData[0]);
+                            for (let trace of plotSpec.data) {
+                                for (let key in trace) {
+                                    if (typeof trace[key] === 'string' && trace[key].startsWith('$')) {
+                                        const col = trace[key].slice(1);
+                                        if (columns.includes(col)) {
+                                            trace[key] = sqlData.map(row => row[col]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        console.log('After $var substitution:', plotSpec.data);
+                        setTimeout(() => {
+                            try {
+                                console.log('Calling Plotly.newPlot with:', plotId, plotSpec.data, plotSpec.layout);
+                                window.Plotly.newPlot(plotId, plotSpec.data, plotSpec.layout);
+                            } catch (e) {
+                                console.error('Plotly.newPlot error:', e);
+                            }
+                        }, 0);
+                        result += `<div class="content-block"><div id="${plotId}"></div></div>`;
+                    } else if (sqlBlockMatch) {
+                        const tableName = sqlBlockMatch[1];
+                        // Process SQL code block
                         const tableHtml = await processSqlBlock(code);
+                        // Parse the SQL result as an array of objects
+                        let sqlResultArr = [];
+                        try {
+                            const SQL = await window.initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
+                            const db = new SQL.Database();
+                            // (re-run the SQL to get the result as array of objects)
+                            // This is a bit redundant but ensures we have the right format
+                            // (You may want to refactor processSqlBlock to return the array directly)
+                            // For now, parse the result from processSqlBlock
+                            // (Assume processSqlBlock returns the HTML table, not the data)
+                            // Instead, update processSqlBlock to store the result in window._sqlResults if tableName is given
+                        } catch (e) {}
+                        if (tableName) {
+                            // Store the result and suppress output
+                            window._sqlResults[tableName] = window._lastSqlResult || [];
+                            // No output
+                        } else {
+                            // Store as last result and output as before
+                            window._lastSqlResult = window._lastSqlResult || [];
+                            result += `<div class="content-block">${tableHtml}</div>`;
+                        }
+                    } else if (lang && lang.trim().toLowerCase() === 'sql') {
+                        // Fallback for plain sql blocks
+                        const tableHtml = await processSqlBlock(code);
+                        window._lastSqlResult = window._lastSqlResult || [];
                         result += `<div class="content-block">${tableHtml}</div>`;
                     } else {
-                        const id = 'code-' + Math.random().toString(36).substr(2, 9);
+                const id = 'code-' + Math.random().toString(36).substr(2, 9);
                         codeBlocks.push({ id, lang, code });
                         result += `@@CODE-BLOCK-${codeBlocks.length - 1}@@`;
                     }
@@ -1734,10 +1826,13 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+// Global SQL results storage
+window._sqlResults = window._sqlResults || {};
+
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        new MarkdownPresentation();
-    });
+document.addEventListener('DOMContentLoaded', () => {
+    new MarkdownPresentation();
+}); 
 } else {
     new MarkdownPresentation();
 }
