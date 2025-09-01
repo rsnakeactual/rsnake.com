@@ -17,6 +17,15 @@ font-color: 000000
 
 ---
 
+# Why should you know if someone is scraping?
+
+- Blocking (wasted bandwidth, copyrights, performance degredation, etc)
+- Manipulation (make them think a thing that benefits you)
+- Measurement (know where to spend, competitive analysis)
+- Security (may be harming you)
+
+---
+
 # Normal Browser
 
 ```mermaid
@@ -342,7 +351,7 @@ And the eBay DRM story
 * ReCaptcha
 * Shape Security
 
-(In that order, though be careful, you'll lose visiblity in the LLMs if they can't crawl you)
+(In that order, ==though be careful, you'll lose visiblity in the LLMs if they can't crawl you==)
 
 ---
 
@@ -378,9 +387,11 @@ I wanted a static preso generator out of Obsidian. So I coded it up. You can jus
 # Contact
 ## Robert "RSnake" Hansen
 ### Managing Director: [https://grossman.vc](Grossman Ventures)
+### CTO: [https://rootevidence.com](Evidence)
 Email: [rsnake@rsnake.com](mailto:rsnake@rsnake.com)
 Web: [https://rsnake.com/](https://rsnake.com/)
 X.com: [https://twitter.com/rsnake](https://twitter.com/rsnake)
+LinkedIn: [https://www.linkedin.com/in/roberthansen3/](https://www.linkedin.com/in/roberthansen3/)
 
 ## Vote early.
 
