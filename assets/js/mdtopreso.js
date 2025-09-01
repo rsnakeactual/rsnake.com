@@ -167,12 +167,12 @@ async function processSqlBlock(sqlBlock) {
     console.log('SQL result:', result);
     if (!result.length) {
         window._lastSqlResult = [];
-        return '<div>No results</div>';
+        return { html: '<div>No results</div>', data: [] };
     }
     const columns = result[0].columns.map(name => ({ name, type: 'auto' }));
     const data = result[0].values.map(row => Object.fromEntries(row.map((v, i) => [columns[i].name, v])));
     window._lastSqlResult = data;
-    return renderTable({ columns, data });
+    return { html: renderTable({ columns, data }), data: data };
 }
 
 async function fetchText(url) {
@@ -520,7 +520,11 @@ class MarkdownPresentation {
                         await injectJsYaml();
                         const plotId = 'plotly-' + Math.random().toString(36).substr(2, 9);
                         const sqlName = plotlyBlockMatch[1];
+                        console.log('Plotly block found, sqlName:', sqlName);
+                        console.log('window._sqlResults:', window._sqlResults);
+                        console.log('window._lastSqlResult:', window._lastSqlResult);
                         let sqlData = sqlName ? (window._sqlResults[sqlName] || []) : (window._lastSqlResult || []);
+                        console.log('sqlData being used:', sqlData);
                         console.log('Plotly YAML code:', code);
                         let plotSpec;
                         try {
@@ -545,45 +549,46 @@ class MarkdownPresentation {
                             }
                         }
                         console.log('After $var substitution:', plotSpec.data);
+                        // Store the plotly code and data for re-rendering
+                        const plotlyData = {
+                            code: code,
+                            plotSpec: plotSpec,
+                            sqlData: sqlData
+                        };
+                        result += `<div class="content-block"><div id="${plotId}" data-plotly-code='${JSON.stringify(plotlyData).replace(/'/g, "&apos;")}'></div></div>`;
+                        // Call Plotly.newPlot after the result is added to the DOM
                         setTimeout(() => {
                             try {
                                 console.log('Calling Plotly.newPlot with:', plotId, plotSpec.data, plotSpec.layout);
-                                window.Plotly.newPlot(plotId, plotSpec.data, plotSpec.layout);
+                                const plotElement = document.getElementById(plotId);
+                                if (plotElement) {
+                                    window.Plotly.newPlot(plotId, plotSpec.data, plotSpec.layout);
+                                } else {
+                                    console.error('Plotly element not found:', plotId);
+                                }
                             } catch (e) {
                                 console.error('Plotly.newPlot error:', e);
                             }
-                        }, 0);
-                        result += `<div class="content-block"><div id="${plotId}"></div></div>`;
+                        }, 100); // Small delay to ensure DOM is ready
                     } else if (sqlBlockMatch) {
                         const tableName = sqlBlockMatch[1];
                         // Process SQL code block
-                        const tableHtml = await processSqlBlock(code);
-                        // Parse the SQL result as an array of objects
-                        let sqlResultArr = [];
-                        try {
-                            const SQL = await window.initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
-                            const db = new SQL.Database();
-                            // (re-run the SQL to get the result as array of objects)
-                            // This is a bit redundant but ensures we have the right format
-                            // (You may want to refactor processSqlBlock to return the array directly)
-                            // For now, parse the result from processSqlBlock
-                            // (Assume processSqlBlock returns the HTML table, not the data)
-                            // Instead, update processSqlBlock to store the result in window._sqlResults if tableName is given
-                        } catch (e) {}
+                        const result = await processSqlBlock(code);
                         if (tableName) {
                             // Store the result and suppress output
-                            window._sqlResults[tableName] = window._lastSqlResult || [];
+                            window._sqlResults[tableName] = result.data || [];
+                            console.log(`Stored SQL result for '${tableName}':`, window._sqlResults[tableName]);
                             // No output
                         } else {
                             // Store as last result and output as before
-                            window._lastSqlResult = window._lastSqlResult || [];
-                            result += `<div class="content-block">${tableHtml}</div>`;
+                            window._lastSqlResult = result.data || [];
+                            result += `<div class="content-block">${result.html}</div>`;
                         }
                     } else if (lang && lang.trim().toLowerCase() === 'sql') {
                         // Fallback for plain sql blocks
-                        const tableHtml = await processSqlBlock(code);
-                        window._lastSqlResult = window._lastSqlResult || [];
-                        result += `<div class="content-block">${tableHtml}</div>`;
+                        const result = await processSqlBlock(code);
+                        window._lastSqlResult = result.data || [];
+                        result += `<div class="content-block">${result.html}</div>`;
                     } else {
                 const id = 'code-' + Math.random().toString(36).substr(2, 9);
                         codeBlocks.push({ id, lang, code });
@@ -677,8 +682,8 @@ class MarkdownPresentation {
             markdown,
             /```sql\s*([\s\S]*?)```/g,
             async (match, sqlCode) => {
-                const tableHtml = await processSqlBlock(sqlCode);
-                return `<div class="content-block">${tableHtml}</div>`;
+                const result = await processSqlBlock(sqlCode);
+                return `<div class="content-block">${result.html}</div>`;
             }
         );
 
@@ -1115,6 +1120,9 @@ class MarkdownPresentation {
             const tempContainer = document.createElement('div');
             tempContainer.innerHTML = this.slides[index].content;
             
+            // Process SQL and plotly blocks for this slide
+            this.processSlideBlocks(tempContainer);
+            
             // Remove any duplicate content blocks
             const seenContent = new Set();
             const contentBlocks = tempContainer.querySelectorAll('.content-block');
@@ -1161,6 +1169,120 @@ class MarkdownPresentation {
             if (slideSelect) {
                 slideSelect.value = index + 1;
             }
+            
+            // Re-render plotly charts for this slide
+            this.renderPlotlyCharts();
+        }
+    }
+
+    renderPlotlyCharts() {
+        // Find all plotly divs and re-render them
+        const plotlyDivs = document.querySelectorAll('[id^="plotly-"]');
+        plotlyDivs.forEach(async (div) => {
+            const plotId = div.id;
+            // Get the stored plotly data from the data attribute
+            const plotlyDataAttr = div.getAttribute('data-plotly-code');
+            if (plotlyDataAttr) {
+                try {
+                    const plotlyData = JSON.parse(plotlyDataAttr);
+                    await this.renderPlotlyChart(plotId, plotlyData);
+                } catch (e) {
+                    console.error('Error parsing plotly data:', e);
+                }
+            }
+        });
+    }
+
+    async renderPlotlyChart(plotId, plotlyData) {
+        await injectPlotly();
+        await injectJsYaml();
+        
+        // Use the stored plotly data
+        const { plotSpec, sqlData } = plotlyData;
+        
+        // Substitute $column with arrays from sqlData if needed
+        if (sqlData && sqlData.length && plotSpec.data) {
+            const columns = Object.keys(sqlData[0]);
+            for (let trace of plotSpec.data) {
+                for (let key in trace) {
+                    if (typeof trace[key] === 'string' && trace[key].startsWith('$')) {
+                        const col = trace[key].slice(1);
+                        if (columns.includes(col)) {
+                            trace[key] = sqlData.map(row => row[col]);
+                        }
+                    }
+                }
+            }
+        }
+        
+        try {
+            window.Plotly.newPlot(plotId, plotSpec.data, plotSpec.layout);
+        } catch (e) {
+            console.error('Plotly.newPlot error:', e);
+        }
+    }
+
+    async processSlideBlocks(container) {
+        // Find and process SQL blocks first
+        const sqlBlocks = container.querySelectorAll('pre code.language-sql');
+        for (const sqlBlock of sqlBlocks) {
+            const code = sqlBlock.textContent;
+            const result = await processSqlBlock(code);
+            const wrapper = sqlBlock.closest('.content-block');
+            if (wrapper) {
+                wrapper.innerHTML = result.html;
+            }
+        }
+        
+        // Find and process plotly blocks
+        const plotlyBlocks = container.querySelectorAll('pre code.language-plotly');
+        for (const plotlyBlock of plotlyBlocks) {
+            const code = plotlyBlock.textContent;
+            await this.processPlotlyBlock(code, plotlyBlock);
+        }
+    }
+
+    async processPlotlyBlock(code, plotlyBlock) {
+        await injectPlotly();
+        await injectJsYaml();
+        const plotId = 'plotly-' + Math.random().toString(36).substr(2, 9);
+        
+        // Try to find SQL data from previous blocks
+        let sqlData = window._lastSqlResult || [];
+        
+        let plotSpec;
+        try {
+            plotSpec = window.jsyaml.load(code);
+        } catch (e) {
+            console.error('YAML parse error:', e, code);
+            plotSpec = {};
+        }
+        
+        // Substitute $column with arrays from sqlData
+        if (sqlData && sqlData.length && plotSpec.data) {
+            const columns = Object.keys(sqlData[0]);
+            for (let trace of plotSpec.data) {
+                for (let key in trace) {
+                    if (typeof trace[key] === 'string' && trace[key].startsWith('$')) {
+                        const col = trace[key].slice(1);
+                        if (columns.includes(col)) {
+                            trace[key] = sqlData.map(row => row[col]);
+                        }
+                    }
+                }
+            }
+        }
+        
+        const wrapper = plotlyBlock.closest('.content-block');
+        if (wrapper) {
+            wrapper.innerHTML = `<div id="${plotId}" style="width:100%;height:400px;"></div>`;
+            setTimeout(() => {
+                try {
+                    window.Plotly.newPlot(plotId, plotSpec.data, plotSpec.layout);
+                } catch (e) {
+                    console.error('Plotly.newPlot error:', e);
+                }
+            }, 0);
         }
     }
 
@@ -1189,7 +1311,7 @@ style.textContent = `
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
-        font-size: clamp(0.875rem, 3vw, 1.25rem); /* Reduced max size */
+        font-size: clamp(1.75rem, 6vw, 2.5rem); /* Doubled from 0.875rem, 3vw, 1.25rem */
     }
 
     .presentation-content {
@@ -1237,7 +1359,7 @@ style.textContent = `
         background: #2c3e50;
         color: white;
         padding: 1rem;
-        font-size: 0.9em;
+        font-size: 1.8em; /* Doubled from 0.9em */
         text-align: left;
         border-bottom: 1px solid #34495e;
         white-space: pre-line;
@@ -1295,7 +1417,7 @@ style.textContent = `
     #presenterModeBtn {
         background: none;
         border: none;
-        font-size: 1.2em;
+        font-size: 2.4em; /* Doubled from 1.2em */
         cursor: pointer;
         padding: 0.5rem;
         color: #666;
@@ -1314,7 +1436,7 @@ style.textContent = `
 
     /* Responsive font sizes with more reasonable maximums */
     h1 {
-        font-size: clamp(1.25rem, 6vw, 2.5rem);
+        font-size: clamp(2.5rem, 12vw, 5rem); /* Doubled from 1.25rem, 6vw, 2.5rem */
         margin-top: 0;
         padding-top: 0;
         word-wrap: break-word;
@@ -1322,33 +1444,33 @@ style.textContent = `
     }
 
     h2 {
-        font-size: clamp(1.1rem, 5vw, 2rem);
+        font-size: clamp(2.2rem, 10vw, 4rem); /* Doubled from 1.1rem, 5vw, 2rem */
         word-wrap: break-word;
         max-width: 100%;
     }
 
     h3 {
-        font-size: clamp(1rem, 4vw, 1.75rem);
+        font-size: clamp(2rem, 8vw, 3.5rem); /* Doubled from 1rem, 4vw, 1.75rem */
         word-wrap: break-word;
         max-width: 100%;
     }
 
     p {
-        font-size: clamp(0.875rem, 3vw, 1.25rem);
+        font-size: clamp(1.75rem, 6vw, 2.5rem); /* Doubled from 0.875rem, 3vw, 1.25rem */
         word-wrap: break-word;
         max-width: 100%;
     }
 
     /* Adjust list font sizes */
     .markdown-list {
-        font-size: clamp(0.875rem, 3vw, 1.25rem);
+        font-size: clamp(1.75rem, 6vw, 2.5rem); /* Doubled from 0.875rem, 3vw, 1.25rem */
         margin: 0.5rem 0;
         padding-left: 2rem;
     }
 
     /* Adjust blockquote font size */
     blockquote {
-        font-size: clamp(0.875rem, 3vw, 1.25rem);
+        font-size: clamp(1.75rem, 6vw, 2.5rem); /* Doubled from 0.875rem, 3vw, 1.25rem */
         border-left: 4px solid #007bff;
         margin: 1rem 0;
         padding: 0.5rem 1rem;
@@ -1359,7 +1481,7 @@ style.textContent = `
 
     /* Adjust table font size */
     .markdown-table {
-        font-size: clamp(0.75rem, 2.5vw, 1.1rem);
+        font-size: clamp(1.5rem, 5vw, 2.2rem); /* Doubled from 0.75rem, 2.5vw, 1.1rem */
         border-collapse: collapse;
         width: 100%;
         margin: 1rem 0;
@@ -1367,7 +1489,7 @@ style.textContent = `
 
     /* Adjust code block font size */
     .shiki {
-        font-size: clamp(0.75rem, 2.5vw, 1.1rem);
+        font-size: clamp(1.5rem, 5vw, 2.2rem); /* Doubled from 0.75rem, 2.5vw, 1.1rem */
         background-color: #0d1117;
         border-radius: 6px;
         padding: 1rem;
@@ -1380,7 +1502,7 @@ style.textContent = `
 
     /* Adjust Mermaid diagram font sizes */
     .mermaid {
-        font-size: clamp(0.75rem, 2.5vw, 1.1rem);
+        font-size: clamp(1.5rem, 5vw, 2.2rem); /* Doubled from 0.75rem, 2.5vw, 1.1rem */
         width: 100%;
         min-height: 300px;
         margin: 1rem 0;
@@ -1391,22 +1513,22 @@ style.textContent = `
     }
 
     .mermaid .label {
-        font-size: clamp(0.7rem, 2vw, 1rem);
+        font-size: clamp(1.4rem, 4vw, 2rem); /* Doubled from 0.7rem, 2vw, 1rem */
     }
 
     .mermaid .section {
-        font-size: clamp(0.75rem, 2.5vw, 1.1rem);
+        font-size: clamp(1.5rem, 5vw, 2.2rem); /* Doubled from 0.75rem, 2.5vw, 1.1rem */
         font-weight: bold;
     }
 
     .mermaid .title {
-        font-size: clamp(0.875rem, 3vw, 1.25rem);
+        font-size: clamp(1.75rem, 6vw, 2.5rem); /* Doubled from 0.875rem, 3vw, 1.25rem */
         font-weight: bold;
     }
 
     /* Adjust navigation font sizes */
     .presentation-nav button {
-        font-size: clamp(0.75rem, 2.5vw, 1.1rem);
+        font-size: clamp(1.5rem, 5vw, 2.2rem); /* Doubled from 0.75rem, 2.5vw, 1.1rem */
         padding: 0.5rem 1rem;
         border: none;
         background: #007bff;
@@ -1418,7 +1540,7 @@ style.textContent = `
     }
 
     #slideSelect {
-        font-size: clamp(0.75rem, 2.5vw, 1.1rem);
+        font-size: clamp(1.5rem, 5vw, 2.2rem); /* Doubled from 0.75rem, 2.5vw, 1.1rem */
         padding: 0.5rem;
         border: 1px solid #ddd;
         border-radius: 4px;
