@@ -368,24 +368,24 @@ This project builds static websites leveraging markdown, mermaid and shiki. View
 ```html
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script src="/assets/js/mdtopreso.js"></script>
-    </head>
-    <body></body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/assets/js/mdtopreso.js"></script>
+  </head>
+  <body></body>
 </html>```
 
-You'll be able to download it. Here's [https://rsnake.com/presos/?page=seoktoberfest2025.md#slide=1](the deck) but here is the .md file that drives it: [https://rsnake.com/presos/seoktoberfest2025.md](seoktoberfest2025.md). Cloudflare pages requires a .nojekyll file.
+You'll be able to download it. Here's [the deck](https://rsnake.com/presos/?page=seoktoberfest2025.md#slide=1) but here is the .md file that drives it: [seoktoberfest2025.md](https://rsnake.com/presos/seoktoberfest2025.md). Cloudflare pages requires a .nojekyll file.
 
 ---
 
 # Q&A - Robert "RSnake" Hansen
-### Managing Director: [https://grossman.vc](Grossman Ventures)
-### CTO: [https://rootevidence.com](Evidence)
+### Managing Director: [Grossman Ventures](https://grossman.vc)
+### Chief Technology Officer: [Evidence](https://rootevidence.com)
 Email: [rsnake@rsnake.com](mailto:rsnake@rsnake.com)
 Web: [https://rsnake.com/](https://rsnake.com/)
-X.com: [https://twitter.com/rsnake](https://twitter.com/rsnake)
+X.com: [https://x.com/rsnake](https://x.com/rsnake)
 LinkedIn: [https://www.linkedin.com/in/roberthansen3/](https://www.linkedin.com/in/roberthansen3/)
 
 ## Vote early. Vote often.
