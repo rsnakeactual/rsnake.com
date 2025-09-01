@@ -363,7 +363,7 @@ There's a tool for that
 
 ## And now for something completely different
 
-If you want to know more about how I made this preso itself, let me know. It's kinda cool if you are a nerd and like static websites, markdown, mermaid and shiki. Seriously, view-source and here is what it looks like:
+This project builds static websites leveraging markdown, mermaid and shiki. Viewing source shows:
 
 ```html
 <!DOCTYPE html>
@@ -376,7 +376,7 @@ If you want to know more about how I made this preso itself, let me know. It's k
     <body></body>
 </html>```
 
-You'll be able to download it. Here's [https://rsnake.com/presos/?page=seoktoberfest2025.md#slide=1](the deck) but here is the .md file that drives it: [https://rsnake.com/presos/seoktoberfest2025.md](seoktoberfest2025.md). If you use Cloudflare pages, add a .nojekyll file, or the frontmatter will get removed.
+You'll be able to download it. Here's [https://rsnake.com/presos/?page=seoktoberfest2025.md#slide=1](the deck) but here is the .md file that drives it: [https://rsnake.com/presos/seoktoberfest2025.md](seoktoberfest2025.md). Cloudflare pages requires a .nojekyll file.
 
 ---
 
