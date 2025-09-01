@@ -380,6 +380,8 @@ If you want to know more about how I made this preso itself, let me know. It's k
 
 You'll be able to download the whole project and play with it. Just place your .md file next to the HTML and JS file and you're off to the races. Here's the whole preso: [https://rsnake.com/presos/?page=seoktoberfest2025.md#slide=1](https://rsnake.com/presos/?page=seoktoberfest2025.md) but here is the .md file that drives it: [https://rsnake.com/presos/seoktoberfest2025.md](https://rsnake.com/presos/seoktoberfest2025.md). If you use Cloudflare pages, add a .nojekyll file, or the frontmatter will get removed.
 
+Jono won't like it because it's not WordPress, but whatevs.
+
 I wanted a static preso generator out of Obsidian. So I coded it up. You can just do things!
 
 ---
@@ -397,4 +399,4 @@ LinkedIn: [https://www.linkedin.com/in/roberthansen3/](https://www.linkedin.com/
 
 ## Vote often.
 
-## A vote for me is a vote against Marcus' tyranny.
+## A vote for RSnake is a vote against Marcus' tyranny.
