@@ -380,10 +380,9 @@ You'll be able to download it. Here's [https://rsnake.com/presos/?page=seoktober
 
 ---
 
-# Q&A
-## Robert "RSnake" Hansen
-#### Managing Director: [https://grossman.vc](Grossman Ventures)
-#### CTO: [https://rootevidence.com](Evidence)
+# Q&A - Robert "RSnake" Hansen
+### Managing Director: [https://grossman.vc](Grossman Ventures)
+### CTO: [https://rootevidence.com](Evidence)
 Email: [rsnake@rsnake.com](mailto:rsnake@rsnake.com)
 Web: [https://rsnake.com/](https://rsnake.com/)
 X.com: [https://twitter.com/rsnake](https://twitter.com/rsnake)
