@@ -52,7 +52,7 @@ sequenceDiagram
 
 ---
 
-# Headless
+# Headless (if it doesn't cache)
 
 ```mermaid
 sequenceDiagram
@@ -92,7 +92,7 @@ sequenceDiagram
 
 ---
 
-# Wget
+# Python requests (if it doesn't cache)
 
 ```mermaid
 sequenceDiagram
@@ -149,7 +149,7 @@ timeline
 
 # Not just request timing
 
-Also bounce timing! How fast does this user leave the page? Dwell times are realistically slow.
+Also bounce timing! How fast does this user leave the page? Dwell times are realistically slow. Google uses this, you should too, but for identifying bots, rather than "disinterest."
 
 If the IP in question is leaving the page extremely fast or suddenly a lot of IPs are, you are being scraped or DoS'd.
 
@@ -258,7 +258,7 @@ And if they __didn't__ hit *robots.txt* and they claim in their User-Agent to be
 123.123.123.123 - - [23/Mar/2025:18:23:30 -0500] "GET /some-obscure-page HTTP/1.1" …
 222.222.222.222 - - [23/Mar/2025:18:23:46 -0500] "GET /some-obscure-page HTTP/1.1" …```
 
-## Most likely cause is someone cutting and pasting or suddenly switching to a proxy
+## Most likely cause is someone cutting and pasting or suddenly switching to a proxy, or sending it to a friend. These IPs are increasingly likely to be correlated, the more unique the URL is.
 
 ---
 
@@ -297,7 +297,7 @@ Is the 80/443 a home firewall that is misconfigured, or a website, or worse yet 
 
 ---
 
-# Cloaking
+# Cloaking AI
 
 Hidden links will get followed by poorly written crawlers. You can cause massive ingestion problems, feeding bad data.
 
@@ -342,7 +342,7 @@ And the eBay DRM story
 * ReCaptcha
 * Shape Security
 
-(In that order)
+(In that order, though be careful, you'll lose visiblity in the LLMs if they can't crawl you)
 
 ---
 
@@ -369,7 +369,9 @@ If you want to know more about how I made this preso itself, let me know. It's k
     <body></body>
 </html>```
 
-You'll be able to download the whole project and play with it. Just plas your .md file next to the HTML and JS file and you're off to the races. Here's the whole preso: [https://rsnake.com/presos/?page=seoktoberfest2025.md#slide=1](https://rsnake.com/presos/?page=seoktoberfest2025.md) but here is the .md file that drives it: [https://rsnake.com/presos/seoktoberfest2025.md](https://rsnake.com/presos/seoktoberfest2025.md). If you use Cloudflare pages, add a .nojekyll file, or frontmatter will get removed.
+You'll be able to download the whole project and play with it. Just place your .md file next to the HTML and JS file and you're off to the races. Here's the whole preso: [https://rsnake.com/presos/?page=seoktoberfest2025.md#slide=1](https://rsnake.com/presos/?page=seoktoberfest2025.md) but here is the .md file that drives it: [https://rsnake.com/presos/seoktoberfest2025.md](https://rsnake.com/presos/seoktoberfest2025.md). If you use Cloudflare pages, add a .nojekyll file, or the frontmatter will get removed.
+
+I wanted a static preso generator out of Obsidian. So I coded it up. You can just do things!
 
 ---
 
