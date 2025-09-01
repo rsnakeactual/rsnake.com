@@ -4,7 +4,7 @@ refresh: 3600
 title: SEOktoberfest 2025
 author: Robert "RSnake" Hansen
 bgcolor: FFFFFF
-bgimage: seoktoberfest2025/bgimage.jpg
+bgimage: /presos/seoktoberfest2025/bgimage.jpg
 bgopacity: 50%
 font-color: 000000
 ---
@@ -13,7 +13,7 @@ font-color: 000000
 
 ## By Robert Hansen
 
-![](seoktoberfest2025/Picture1.png)
+![](/presos/seoktoberfest2025/Picture1.png)
 
 ---
 
@@ -114,7 +114,7 @@ sequenceDiagram
 ```
 ---
 
-![](seoktoberfest2025/porn.jpg)
+![](/presos/seoktoberfest2025/porn.jpg)
 
 ---
 
@@ -153,7 +153,7 @@ Also bounce timing! How fast does this user leave the page? Dwell times are real
 
 If the IP in question is leaving the page extremely fast or suddenly a lot of IPs are, you are being scraped or DoS'd.
 
-![](/seoktoberfest2025/bounce.gif)
+![](/presos/seoktoberfest2025/bounce.gif)
 
 ---
 
@@ -248,7 +248,7 @@ Oh yeah, and this might be a useful way of identifying Google tests, btw. :)
 
 And if they __didn't__ hit *robots.txt* and they claim in their User-Agent to be *Googlebot*, I'd definitely want to know.
 
-![](/seoktoberfest2025/robot.gif)
+![](/presos/seoktoberfest2025/robot.gif)
 
 ---
 
@@ -327,8 +327,8 @@ Sometimes on purpose but often just because they're lazy.
 
 The ha.ckers.org scraper story
 
-![](seoktoberfest2025/seocomic29.gif)
-![](seoktoberfest2025/seocomic30.gif)
+![](/presos/seoktoberfest2025/seocomic29.gif)
+![](/presos/seoktoberfest2025/seocomic30.gif)
 
 And the eBay DRM story
 
@@ -350,7 +350,7 @@ And the eBay DRM story
 
 There's a tool for that
 
-![](seoktoberfest2025/a16z.png)
+![](/presos/seoktoberfest2025/a16z.png)
 
 ---
 
