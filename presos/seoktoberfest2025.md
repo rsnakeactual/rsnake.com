@@ -11,7 +11,7 @@ font-color: 000000
 
 # Scraping in the age of AI
 
-## By Robert Hansen
+## By Robert "RSnake" Hansen
 
 ![](/presos/seoktoberfest2025/Picture1.png)
 
@@ -200,7 +200,7 @@ page.php?id=3
 | Sec-Fetch-Site | cross-site |
 | Accept-Language | en-US,en;q=0.9 |
 | Sec-Gpc | 1 |
-| Accept | text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8 |
+| Accept | text/html,application/xhtml+xml,application/xml; q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8 |
 | User-Agent | Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 |
 | Upgrade-Insecure-Requests | 1 |
 | Sec-Ch-Ua-Platform | "macOS" |
@@ -231,18 +231,16 @@ page.php?id=3
 
 # Origin IPs
 
-## Large cloud providers:
+### Large cloud providers:
 - Cloudflare: [https://www.cloudflare.com/ips/](https://www.cloudflare.com/ips/)
 - Azure: [https://www.microsoft.com/en-us/download/details.aspx?id=56519](https://www.microsoft.com/en-us/download/details.aspx?id=56519)
 - EC2: [https://ip-ranges.amazonaws.com/ip-ranges.json](https://ip-ranges.amazonaws.com/ip-ranges.json)
 - GCP: [https://www.gstatic.com/ipranges/cloud.json](https://www.gstatic.com/ipranges/cloud.json)
 
-## Other shortcuts:
-- Greynoise 
-- ASN info
-- IP reputation like pihole
+### Other shortcuts:
+- Greynoise, ASN info, IP reputation like pihole
 
-## They aren't going to be valid, like these:
+### They aren't going to be valid, like these:
 - Bingbot: [https://www.bing.com/toolbox/bingbot.json](https://www.bing.com/toolbox/bingbot.json)
 - Googlebot: [https://developers.google.com/search/apis/ipranges/googlebot.json](https://developers.google.com/search/apis/ipranges/googlebot.json])
 - OpenAI: [https://openai.com/chatgpt-actions.json](https://openai.com/chatgpt-actions.json)
@@ -264,10 +262,10 @@ And if they __didn't__ hit *robots.txt* and they claim in their User-Agent to be
 # Cutting and Pasting Correlation
 
 ```plain
-123.123.123.123 - - [23/Mar/2025:18:23:30 -0500] "GET /some-obscure-page HTTP/1.1" …
-222.222.222.222 - - [23/Mar/2025:18:23:46 -0500] "GET /some-obscure-page HTTP/1.1" …```
+1.1.1.1 - - [23/Aug/2025:18:23:30 -0500] "GET /obscure-page HTTP/1.1" …
+2.2.2.2 - - [23/Aug/2025:18:23:46 -0500] "GET /obscure-page HTTP/1.1" …```
 
-## Most likely cause is someone cutting and pasting or suddenly switching to a proxy, or sending it to a friend. These IPs are increasingly likely to be correlated, the more unique the URL is.
+Most likely cause is someone cutting and pasting or suddenly switching to a proxy, or sending it to a friend. These IPs are increasingly likely to be correlated, the more unique the URL is.
 
 ---
 
@@ -300,7 +298,7 @@ Referrer: http://Google.com```
 - Are they running port 80/443?
 - How about port 22?
 
-## Why is a home user running those things?
+### Why is a home user running those things?
 
 Is the 80/443 a home firewall that is misconfigured, or a website, or worse yet a proxy?
 
@@ -355,7 +353,7 @@ And the eBay DRM story
 
 ---
 
-# Then there is calling out the LLM usage when you see it
+# Then there is calling out the LLM usage
 
 There's a tool for that
 
@@ -378,25 +376,19 @@ If you want to know more about how I made this preso itself, let me know. It's k
     <body></body>
 </html>```
 
-You'll be able to download the whole project and play with it. Just place your .md file next to the HTML and JS file and you're off to the races. Here's the whole preso: [https://rsnake.com/presos/?page=seoktoberfest2025.md#slide=1](https://rsnake.com/presos/?page=seoktoberfest2025.md) but here is the .md file that drives it: [https://rsnake.com/presos/seoktoberfest2025.md](https://rsnake.com/presos/seoktoberfest2025.md). If you use Cloudflare pages, add a .nojekyll file, or the frontmatter will get removed.
-
-Jono won't like it because it's not WordPress, but whatevs.
-
-I wanted a static preso generator out of Obsidian. So I coded it up. You can just do things!
+You'll be able to download it. Here's [https://rsnake.com/presos/?page=seoktoberfest2025.md#slide=1](the deck) but here is the .md file that drives it: [https://rsnake.com/presos/seoktoberfest2025.md](seoktoberfest2025.md). If you use Cloudflare pages, add a .nojekyll file, or the frontmatter will get removed.
 
 ---
 
-# Contact
+# Q&A
 ## Robert "RSnake" Hansen
-### Managing Director: [https://grossman.vc](Grossman Ventures)
-### CTO: [https://rootevidence.com](Evidence)
+#### Managing Director: [https://grossman.vc](Grossman Ventures)
+#### CTO: [https://rootevidence.com](Evidence)
 Email: [rsnake@rsnake.com](mailto:rsnake@rsnake.com)
 Web: [https://rsnake.com/](https://rsnake.com/)
 X.com: [https://twitter.com/rsnake](https://twitter.com/rsnake)
 LinkedIn: [https://www.linkedin.com/in/roberthansen3/](https://www.linkedin.com/in/roberthansen3/)
 
-## Vote early.
-
-## Vote often.
+## Vote early. Vote often.
 
 ## A vote for RSnake is a vote against Marcus' tyranny.
