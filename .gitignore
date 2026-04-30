@@ -1,0 +1,26 @@
+# OS
+.DS_Store
+**/.DS_Store
+
+# Local-only email composer (never pushed)
+XFang/
+
+# Local Cloudflare Worker source (lives outside repo too, but block any stray copy)
+cloudflare/
+wrangler.toml
+.wrangler/
+
+# Secrets — never commit
+secrets/
+.env
+.env.*
+*.env
+
+# Beehiiv migration artifacts (large, regenerable)
+migration/
+beehiiv-export/
+
+# Editor / build cruft
+node_modules/
+dist/
+*.log
