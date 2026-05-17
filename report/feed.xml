@@ -6,7 +6,21 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Sun, 03 May 2026 14:48:04 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 17 May 2026 01:56:02 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20260516</title>
+    <link>https://rsnake.com/report/p/trump-visits-china-iran-directed-malware</link>
+    <guid>https://rsnake.com/report/p/trump-visits-china-iran-directed-malware</guid>
+    <pubDate>Sat, 16 May 2026 20:01:31 GMT</pubDate>
+    <description>Trump visits China, Iran directed malware, etc</description>
+  </item>
+  <item>
+    <title>RSnake Report 20260510</title>
+    <link>https://rsnake.com/report/p/uea-pipeline-hit-ai-cognitive-surrender</link>
+    <guid>https://rsnake.com/report/p/uea-pipeline-hit-ai-cognitive-surrender</guid>
+    <pubDate>Mon, 11 May 2026 00:27:35 GMT</pubDate>
+    <description>UEA pipeline hit, AI Cognitive Surrender, etc.</description>
+  </item>
   <item>
     <title>RSnake Report 20260502</title>
     <link>https://rsnake.com/report/p/china-rebuilding-ukrainian-territory-hezbollah-drone-usage</link>
@@ -202,20 +216,6 @@
     <guid>https://rsnake.com/report/p/putin-signals-off-ramp-gov-shutdown-continues</guid>
     <pubDate>Sat, 25 Oct 2025 20:31:04 GMT</pubDate>
     <description>Putin signals off-ramp, Gov shutdown continues, etc</description>
-  </item>
-  <item>
-    <title>RSnake Report 20251018</title>
-    <link>https://rsnake.com/report/p/chinese-tariffs-over-heavy-metals-and-reporters-leave-pentagon</link>
-    <guid>https://rsnake.com/report/p/chinese-tariffs-over-heavy-metals-and-reporters-leave-pentagon</guid>
-    <pubDate>Sat, 18 Oct 2025 19:13:03 GMT</pubDate>
-    <description>Chinese tariffs over heavy metals, and reporters leave Pentagon, etc</description>
-  </item>
-  <item>
-    <title>RSnake Report 20251012</title>
-    <link>https://rsnake.com/report/p/attacks-against-russia-moving-to-electrical-chinese-rare-earths</link>
-    <guid>https://rsnake.com/report/p/attacks-against-russia-moving-to-electrical-chinese-rare-earths</guid>
-    <pubDate>Sun, 12 Oct 2025 22:15:36 GMT</pubDate>
-    <description>Attacks against Russia moving to electrical, Chinese rare earths, etc</description>
   </item>
 </channel>
 </rss>
