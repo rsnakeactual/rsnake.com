@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Organizer</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- External CSS for jQuery UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        label {
+            font-weight: 600;
+        }
+        #importanceDropdown {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #fileInput {
+            padding: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: block;
+        }
+        #articlesContainer {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .article div {
+            margin: 0;
+            flex-grow: 1;
+            color: #555;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background: none;
+            border: none;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+        }
+        .article h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .minimize-btn {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            font-size: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .minimize-btn:hover {
+            background-color: #007bff;
+        }
+        .output-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Roboto', sans-serif;
+            color: #555;
+            white-space: pre-wrap;
+        }
+        #loadingIndicator p {
+            font-size: 16px;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h2>RSnake's RSSSerpent Sorter</h2>
+    <center><img src="./RSSSerpent.png" style="width:30%"></center>
+
+    <div style="text-align:center; margin-bottom: 20px;">
+        <a href="#geopolitics">Geopolitics</a> |
+        <a href="#technology">Technology</a> |
+        <a href="#cybersecurity">Cybersecurity</a> |
+        <a href="#business">Business</a> |
+        <a href="#business">Marketing</a> |
+        <a href="#business">Jobs</a> |
+        <a href="#other">Other</a>
+    </div>
+
+    <label for="importanceDropdown">Show articles with importance ≥ </label>
+    <select id="importanceDropdown">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+    </select>
+
+    <button onclick="analyzeAndSetImportance()">Auto-Select the Top >50</button>
+
+    <br><br>
+    <input type="file" id="fileInput" accept=".md" multiple>
+
+    <div id="loadingIndicator" style="display:none; text-align: center; margin-top: 20px;">
+        <p>Loading... Please wait.</p>
+    </div>
+
+    <div id="articlesContainer">Please choose some files</div>
+
+    <div class="textarea-wrapper">
+        <div style="text-align:center; margin-bottom: 20px;">
+           <h3>Output</h3>
+        </div> 
+        <div id="selectedArticles" class="output-container"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        let articlesData = [];
+        let selectedArticlesSet = new Set();
+
+        document.getElementById('fileInput').addEventListener('change', handleFiles, false);
+        document.getElementById('importanceDropdown').addEventListener('change', filterByImportance);
+
+function handleFiles(event) {
+    const files = event.target.files;
+    const articlesContainer = document.getElementById('articlesContainer');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    
+    articlesContainer.innerHTML = '';
+    articlesData = [];
+    selectedArticlesSet.clear();
+
+    let filesProcessed = 0;
+
+    // Show the loading indicator when file processing begins
+    loadingIndicator.style.display = 'block';
+
+    Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const content = e.target.result;
+            parseArticles(content);
+            filesProcessed++;
+
+            // Call auto-select only after all files have been processed
+            if (filesProcessed === files.length) {
+                analyzeAndSetImportance();
+                
+                // Hide the loading indicator after processing completes
+                loadingIndicator.style.display = 'none';
+            }
+        };
+        reader.readAsText(file);
+    });
+}
+
+
+        function parseArticles(content) {
+            const articles = content.split('---\n').filter(article => article.trim() !== '');
+            articles.forEach(article => {
+                const categoryMatch = article.match(/Category:\s*(\w+)/i);
+                const importanceMatch = article.match(/Importance:\s*(\d+)/i);
+                const category = categoryMatch ? categoryMatch[1].toLowerCase() : 'other';
+                const importance = importanceMatch ? parseInt(importanceMatch[1]) : 1;
+
+                const articleContent = article.replace(/(Category|Importance):.*\n/, '').trim();
+
+                const articleId = hashCode(articleContent);
+
+                articlesData.push({
+                    id: articleId,
+                    category: category,
+                    importance: importance,
+                    content: articleContent
+                });
+            });
+            filterByImportance();
+        }
+
+        function filterByImportance() {
+            const importanceThreshold = parseInt(document.getElementById('importanceDropdown').value);
+            const articlesContainer = document.getElementById('articlesContainer');
+            articlesContainer.innerHTML = '';
+
+            const categorizedArticles = articlesData.filter(article => article.importance >= importanceThreshold);
+            displayArticles(categorizedArticles, articlesContainer);
+        }
+
+        function convertLinksToHTML(text) {
+            text = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+            return (text) 
+        }
+
+
+        function displayArticles(filteredArticles, container) {
+            const categorized = {
+                'geopolitics': [],
+                'technology': [],
+                'cybersecurity': [],
+                'business': [],
+                'other': []
+            };
+        
+            filteredArticles.forEach(article => {
+                if (categorized.hasOwnProperty(article.category)) {
+                    categorized[article.category].push(article);
+                } else {
+                    categorized['other'].push(article);
+                }
+            });
+        
+            Object.keys(categorized).forEach(category => {
+                if (categorized[category].length > 0) {
+                    const categoryHeader = document.createElement('h2');
+                    categoryHeader.textContent = capitalizeFirstLetter(category);
+                    categoryHeader.id = category;
+                    container.appendChild(categoryHeader);
+        
+                    categorized[category].sort((a, b) => b.importance - a.importance);
+        
+                    categorized[category].forEach(article => {
+                        const articleElement = document.createElement('div');
+                        articleElement.classList.add('article');
+                        
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+        
+                        if (selectedArticlesSet.has(article.id)) {
+                            checkbox.checked = true;
+                        }
+        
+                        checkbox.addEventListener('change', () => {
+                            if (checkbox.checked) {
+                                selectedArticlesSet.add(article.id);
+                            } else {
+                                selectedArticlesSet.delete(article.id);
+                            }
+                            updateSelectedArticles();
+                        });
+        
+                        const articleContent = document.createElement('div');
+                        articleContent.style.whiteSpace = 'pre-wrap';  // Preserves line breaks
+                        articleContent.style.wordWrap = 'break-word';  // Ensures long words break properly
+                        articleContent.innerHTML = convertLinksToHTML(article.content);
+        
+                        const minimizeButton = document.createElement('button');
+                        minimizeButton.innerHTML = '▲';
+                        minimizeButton.classList.add('minimize-btn');
+                        minimizeButton.addEventListener('click', () => {
+                            if (articleContent.style.display === 'none') {
+                                articleContent.style.display = 'block';
+                                minimizeButton.textContent = '▲';
+                            } else {
+                                articleContent.style.display = 'none';
+                                minimizeButton.textContent = '▼';
+                            }
+                        });
+                        
+                        const hrElement = document.createElement('hr');
+                        articleElement.appendChild(hrElement);
+                        articleElement.appendChild(checkbox);
+                        articleElement.appendChild(minimizeButton);
+                        articleElement.appendChild(articleContent);
+                        articleContent.innerHTML = convertLinksToHTML(article.content);
+                        container.appendChild(articleElement);
+                    });
+                }
+            });
+        
+            $(container).sortable({
+                update: function() {
+                    updateSelectedArticles();  // Trigger on sort change
+                }
+            });
+        }
+
+
+        function updateSelectedArticles() {
+            const selectedArticles = [];
+        
+            const articles = document.querySelectorAll('.article');
+            articles.forEach(articleElement => {
+                const checkbox = articleElement.querySelector('input[type="checkbox"]');
+                if (checkbox.checked) {
+                    // Get the innerHTML of the article content to preserve formatting
+                    let articleContent = articleElement.querySelector('div').innerHTML.trim();
+        
+                    // Remove the Importance line completely
+                    articleContent = articleContent.replace(/Importance: \d*/g, '').trim();
+        
+                    // Split content into paragraphs by double line breaks
+                    let paragraphs = articleContent.split(/\n/);
+        
+                    // Bold the first paragraph (main summary)
+                    let mainSummary = `<b>${paragraphs[0]}</b>`;
+        
+                    // Check if paragraphs[1] exists (the bullet points)
+                    let bulletPoints = '';
+                    for (i = 2; i < paragraphs.length - 2; i++) {
+                        // Extract bullet points and convert to <ul><li> list
+                        paragraphs[i] = paragraphs[i].replace(/^ - /, '')
+                        bulletPoints = bulletPoints + '<li>' + paragraphs[i] + "</li>\n";
+                    }
+        
+                    // Combine the formatted content
+                    let formattedContent = `<div>${mainSummary}<ul>${bulletPoints}</ul><i>[RSnake: ]</i><br><br>${paragraphs[paragraphs.length - 1]}</div>`;
+        
+                    // Push the formatted content to the selectedArticles array
+                    selectedArticles.push(formattedContent);
+                }
+            });
+        
+            // Join selected articles with double <br> for spacing between articles
+            document.getElementById('selectedArticles').innerHTML = selectedArticles.join('<br><br>');
+        }
+
+
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        function analyzeAndSetImportance() {
+            const importanceScores = Array(10).fill(0);
+            articlesData.forEach(article => {
+                importanceScores[article.importance - 1]++;
+            });
+
+            let count = 0;
+            let threshold = 10;
+            for (let i = 9; i >= 0; i--) {
+                count += importanceScores[i];
+                if (count >= 50) {
+                    threshold = i + 1;
+                    break;
+                }
+            }
+
+            document.getElementById('importanceDropdown').value = threshold;
+            filterByImportance();
+        }
+
+        function hashCode(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = (hash << 5) - hash + char;
+                hash |= 0;
+            }
+            return hash;
+        }
+    </script>
+
+</body>
+</html>
