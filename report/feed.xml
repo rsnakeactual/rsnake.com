@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Mon, 18 May 2026 01:51:55 GMT</lastBuildDate>
+  <lastBuildDate>Sat, 23 May 2026 20:55:10 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20260523</title>
+    <link>https://rsnake.com/report/p/san-diego-shooters-putin-seizes-property-from-dissenters</link>
+    <guid>https://rsnake.com/report/p/san-diego-shooters-putin-seizes-property-from-dissenters</guid>
+    <pubDate>Sat, 23 May 2026 19:46:11 GMT</pubDate>
+    <description>San Diego shooters, Putin seizes property from dissenters, etc</description>
+  </item>
   <item>
     <title>RSnake Report 20260516</title>
     <link>https://rsnake.com/report/p/trump-visits-china-iran-directed-malware</link>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/moscow-out-of-power-rio-drug-cartel-curtailed</guid>
     <pubDate>Sun, 02 Nov 2025 21:34:03 GMT</pubDate>
     <description>Moscow out of power, Rio drug cartel curtailed, etc</description>
-  </item>
-  <item>
-    <title>RSnake Report 20251025 </title>
-    <link>https://rsnake.com/report/p/putin-signals-off-ramp-gov-shutdown-continues</link>
-    <guid>https://rsnake.com/report/p/putin-signals-off-ramp-gov-shutdown-continues</guid>
-    <pubDate>Sat, 25 Oct 2025 20:31:04 GMT</pubDate>
-    <description>Putin signals off-ramp, Gov shutdown continues, etc</description>
   </item>
 </channel>
 </rss>
