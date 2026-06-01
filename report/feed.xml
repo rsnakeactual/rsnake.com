@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Sat, 23 May 2026 20:55:10 GMT</lastBuildDate>
+  <lastBuildDate>Mon, 01 Jun 2026 00:51:50 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20260531</title>
+    <link>https://rsnake.com/report/p/rsnake-report-20260531</link>
+    <guid>https://rsnake.com/report/p/rsnake-report-20260531</guid>
+    <pubDate>Sun, 31 May 2026 23:27:19 GMT</pubDate>
+    <description>FCC banning Chinese chips, Ukraine hitting logistics, etc</description>
+  </item>
   <item>
     <title>RSnake Report 20260523</title>
     <link>https://rsnake.com/report/p/san-diego-shooters-putin-seizes-property-from-dissenters</link>
@@ -75,7 +82,7 @@
     <link>https://rsnake.com/report/p/iran-s-range-reaches-4k-km-10m-rial-iranian-rial-notes</link>
     <guid>https://rsnake.com/report/p/iran-s-range-reaches-4k-km-10m-rial-iranian-rial-notes</guid>
     <pubDate>Sat, 21 Mar 2026 18:30:39 GMT</pubDate>
-    <description>Iran&#39;s range reaches 4k km, 10M Rial Iranian Rial notes, etc</description>
+    <description>Iran's range reaches 4k km, 10M Rial Iranian Rial notes, etc</description>
   </item>
   <item>
     <title>RSnake Report 20260314</title>
@@ -117,7 +124,7 @@
     <link>https://rsnake.com/report/p/iran-s-economy-tanked-by-us-two-new-healthcare-frauds</link>
     <guid>https://rsnake.com/report/p/iran-s-economy-tanked-by-us-two-new-healthcare-frauds</guid>
     <pubDate>Sun, 08 Feb 2026 20:16:37 GMT</pubDate>
-    <description>Iran&#39;s economy tanked by US, Two new healthcare frauds, etc.</description>
+    <description>Iran's economy tanked by US, Two new healthcare frauds, etc.</description>
   </item>
   <item>
     <title>RSnake Report 20260201</title>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/stripper-index-predicts-recession-mamdani-wins-nyc</guid>
     <pubDate>Sun, 09 Nov 2025 20:43:03 GMT</pubDate>
     <description>Stripper index predicts recession, Mamdani wins NYC, etc.</description>
-  </item>
-  <item>
-    <title>RSnake Report 20251102</title>
-    <link>https://rsnake.com/report/p/moscow-out-of-power-rio-drug-cartel-curtailed</link>
-    <guid>https://rsnake.com/report/p/moscow-out-of-power-rio-drug-cartel-curtailed</guid>
-    <pubDate>Sun, 02 Nov 2025 21:34:03 GMT</pubDate>
-    <description>Moscow out of power, Rio drug cartel curtailed, etc</description>
   </item>
 </channel>
 </rss>
