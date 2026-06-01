@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RSnake Sorter — daily news digest</title>
+<meta name="description" content="Browse the day-by-day digest of geopolitical, cybersecurity, technology, and business articles.">
+<link rel="canonical" href="https://rsnake.com/sorter/">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #000; --paper: #fff;
+    --gray-100: #f7f7f7; --gray-200: #e6e6e6; --gray-400: #b3b3b3;
+    --gray-600: #6b6b6b; --gray-800: #2a2a2a;
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--paper); color: var(--ink); }
+  body {
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px; line-height: 1.55; margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--gray-600); }
+  h1, h2, h3 { font-weight: 700; letter-spacing: -0.012em; line-height: 1.1; margin-top: 0; }
+
+  /* Nav (same skeleton as /report/) */
+  .rep-nav { background: var(--paper); border-bottom: 1px solid var(--ink); padding: 18px 0; }
+  .rep-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+  .rep-brand { font-weight: 800; font-size: 0.85rem; letter-spacing: 0.22em; text-transform: uppercase; text-decoration: none; }
+  .rep-nav-links { list-style: none; margin: 0; padding: 0; display: flex; gap: 24px; }
+  .rep-nav-links a { color: var(--gray-600); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 500; text-decoration: none; }
+  .rep-nav-links a:hover, .rep-nav-links a.active { color: var(--ink); font-weight: 700; }
+
+  /* Page shell */
+  main { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
+  .page-title { font-size: 2.4rem; margin: 0 0 0.4rem; }
+  .page-subtitle { font-size: 1.15rem; font-family: 'Source Serif 4', Georgia, serif; color: var(--gray-800); font-weight: 400; margin: 0 0 2rem; max-width: 720px; }
+
+  /* Day picker */
+  .picker { border: 1px solid var(--gray-200); background: var(--gray-100); padding: 0.85rem 1rem; margin-bottom: 1.5rem; }
+  .picker-head { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 0.7rem; flex-wrap: wrap; }
+  .picker-head strong { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; }
+  .picker-head .pickerCount { font-size: 0.72rem; color: var(--gray-600); }
+  .picker-head .spacer { flex: 1; }
+  .picker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.4rem; max-height: 240px; overflow-y: auto; }
+  .picker-chip { display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.6rem; background: var(--paper); color: var(--ink); border: 1px solid var(--gray-200); cursor: pointer; font-size: 0.8rem; user-select: none; }
+  .picker-chip input { margin: 0; cursor: pointer; }
+  .picker-chip[data-selected="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .picker-chip[data-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+  .picker-chip .label { flex: 1; }
+  .picker-chip .size { font-size: 0.7rem; opacity: 0.7; }
+
+  /* Buttons */
+  .btn { background: var(--paper); color: var(--ink); border: 1px solid var(--ink); padding: 0.5rem 0.95rem; font-family: inherit; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; cursor: pointer; }
+  .btn:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+  .btn:disabled { color: var(--gray-400); border-color: var(--gray-400); cursor: not-allowed; }
+  .btn--primary { background: var(--ink); color: var(--paper); }
+  .btn--primary:hover:not(:disabled) { background: var(--gray-800); }
+  .btn--small { padding: 0.35rem 0.7rem; font-size: 0.65rem; }
+
+  /* Controls strip */
+  .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem; }
+  .controls label { font-size: 0.75rem; color: var(--gray-600); }
+  .controls select { font-family: inherit; font-size: 0.85rem; padding: 0.35rem 0.5rem; border: 1px solid var(--gray-400); background: var(--paper); }
+  .status { color: var(--gray-600); font-size: 0.82rem; font-style: italic; margin: 0.5rem 0 1rem; }
+  .filter-info { color: var(--gray-600); font-size: 0.78rem; margin: 0.25rem 0 1.1rem; }
+
+  /* Category accordions */
+  .accordion { border: 1px solid var(--gray-200); margin-bottom: 0.5rem; background: var(--paper); }
+  .accordion-head { padding: 0.7rem 1rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: var(--gray-100); user-select: none; }
+  .accordion-head:hover { background: var(--gray-200); }
+  .accordion-title { font-size: 0.95rem; font-weight: 600; margin: 0; }
+  .accordion-right { display: flex; gap: 0.5rem; align-items: center; }
+  .badge { background: var(--ink); color: var(--paper); padding: 0.15rem 0.55rem; font-size: 0.65rem; letter-spacing: 0.08em; font-weight: 600; }
+  .badge--empty { background: var(--gray-200); color: var(--gray-600); }
+  .chevron { color: var(--gray-600); font-size: 0.7rem; }
+  .accordion-body { padding: 0.6rem 1rem 1rem; }
+  .accordion-empty { color: var(--gray-600); font-style: italic; font-size: 0.85rem; margin: 0.6rem 0; }
+
+  /* Article cards */
+  .article { padding: 0.7rem 0.5rem 0.7rem 0; border-top: 1px solid var(--gray-200); display: grid; grid-template-columns: auto auto 1fr; gap: 0.6rem 0.85rem; align-items: start; }
+  .accordion-body .article:first-child { border-top: none; }
+  .article-check { margin-top: 0.2rem; }
+  .article-importance { font-size: 0.7rem; font-weight: 700; color: var(--gray-600); letter-spacing: 0.06em; min-width: 32px; padding-top: 0.15rem; }
+  .article-importance[data-hot="true"] { color: var(--ink); }
+  .article-body { font-family: 'Source Serif 4', Georgia, serif; font-size: 1rem; line-height: 1.5; }
+  .article-overview { margin: 0 0 0.35rem; }
+  .article-bullets { margin: 0.25rem 0 0.5rem 1.2rem; padding: 0; font-size: 0.94rem; }
+  .article-bullets li { margin: 0.1rem 0; }
+  .article-source { font-size: 0.72rem; color: var(--gray-600); word-break: break-word; }
+  .article-source a { color: var(--gray-600); }
+
+  /* Action bar */
+  .action-bar { position: sticky; bottom: 0; background: var(--paper); border-top: 1px solid var(--ink); padding: 0.85rem 0; display: flex; gap: 10px; align-items: center; margin-top: 1.5rem; z-index: 5; }
+  .action-bar .selected-count { font-size: 0.78rem; color: var(--gray-600); }
+
+  /* Footer (matches /report/) */
+  footer { background: var(--paper); border-top: 1px solid var(--ink); padding: 2.5rem 0; margin-top: 4rem; }
+  .footer-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; text-align: center; color: var(--gray-600); }
+  .footer-inner p { font-size: 0.7rem; margin: 0; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+
+<nav class="rep-nav"><div class="rep-nav-inner">
+  <a class="rep-brand" href="/">RSnake</a>
+  <ul class="rep-nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/about.html">About</a></li>
+    <li><a href="https://youtube.com/@thersnakeshow">The RSnake Show</a></li>
+    <li><a href="/report/">Report</a></li>
+    <li><a href="/sorter/" class="active">Sorter</a></li>
+  </ul>
+</div></nav>
+
+<main>
+  <h1 class="page-title">Sorter</h1>
+  <p class="page-subtitle">Browse the day-by-day stream of articles by category and importance. Pick up to 7 days at once to compare or catch up.</p>
+
+  <div id="picker" class="picker" hidden>
+    <div class="picker-head">
+      <strong>Pick days</strong>
+      <span class="pickerCount" id="pickerCount">(0/7 selected)</span>
+      <span class="spacer"></span>
+      <button id="loadBtn" class="btn btn--small">Load 0 days</button>
+    </div>
+    <div class="picker-grid" id="pickerGrid"></div>
+  </div>
+
+  <div class="controls" id="controls" hidden>
+    <label>Importance ≥</label>
+    <select id="thresholdSelect"></select>
+    <button id="topPerCatBtn" class="btn btn--small">Top 10/category</button>
+    <button id="topAllBtn" class="btn btn--small">Top 50 overall</button>
+    <button id="clearSelBtn" class="btn btn--small">Clear selection</button>
+  </div>
+
+  <p class="status" id="status">Looking for the latest daily update…</p>
+  <p class="filter-info" id="filterInfo" hidden></p>
+
+  <div id="categoryList"></div>
+
+  <div class="action-bar" id="actionBar" hidden>
+    <span class="selected-count" id="selectedCount">0 selected</span>
+    <span class="spacer" style="flex:1"></span>
+    <button id="copyBtn" class="btn btn--primary" disabled>Copy selection</button>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>RSnake · <a href="/">Home</a> · <a href="/report/">Report</a></p>
+  </div>
+</footer>
+
+<script>
+'use strict';
+
+// ─── Constants ──────────────────────────────────────────────────────────
+const DAILY_FILE_RE = /^\d{8}\.md$/;        // accept only YYYYMMDD.md
+const SORTER_CATEGORIES = ['Geopolitics', 'Cybersecurity', 'Technology', 'Business'];
+const MAX_DAYS = 7;
+
+// ─── State ──────────────────────────────────────────────────────────────
+const state = {
+  availableDays: [],     // [{file, mtime, bytes}]
+  selectedDays: new Set(), // file names
+  loading: false,
+  articles: [],          // [{id, category, originalCategory, importance, overview, bullets[], source, selected}]
+  threshold: 1,
+  collapsed: new Set(),  // category names
+};
+
+// ─── Helpers ────────────────────────────────────────────────────────────
+function fmtDay(file) {
+  const m = file.match(/^(\d{4})(\d{2})(\d{2})\.md$/);
+  if (!m) return file;
+  const d = new Date(`${m[1]}-${m[2]}-${m[3]}T12:00:00Z`);
+  return d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+}
+function fmtSize(bytes) {
+  if (bytes === 0) return 'blank';
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
+function escapeHtml(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function normalizeCategory(cat) {
+  const lower = String(cat || '').toLowerCase();
+  for (const c of SORTER_CATEGORIES) {
+    if (c.toLowerCase() === lower) return c;
+  }
+  return ''; // unknown categories drop at parse time (no destination column)
+}
+
+// ─── Markdown parse (matches XFang sorter behavior) ─────────────────────
+function parseMarkdown(content) {
+  const blocks = content.split(/^\s*-{3,}\s*$/m).map(b => b.trim()).filter(Boolean);
+  const parsed = [];
+  let idx = 0;
+  for (const block of blocks) {
+    const lines = block.split('\n');
+    let rawCategory = '';
+    let importance = 1;
+    let source = '';
+    const bullets = [];
+    const overviewLines = [];
+    for (const line of lines) {
+      const t = line.trim();
+      const low = t.toLowerCase();
+      if (low.startsWith('category:')) {
+        rawCategory = t.slice('category:'.length).trim();
+      } else if (low.startsWith('importance:')) {
+        const n = parseInt(t.slice('importance:'.length).trim(), 10);
+        if (Number.isFinite(n)) importance = n;
+      } else if (low.startsWith('source:')) {
+        source = t.slice('source:'.length).trim();
+      } else if (line.startsWith(' - ')) {
+        bullets.push(t.replace(/^-\s*/, ''));
+      } else if (t) {
+        overviewLines.push(t);
+      }
+    }
+    const category = normalizeCategory(rawCategory);
+    if (!category) continue;
+    parsed.push({
+      id: `art-${idx++}`,
+      category,
+      originalCategory: category,
+      importance,
+      overview: overviewLines.join(' '),
+      bullets,
+      source,
+      selected: false,
+    });
+  }
+  // Intra-file dedupe by category|source|overview (higher importance wins).
+  const seen = new Map();
+  for (const a of parsed) {
+    const fp = `${a.category}|${a.source}|${a.overview}`;
+    const prev = seen.get(fp);
+    if (!prev || a.importance > prev.importance) seen.set(fp, a);
+  }
+  return [...seen.values()];
+}
+
+function dedupeAcross(list) {
+  // Cross-file dedupe (same key). Articles repeated day-over-day collapse.
+  const seen = new Map();
+  for (const a of list) {
+    const fp = `${a.category}|${a.source}|${a.overview}`;
+    const prev = seen.get(fp);
+    if (!prev || a.importance > prev.importance) seen.set(fp, a);
+  }
+  // Stable re-index so React-less reconciliation works.
+  return [...seen.values()].map((a, i) => ({ ...a, id: `art-${i}` }));
+}
+
+// ─── Top-N selection ────────────────────────────────────────────────────
+function computeAutoSelectTop50(arts) {
+  const counts = Array(10).fill(0);
+  arts.forEach(a => { counts[Math.min(Math.max(a.importance, 1), 10) - 1]++; });
+  let count = 0;
+  let threshold = 10;
+  for (let i = 9; i >= 0; i--) {
+    count += counts[i];
+    if (count >= 50) { threshold = i + 1; break; }
+  }
+  return { threshold, updated: arts.map(a => ({ ...a, selected: a.importance >= threshold })) };
+}
+function computeAutoSelectTopPerCategory(arts, perCat = 10) {
+  const buckets = {};
+  SORTER_CATEGORIES.forEach(c => buckets[c] = []);
+  arts.forEach(a => { if (buckets[a.category]) buckets[a.category].push(a); });
+  const selectedIds = new Set();
+  let minT = 10;
+  for (const c of SORTER_CATEGORIES) {
+    const sorted = buckets[c].slice().sort((x, y) => y.importance - x.importance);
+    const top = sorted.slice(0, perCat);
+    top.forEach(a => selectedIds.add(a.id));
+    if (top.length > 0) {
+      const lowest = top[top.length - 1].importance;
+      if (lowest < minT) minT = lowest;
+    }
+  }
+  return {
+    threshold: Math.max(1, minT),
+    updated: arts.map(a => ({ ...a, selected: selectedIds.has(a.id) })),
+  };
+}
+
+// ─── Network ────────────────────────────────────────────────────────────
+async function fetchIndex() {
+  const r = await fetch(`/dailyupdate/index.json?t=${Date.now()}`, { cache: 'no-store' });
+  if (!r.ok) throw new Error(`index.json HTTP ${r.status}`);
+  const raw = await r.json();
+  return raw.filter(e => DAILY_FILE_RE.test(e.file));
+}
+async function fetchDays(files) {
+  const safe = files.filter(f => DAILY_FILE_RE.test(f));
+  const bust = Date.now();
+  const results = await Promise.all(safe.map(async (file) => {
+    const r = await fetch(`/dailyupdate/${encodeURIComponent(file)}?t=${bust}`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`${file}: HTTP ${r.status}`);
+    return r.text();
+  }));
+  let combined = [];
+  for (const text of results) combined = combined.concat(parseMarkdown(text));
+  return dedupeAcross(combined);
+}
+
+// ─── Render ─────────────────────────────────────────────────────────────
+function render() {
+  renderPicker();
+  renderControls();
+  renderCategoryList();
+  renderActionBar();
+}
+
+function renderPicker() {
+  const root = document.getElementById('picker');
+  if (state.availableDays.length === 0) { root.hidden = true; return; }
+  root.hidden = false;
+  document.getElementById('pickerCount').textContent = `(${state.selectedDays.size}/${MAX_DAYS} selected)`;
+  const loadBtn = document.getElementById('loadBtn');
+  loadBtn.textContent = state.loading
+    ? 'Loading…'
+    : `Load ${state.selectedDays.size} day${state.selectedDays.size === 1 ? '' : 's'}`;
+  loadBtn.disabled = state.loading || state.selectedDays.size === 0;
+  const grid = document.getElementById('pickerGrid');
+  grid.innerHTML = '';
+  for (const d of state.availableDays) {
+    const isSel = state.selectedDays.has(d.file);
+    const isBlank = d.bytes === 0;
+    const atCap = !isSel && state.selectedDays.size >= MAX_DAYS;
+    const disabled = isBlank || atCap;
+    const lab = document.createElement('label');
+    lab.className = 'picker-chip';
+    lab.dataset.selected = isSel ? 'true' : 'false';
+    lab.dataset.disabled = disabled ? 'true' : 'false';
+    lab.title = isBlank ? 'blank day' : atCap ? `max ${MAX_DAYS} days at a time` : d.file;
+    lab.innerHTML = `
+      <input type="checkbox" ${isSel ? 'checked' : ''} ${disabled ? 'disabled' : ''}>
+      <span class="label">${escapeHtml(fmtDay(d.file))}</span>
+      <span class="size">${escapeHtml(fmtSize(d.bytes))}</span>
+    `;
+    lab.querySelector('input').addEventListener('change', () => toggleDay(d.file));
+    grid.appendChild(lab);
+  }
+}
+
+function renderControls() {
+  const root = document.getElementById('controls');
+  if (state.articles.length === 0) { root.hidden = true; return; }
+  root.hidden = false;
+  const sel = document.getElementById('thresholdSelect');
+  if (sel.options.length === 0) {
+    for (let i = 1; i <= 10; i++) sel.add(new Option(String(i), String(i)));
+  }
+  sel.value = String(state.threshold);
+}
+
+function renderCategoryList() {
+  const root = document.getElementById('categoryList');
+  root.innerHTML = '';
+  if (state.articles.length === 0) return;
+
+  const filtered = state.articles.filter(a => a.importance >= state.threshold);
+  const selectedCount = state.articles.filter(a => a.selected).length;
+  const info = document.getElementById('filterInfo');
+  info.hidden = false;
+  info.textContent = `${filtered.length} shown · ${selectedCount} selected`;
+
+  for (const cat of SORTER_CATEGORIES) {
+    const catArts = filtered.filter(a => a.category === cat).sort((a, b) => b.importance - a.importance);
+    const isCollapsed = state.collapsed.has(cat);
+    const selInCat = catArts.filter(a => a.selected).length;
+    const acc = document.createElement('div');
+    acc.className = 'accordion';
+    const headBadgeClass = catArts.length === 0 ? 'badge badge--empty' : 'badge';
+    acc.innerHTML = `
+      <div class="accordion-head" data-cat="${escapeHtml(cat)}">
+        <h3 class="accordion-title">${escapeHtml(cat)}</h3>
+        <div class="accordion-right">
+          <span class="${headBadgeClass}">${selInCat}/${catArts.length}</span>
+          <span class="chevron">${isCollapsed ? '▶' : '▼'}</span>
+        </div>
+      </div>
+    `;
+    if (!isCollapsed) {
+      const body = document.createElement('div');
+      body.className = 'accordion-body';
+      if (catArts.length === 0) {
+        body.innerHTML = `<p class="accordion-empty">No articles in this category at this threshold.</p>`;
+      } else {
+        for (const a of catArts) body.appendChild(renderArticle(a));
+      }
+      acc.appendChild(body);
+    }
+    acc.querySelector('.accordion-head').addEventListener('click', () => toggleCollapse(cat));
+    root.appendChild(acc);
+  }
+}
+
+function renderArticle(a) {
+  const row = document.createElement('div');
+  row.className = 'article';
+  const hot = a.importance >= 8;
+  const bulletsHtml = a.bullets.length
+    ? `<ul class="article-bullets">${a.bullets.map(b => `<li>${escapeHtml(b)}</li>`).join('')}</ul>`
+    : '';
+  const sourceHtml = a.source
+    ? `<div class="article-source">Source: <a href="${escapeHtml(a.source)}" target="_blank" rel="noopener noreferrer">${escapeHtml(a.source)}</a></div>`
+    : '';
+  row.innerHTML = `
+    <input type="checkbox" class="article-check" ${a.selected ? 'checked' : ''}>
+    <span class="article-importance" data-hot="${hot}">i:${a.importance}</span>
+    <div class="article-body">
+      <p class="article-overview">${escapeHtml(a.overview)}</p>
+      ${bulletsHtml}
+      ${sourceHtml}
+    </div>
+  `;
+  row.querySelector('.article-check').addEventListener('change', () => toggleArticle(a.id));
+  return row;
+}
+
+function renderActionBar() {
+  const bar = document.getElementById('actionBar');
+  if (state.articles.length === 0) { bar.hidden = true; return; }
+  bar.hidden = false;
+  const sel = state.articles.filter(a => a.selected).length;
+  document.getElementById('selectedCount').textContent = `${sel} selected`;
+  document.getElementById('copyBtn').disabled = sel === 0;
+}
+
+function setStatus(msg) { document.getElementById('status').textContent = msg; }
+
+// ─── Actions ────────────────────────────────────────────────────────────
+function toggleDay(file) {
+  if (state.selectedDays.has(file)) state.selectedDays.delete(file);
+  else if (state.selectedDays.size < MAX_DAYS) state.selectedDays.add(file);
+  renderPicker();
+}
+function toggleArticle(id) {
+  state.articles = state.articles.map(a => a.id === id ? { ...a, selected: !a.selected } : a);
+  renderCategoryList();
+  renderActionBar();
+}
+function toggleCollapse(cat) {
+  if (state.collapsed.has(cat)) state.collapsed.delete(cat);
+  else state.collapsed.add(cat);
+  renderCategoryList();
+}
+
+async function loadSelectedDays() {
+  if (state.selectedDays.size === 0) return;
+  state.loading = true;
+  setStatus(`Loading ${state.selectedDays.size} day${state.selectedDays.size === 1 ? '' : 's'}…`);
+  renderPicker();
+  try {
+    const merged = await fetchDays([...state.selectedDays]);
+    if (merged.length === 0) {
+      state.articles = [];
+      setStatus(`Loaded ${state.selectedDays.size} day(s), but no parseable articles found.`);
+      render();
+      return;
+    }
+    const { threshold, updated } = computeAutoSelectTop50(merged);
+    state.articles = updated;
+    state.threshold = threshold;
+    state.collapsed = new Set(SORTER_CATEGORIES);   // start all collapsed for a quick scan
+    const sel = updated.filter(a => a.selected).length;
+    setStatus(`Loaded ${state.selectedDays.size} day(s) · ${merged.length} articles after dedupe · ${sel} auto-selected (importance ≥ ${threshold}).`);
+  } catch (e) {
+    setStatus(`Load failed: ${e && e.message ? e.message : String(e)}`);
+  } finally {
+    state.loading = false;
+    render();
+  }
+}
+
+function autoSelectTopAll() {
+  const { threshold, updated } = computeAutoSelectTop50(state.articles);
+  state.articles = updated;
+  state.threshold = threshold;
+  render();
+}
+function autoSelectTopPerCategory() {
+  const { threshold, updated } = computeAutoSelectTopPerCategory(state.articles, 10);
+  state.articles = updated;
+  state.threshold = threshold;
+  render();
+}
+function clearSelection() {
+  state.articles = state.articles.map(a => ({ ...a, selected: false }));
+  renderCategoryList();
+  renderActionBar();
+}
+
+function buildMdFromSelected() {
+  const selected = state.articles.filter(a => a.selected);
+  if (selected.length === 0) return '';
+  return selected.map(a => {
+    let block = `Category: ${a.originalCategory}\n`;
+    block += a.overview + '\n';
+    if (a.bullets.length) block += a.bullets.map(b => ' - ' + b).join('\n') + '\n';
+    if (a.source) block += 'Source: ' + a.source + '\n';
+    return block;
+  }).join('\n---\n\n');
+}
+
+async function copySelectionToClipboard() {
+  const md = buildMdFromSelected();
+  if (!md) return;
+  const btn = document.getElementById('copyBtn');
+  const orig = btn.textContent;
+  try {
+    await navigator.clipboard.writeText(md);
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 1800);
+  } catch {
+    btn.textContent = 'Copy failed';
+    setTimeout(() => { btn.textContent = orig; }, 2200);
+  }
+}
+
+// ─── Wire up + auto-load ────────────────────────────────────────────────
+document.getElementById('loadBtn').addEventListener('click', loadSelectedDays);
+document.getElementById('thresholdSelect').addEventListener('change', (e) => {
+  state.threshold = parseInt(e.target.value, 10) || 1;
+  renderCategoryList();
+});
+document.getElementById('topAllBtn').addEventListener('click', autoSelectTopAll);
+document.getElementById('topPerCatBtn').addEventListener('click', autoSelectTopPerCategory);
+document.getElementById('clearSelBtn').addEventListener('click', clearSelection);
+document.getElementById('copyBtn').addEventListener('click', copySelectionToClipboard);
+
+(async function init() {
+  try {
+    const idx = await fetchIndex();
+    state.availableDays = idx;
+    const newest = idx.find(e => e.bytes > 0);
+    if (!newest) {
+      setStatus(idx.length === 0 ? 'No daily updates available yet.' : `Latest day is blank — pick another day above.`);
+      render();
+      return;
+    }
+    state.selectedDays = new Set([newest.file]);
+    render();
+    await loadSelectedDays();
+  } catch (e) {
+    setStatus(`Could not load daily index: ${e && e.message ? e.message : String(e)}`);
+    render();
+  }
+})();
+</script>
+</body>
+</html>
