@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Sat, 06 Jun 2026 22:08:36 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 14 Jun 2026 19:50:23 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20260614</title>
+    <link>https://rsnake.com/report/p/rsnake-report-20260614</link>
+    <guid>https://rsnake.com/report/p/rsnake-report-20260614</guid>
+    <pubDate>Sun, 14 Jun 2026 19:50:21 GMT</pubDate>
+    <description>Uptick on strikes in Russia, Anthropic's Mythos and Fable blocked, etc</description>
+  </item>
   <item>
     <title>RSnake Report 20260606</title>
     <link>https://rsnake.com/report/p/rsnake-report-20260606</link>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/uk-ru-peace-plan-leaked-epstein-files-to-be-released</guid>
     <pubDate>Sat, 22 Nov 2025 20:36:04 GMT</pubDate>
     <description>UK/RU peace plan leaked, Epstein files to be released, etc</description>
-  </item>
-  <item>
-    <title>RSnake Report 20251115</title>
-    <link>https://rsnake.com/report/p/russian-cbr-forces-banks-to-buy-us-gov-shutdown-ended</link>
-    <guid>https://rsnake.com/report/p/russian-cbr-forces-banks-to-buy-us-gov-shutdown-ended</guid>
-    <pubDate>Sat, 15 Nov 2025 20:05:05 GMT</pubDate>
-    <description>Russian CBR forces banks to buy, US Gov shutdown ended etc...</description>
   </item>
 </channel>
 </rss>
