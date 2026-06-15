@@ -30,6 +30,13 @@
      display:block + width:100% so inline <img>s fill the column instead of
      showing at their natural width. height:auto preserves aspect ratio. */
   .rep-content img { display: block !important; width: 100% !important; max-width: 100% !important; height: auto !important; margin: 0 auto !important; }
+  /* Newsletter intro paragraphs come through as bare <div>s (from the editor's
+     textToHtml). Browser default <div> margin is 0, so without help they
+     touch each other. Old (pre-Beehiiv) issues used styled <p> tags with
+     line-height + margin and looked fine; this restores that spacing for the
+     bare-<div> output, both retro (existing posts) and forward. */
+  .rep-content > div { margin-bottom: 1em; line-height: 1.5; }
+  .rep-content > div:last-child { margin-bottom: 0; }
   h1, h2, h3 { font-weight: 700; letter-spacing: -0.012em; line-height: 1.1; margin-top: 0; }
   h1.rep-title { font-size: 2.4rem; margin-bottom: 0.5rem; }
   .rep-subtitle { font-size: 1.25rem; line-height: 1.4; color: var(--gray-800); font-weight: 400; margin: 0 0 1.25rem; font-family: 'Source Serif 4', Georgia, serif; }
