@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Sun, 05 Jul 2026 20:25:02 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 05 Jul 2026 20:25:43 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20260705</title>
+    <link>https://rsnake.com/report/p/russias-fuel-shortage-broadens-birthright-citizenship-upheld-by-scotus-etc</link>
+    <guid>https://rsnake.com/report/p/russias-fuel-shortage-broadens-birthright-citizenship-upheld-by-scotus-etc</guid>
+    <pubDate>Sun, 05 Jul 2026 20:25:41 GMT</pubDate>
+    <description>Russia's fuel shortage broadens, Birthright citizenship upheld by SCOTUS, etc.</description>
+  </item>
   <item>
     <title>RSnake Report 20260627</title>
     <link>https://rsnake.com/report/p/fauci-required-to-testify-scotus-tps-ruling-etc</link>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/return-of-the-monroe-doctrine-mass-hanukkah-shooting-in-australia</guid>
     <pubDate>Sun, 14 Dec 2025 20:05:22 GMT</pubDate>
     <description>Return of the Monroe doctrine, Mass Hanukkah Shooting in Australia, etc. </description>
-  </item>
-  <item>
-    <title>RSnake Report 20251206</title>
-    <link>https://rsnake.com/report/p/openai-ads-ccp-hypersonics-revealed</link>
-    <guid>https://rsnake.com/report/p/openai-ads-ccp-hypersonics-revealed</guid>
-    <pubDate>Sat, 06 Dec 2025 21:50:04 GMT</pubDate>
-    <description>OpenAI ads, CCP hypersonics revealed, etc</description>
   </item>
 </channel>
 </rss>
