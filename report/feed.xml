@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Fri, 10 Jul 2026 23:29:29 GMT</lastBuildDate>
+  <lastBuildDate>Sat, 11 Jul 2026 19:45:13 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20260711</title>
+    <link>https://rsnake.com/report/p/russian-dark-fleet-attacked-chinese-space-orbiter-etc</link>
+    <guid>https://rsnake.com/report/p/russian-dark-fleet-attacked-chinese-space-orbiter-etc</guid>
+    <pubDate>Sat, 11 Jul 2026 19:45:11 GMT</pubDate>
+    <description>Russian dark fleet attacked, Chinese space orbiter, etc</description>
+  </item>
   <item>
     <title>RSnake Report 20260705</title>
     <link>https://rsnake.com/report/p/russias-fuel-shortage-broadens-birthright-citizenship-upheld-by-scotus-etc</link>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/epstein-files-released-more-attacks-on-russian-dark-fleet</guid>
     <pubDate>Sat, 20 Dec 2025 19:39:28 GMT</pubDate>
     <description>Epstein files released, More attacks on Russian dark fleet, etc</description>
-  </item>
-  <item>
-    <title>RSnake Report 20251214</title>
-    <link>https://rsnake.com/report/p/return-of-the-monroe-doctrine-mass-hanukkah-shooting-in-australia</link>
-    <guid>https://rsnake.com/report/p/return-of-the-monroe-doctrine-mass-hanukkah-shooting-in-australia</guid>
-    <pubDate>Sun, 14 Dec 2025 20:05:22 GMT</pubDate>
-    <description>Return of the Monroe doctrine, Mass Hanukkah Shooting in Australia, etc. </description>
   </item>
 </channel>
 </rss>
