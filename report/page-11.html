@@ -207,7 +207,7 @@
       pending = true;
       status.textContent = 'Loading index…';
       try {
-        var res = await fetch('/report/archive.json', { cache: 'no-store' });
+        var res = await fetch('/report/archive.json');
         if (!res.ok) throw new Error('HTTP ' + res.status);
         manifest = await res.json();
         status.textContent = '';
