@@ -12,43 +12,37 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #000; --paper: #fff;
-    --gray-100: #f7f7f7; --gray-200: #e6e6e6; --gray-400: #b3b3b3;
-    --gray-600: #6b6b6b; --gray-800: #2a2a2a;
-  }
+  :root { --ink:#000; --paper:#fff; --gray-100:#f7f7f7; --gray-200:#e6e6e6; --gray-400:#b3b3b3; --gray-600:#6b6b6b; --gray-800:#2a2a2a; }
   * { box-sizing: border-box; }
   html, body { background: var(--paper); color: var(--ink); }
-  body {
-    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 16px; line-height: 1.55; margin: 0;
-    -webkit-font-smoothing: antialiased;
-  }
+  body { font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.55; margin: 0; -webkit-font-smoothing: antialiased; }
   a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
   a:hover { color: var(--gray-600); }
-
-  /* nav */
   .rep-nav { background: var(--paper); border-bottom: 1px solid var(--ink); padding: 18px 0; }
   .rep-nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
   .rep-brand { font-weight: 800; font-size: 0.85rem; letter-spacing: 0.22em; text-transform: uppercase; text-decoration: none; }
   .rep-nav-links { list-style: none; margin: 0; padding: 0; display: flex; gap: 24px; }
   .rep-nav-links a { color: var(--gray-600); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 500; text-decoration: none; }
   .rep-nav-links a:hover, .rep-nav-links a.active { color: var(--ink); font-weight: 700; }
-
-  /* layout */
   main.rep-container { max-width: 1100px; margin: 0 auto; padding: 3rem 1.25rem 5rem; }
   .rep-content { max-width: 720px; margin: 0 auto; }
-  .rep-content img { max-width: 100% !important; height: auto !important; }
-  .rep-content a { color: var(--ink); }
-
+  /* Match the email renderer's image style (buildRecipientHtml force-rule):
+     display:block + width:100% so inline <img>s fill the column instead of
+     showing at their natural width. height:auto preserves aspect ratio. */
+  .rep-content img { display: block !important; width: 100% !important; max-width: 100% !important; height: auto !important; margin: 0 auto !important; }
+  /* Newsletter intro paragraphs come through as bare <div>s (from the editor's
+     textToHtml). Browser default <div> margin is 0, so without help they
+     touch each other. Old (pre-Beehiiv) issues used styled <p> tags with
+     line-height + margin and looked fine; this restores that spacing for the
+     bare-<div> output, both retro (existing posts) and forward. */
+  .rep-content > div { margin-bottom: 1em; line-height: 1.5; }
+  .rep-content > div:last-child { margin-bottom: 0; }
   h1, h2, h3 { font-weight: 700; letter-spacing: -0.012em; line-height: 1.1; margin-top: 0; }
   h1.rep-title { font-size: 2.4rem; margin-bottom: 0.5rem; }
   .rep-subtitle { font-size: 1.25rem; line-height: 1.4; color: var(--gray-800); font-weight: 400; margin: 0 0 1.25rem; font-family: 'Source Serif 4', Georgia, serif; }
   .rep-meta { color: var(--gray-600); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 2rem; }
   .rep-back { color: var(--gray-600); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none; }
   .rep-back:hover { color: var(--ink); }
-
-  /* archive cards */
   .rep-archive-card { border-top: 1px solid var(--ink); padding: 1.5rem 0; }
   .rep-archive-card:last-child { border-bottom: 1px solid var(--ink); }
   .rep-archive-card .date { color: var(--gray-600); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 0.5rem; }
@@ -56,160 +50,230 @@
   .rep-archive-card h2 a { color: var(--ink); text-decoration: none; }
   .rep-archive-card h2 a:hover { color: var(--gray-600); }
   .rep-archive-card .excerpt { color: var(--gray-800); font-family: 'Source Serif 4', Georgia, serif; font-size: 1.05rem; line-height: 1.5; margin: 0; }
-  .rep-archive-card .cover { float: right; margin-left: 1.5rem; max-width: 160px; }
-
-  /* subscribe block */
   .rep-subscribe { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); padding: 2rem 0; margin: 3rem 0; text-align: center; }
   .rep-subscribe h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 1rem; }
   .rep-subscribe form { display: flex; gap: 0.5rem; max-width: 480px; margin: 0 auto; }
   .rep-subscribe input[type=email] { flex: 1; padding: 0.55rem 0.75rem; border: 1px solid var(--ink); border-radius: 0; font-family: inherit; font-size: 0.875rem; }
   .rep-subscribe button { background: var(--ink); color: var(--paper); border: 1px solid var(--ink); padding: 0.55rem 1.1rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; cursor: pointer; }
-  .rep-subscribe button:hover { background: var(--gray-800); }
-
-  /* pagination */
-  .rep-pager { display: flex; gap: 0; justify-content: center; padding: 2rem 0; list-style: none; margin: 0; }
-  .rep-pager a, .rep-pager span { display: inline-block; padding: 0.4rem 0.75rem; border: 1px solid var(--ink); margin-left: -1px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; color: var(--ink); }
-  .rep-pager a:hover { background: var(--ink); color: var(--paper); }
-  .rep-pager .active { background: var(--ink); color: var(--paper); }
-
-  /* footer */
   .rep-footer { background: var(--paper); border-top: 1px solid var(--ink); padding: 2.5rem 0; margin-top: 4rem; }
   .rep-footer-inner { max-width: 1100px; margin: 0 auto; padding: 0 20px; text-align: center; color: var(--gray-600); }
   .rep-footer-links { list-style: none; margin: 0 0 1rem; padding: 0; display: flex; gap: 24px; justify-content: center; }
   .rep-footer-links a { color: var(--gray-600); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none; }
-  .rep-footer-links a:hover { color: var(--ink); }
   .rep-footer p { font-size: 0.7rem; margin: 0; letter-spacing: 0.04em; }
 </style>
-<title>RSnake Report — archive</title>
+<title>RSnake Report — archive — page 7</title>
 <meta name="description" content="Geopolitical, technology, cybersecurity, and business news for people in the know.">
-<link rel="canonical" href="https://rsnake.com/report/?page=7">
+<link rel="canonical" href="https://rsnake.com/report/page-7.html">
 <link rel="alternate" type="application/rss+xml" title="RSnake Report" href="/report/feed.xml">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://rsnake.com/report/">
-<meta property="og:title" content="RSnake Report">
-<meta property="og:description" content="Geopolitical, technology, cybersecurity, and business news for people in the know.">
+<link rel="prev" href="https://rsnake.com/report/page-6.html">
+<link rel="next" href="https://rsnake.com/report/page-8.html">
+<style>
+  .rep-search-box { margin: 0 0 2rem; }
+  .rep-search-box input { width: 100%; padding: 0.65rem 0.85rem; border: 1px solid #000; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; }
+  .rep-search-box input:focus { outline: 2px solid #000; outline-offset: 2px; }
+  .rep-search-status { color: #6b6b6b; font-size: 0.78rem; margin: 0.35rem 0 0; min-height: 1em; }
+  .rep-search-status[data-empty="true"] { color: #a00; }
+  #rep-search-results { display: none; margin: 1rem 0 2rem; }
+  #rep-search-results[data-open="true"] { display: block; }
+  #rep-search-results[data-open="true"] ~ #rep-static-cards,
+  #rep-search-results[data-open="true"] ~ .rep-pager { display: none; }
+  mark.rep-hit { background: #ffec99; color: #000; padding: 0 1px; }
+  .rep-pager { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin: 3rem 0 1rem; padding: 1.25rem 0; border-top: 1px solid #000; border-bottom: 1px solid #000; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; }
+  .rep-pager a { text-decoration: none; font-weight: 600; }
+  .rep-pager a:hover { color: #6b6b6b; }
+  .rep-pager-info { color: #6b6b6b; letter-spacing: 0.08em; }
+  .rep-pager-disabled { color: #b3b3b3; }
+  @media (max-width: 560px) {
+    .rep-pager { flex-direction: column; text-align: center; gap: 0.5rem; }
+  }
+</style>
 </head>
 <body>
-<nav class="rep-nav">
-  <div class="rep-nav-inner">
-    <a class="rep-brand" href="/">RSnake</a>
-    <ul class="rep-nav-links">
-      <li><a href="/">Home</a></li>
-      <li><a href="/about.html">About</a></li>
-      <li><a href="https://youtube.com/@thersnakeshow">The RSnake Show</a></li>
-      <li><a href="/report/" class="active">Report</a></li>
-    </ul>
-  </div>
-</nav>
+<nav class="rep-nav"><div class="rep-nav-inner">
+  <a class="rep-brand" href="/">RSnake</a>
+  <ul class="rep-nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/about.html">About</a></li>
+    <li><a href="https://youtube.com/@thersnakeshow">The RSnake Show</a></li>
+    <li><a href="/report/" class="active">Report</a></li>
+  </ul>
+</div></nav>
 <main class="rep-container">
   <div style="max-width:780px;margin:0 auto;">
-    <h1 class="rep-title" style="font-size:2.8rem;margin-bottom:0.5rem;">RSnake Report</h1>
+    <h1 class="rep-title" style="font-size:2.8rem;">RSnake Report</h1>
     <p class="rep-subtitle">Geopolitical, technology, cybersecurity, and business news for people in the know.</p>
-    <div class="rep-subscribe" style="text-align:left;margin:1.5rem 0 3rem;border-top:none;border-bottom:1px solid var(--ink);padding:0 0 2rem;">
+    <div class="rep-subscribe" style="text-align:left;margin:1.5rem 0 3rem;border-top:none;padding:0 0 2rem;">
       <form action="https://rsnake.com/api/subscribe" method="post" style="margin:0;">
         <input type="email" name="email" placeholder="you@example.com" required>
         <button type="submit">Subscribe</button>
       </form>
     </div>
-    <article class="rep-archive-card">
-  <img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/publication/thumbnail/55d1c8de-489c-4fe7-aa2c-a800ab0bc22c/landscape_CTC-DES-replace.png" alt="" class="cover">
+
+    <div class="rep-search-box">
+      <label for="rep-search" style="display:none;">Search issues</label>
+      <input type="search" id="rep-search" placeholder="Search all 129 issues by title or subtitle…" autocomplete="off">
+      <p class="rep-search-status" id="rep-search-status"></p>
+    </div>
+
+    <div id="rep-search-results"></div>
+
+    <div id="rep-static-cards">
+      <article class="rep-archive-card">
+  <div class="date">February 23, 2025</div>
+  <h2><a href="/report/p/russian-peace-deal-unlikely-in-short-term-new-executive-orders-etc">RSnake Report 20250223</a></h2>
+  <p class="excerpt">Russian peace deal unlikely in short term, new executive orders, etc </p>
+</article>
+<article class="rep-archive-card">
+  <div class="date">February 16, 2025</div>
+  <h2><a href="/report/p/chernobyl-attacked-and-putin-open-to-peace">RSnake Report 20250216</a></h2>
+  <p class="excerpt">Chernobyl attacked and Putin open to peace, etc.</p>
+</article>
+<article class="rep-archive-card">
+  <div class="date">February 12, 2025</div>
+  <h2><a href="/report/p/iranian-drone-ship-teardown-egypt-amassing-tanks">RSnake Report 20250212</a></h2>
+  <p class="excerpt">Iranian drone ship teardown, Egypt amassing tanks, etc.</p>
+</article>
+<article class="rep-archive-card">
+  <div class="date">February 6, 2025</div>
+  <h2><a href="/report/p/usaid-recalled-trumps-ban-on-trans-in-womens-sports">RSnake Report 20250206</a></h2>
+  <p class="excerpt">USAID recalled, Trump’s ban on trans in women’s sports, etc</p>
+</article>
+<article class="rep-archive-card">
+  <div class="date">February 2, 2025</div>
+  <h2><a href="/report/p/dei-erased-by-doge-oil-and-gas-imperiled-in-russia">RSnake Report 20250202</a></h2>
+  <p class="excerpt">DEI Erased by DOGE, Oil and Gas imperiled in Russia, etc</p>
+</article>
+<article class="rep-archive-card">
+  <div class="date">January 28, 2025</div>
+  <h2><a href="/report/p/trump-starts-deporting-deepseek-part-2">RSnake Report 20250128</a></h2>
+  <p class="excerpt">Trump starts deporting, Deepseek part 2, etc.</p>
+</article>
+<article class="rep-archive-card">
+  <div class="date">January 23, 2025</div>
+  <h2><a href="/report/p/elon-nazi-salute-clearances-removed-from-51-cia-intel-agents">20250123</a></h2>
+  <p class="excerpt">Elon Nazi salute, clearances removed from 51 CIA intel agents, etc</p>
+</article>
+<article class="rep-archive-card">
   <div class="date">January 20, 2025</div>
   <h2><a href="/report/p/inauguration-day-tiktok-unbanned">RSnake Report 20250120</a></h2>
   <p class="excerpt">Inauguration day, TikTok unbanned, etc.</p>
 </article>
 <article class="rep-archive-card">
-  <img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/publication/thumbnail/55d1c8de-489c-4fe7-aa2c-a800ab0bc22c/landscape_CTC-DES-replace.png" alt="" class="cover">
   <div class="date">January 17, 2025</div>
   <h2><a href="/report/p/palestinian-peace-deal-possible-run-on-russian-banks">RSnake Report 20250117</a></h2>
   <p class="excerpt">Palestinian peace deal, possible run on Russian banks, etc.</p>
 </article>
 <article class="rep-archive-card">
-  <img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/publication/thumbnail/55d1c8de-489c-4fe7-aa2c-a800ab0bc22c/landscape_CTC-DES-replace.png" alt="" class="cover">
   <div class="date">January 10, 2025</div>
   <h2><a href="/report/p/wagner-caught-on-us-border-sam-altman-incest-allegations">RSnake Report 20250110</a></h2>
   <p class="excerpt">Wagner caught on US border, Sam Altman incest allegations, etc.</p>
 </article>
 <article class="rep-archive-card">
-  <img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/publication/thumbnail/55d1c8de-489c-4fe7-aa2c-a800ab0bc22c/landscape_CTC-DES-replace.png" alt="" class="cover">
   <div class="date">January 6, 2025</div>
   <h2><a href="/report/p/new-base-in-kurdistan-cybertruck-explosion">RSnake Report 20250106</a></h2>
   <p class="excerpt">New base in Kurdistan, Cybertruck explosion, etc. </p>
 </article>
 <article class="rep-archive-card">
-  <img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/publication/thumbnail/55d1c8de-489c-4fe7-aa2c-a800ab0bc22c/landscape_CTC-DES-replace.png" alt="" class="cover">
   <div class="date">January 1, 2025</div>
   <h2><a href="/report/p/terrorist-attack-in-new-orleans-ukraine-stops-gasprom-pipeline">RSnake Report 20250101</a></h2>
   <p class="excerpt">Terrorist attack in New Orleans, Ukraine stops Gasprom pipeline, etc</p>
 </article>
-<article class="rep-archive-card">
-  <img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/publication/thumbnail/55d1c8de-489c-4fe7-aa2c-a800ab0bc22c/landscape_CTC-DES-replace.png" alt="" class="cover">
-  <div class="date">December 28, 2024</div>
-  <h2><a href="/report/p/syria-sues-iran-chinas-6th-generation-fighter">RSnake Report 20241228</a></h2>
-  <p class="excerpt">Syria sues Iran, China&#39;s 6th generation fighter, etc.</p>
-</article>
-<article class="rep-archive-card">
-  <img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/publication/thumbnail/55d1c8de-489c-4fe7-aa2c-a800ab0bc22c/landscape_CTC-DES-replace.png" alt="" class="cover">
-  <div class="date">December 24, 2024</div>
-  <h2><a href="/report/p/russia-switching-to-civilian-vehicles-drones-save-drones">RSnake Report 20241224</a></h2>
-  <p class="excerpt">Russia switching to civilian vehicles, Drones save drones, etc.</p>
-</article>
-<article class="rep-archive-card">
-  <img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/publication/thumbnail/55d1c8de-489c-4fe7-aa2c-a800ab0bc22c/landscape_CTC-DES-replace.png" alt="" class="cover">
-  <div class="date">December 22, 2024</div>
-  <h2><a href="/report/p/1000km-drone-strikes-in-russia-kurds-start-using-drones">RSnake Report 20241222</a></h2>
-  <p class="excerpt">1000km drone strikes in Russia, Kurds start using drones, etc</p>
-</article>
-<article class="rep-archive-card">
-  <img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/publication/thumbnail/55d1c8de-489c-4fe7-aa2c-a800ab0bc22c/landscape_CTC-DES-replace.png" alt="" class="cover">
-  <div class="date">December 20, 2024</div>
-  <h2><a href="/report/p/oil-spill-increases-israel-hits-yemen">RSnake Report 20241220</a></h2>
-  <p class="excerpt">Oil spill increases, Israel hits Yemen, etc.</p>
-</article>
-<article class="rep-archive-card">
-  <img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/publication/thumbnail/55d1c8de-489c-4fe7-aa2c-a800ab0bc22c/landscape_CTC-DES-replace.png" alt="" class="cover">
-  <div class="date">December 16, 2024</div>
-  <h2><a href="/report/p/syria-rages-on-north-korean-forces-face-ukraine-and-lose">RSnake Report 20241216</a></h2>
-  <p class="excerpt">Syria rages on, North Korean forces face Ukraine and lose, etc</p>
-</article>
-<article class="rep-archive-card">
-  <img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/publication/thumbnail/55d1c8de-489c-4fe7-aa2c-a800ab0bc22c/landscape_CTC-DES-replace.png" alt="" class="cover">
-  <div class="date">December 12, 2024</div>
-  <h2><a href="/report/p/syria-in-chaos-uhc-shooter-caught-we-think">RSnake Report 20241212</a></h2>
-  <p class="excerpt">Syria in chaos, UHC shooter caught, we think, etc.</p>
-</article>
-<article class="rep-archive-card">
-  <img src="https://beehiiv-images-production.s3.amazonaws.com/uploads/publication/thumbnail/55d1c8de-489c-4fe7-aa2c-a800ab0bc22c/landscape_CTC-DES-replace.png" alt="" class="cover">
-  <div class="date">December 8, 2024</div>
-  <h2><a href="/report/p/putis-fpv-drones-exploding-uch-ceo-assassinated">RSnake Report 20241208</a></h2>
-  <p class="excerpt">Putin&#39;s FPV drones exploding, UHC CEO assassinated, etc</p>
-</article>
-    <nav aria-label="Archive pagination"><ul class="rep-pager">
-    <li><a href="/report/?page=6">‹ Prev</a></li>
-    <li><a href="/report/">1</a></li>
-<li><a href="/report/?page=2">2</a></li>
-<li><a href="/report/?page=3">3</a></li>
-<li><a href="/report/?page=4">4</a></li>
-<li><a href="/report/?page=5">5</a></li>
-<li><a href="/report/?page=6">6</a></li>
-<li><span class="active">7</span></li>
-<li><a href="/report/?page=8">8</a></li>
-<li><a href="/report/?page=9">9</a></li>
-<li><a href="/report/?page=10">10</a></li>
-<li><a href="/report/?page=11">11</a></li>
-    <li><a href="/report/?page=8">Next ›</a></li>
-  </ul></nav>
+    </div>
+    <nav class="rep-pager" aria-label="Archive pagination">
+  <a href="/report/page-6.html" rel="prev">← Newer issues</a>
+  <span class="rep-pager-info">Page 7 of 11 · 129 issues total</span>
+  <a href="/report/page-8.html" rel="next">Older issues →</a>
+</nav>
   </div>
 </main>
-<footer class="rep-footer">
-  <div class="rep-footer-inner">
-    <ul class="rep-footer-links">
-      <li><a href="/about.html">About</a></li>
-      <li><a href="/report/">Newsletter</a></li>
-      <li><a href="https://youtube.com/@thersnakeshow">Podcast</a></li>
-    </ul>
-    <p>Copyright <span id="copy-year">2026</span>. All Rights Reserved, All Wrongs Observed.</p>
-    <script>document.getElementById('copy-year').textContent=new Date().getFullYear();</script>
-  </div>
-</footer>
+<footer class="rep-footer"><div class="rep-footer-inner">
+  <ul class="rep-footer-links">
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/report/">Newsletter</a></li>
+    <li><a href="https://youtube.com/@thersnakeshow">Podcast</a></li>
+  </ul>
+  <p>Copyright <span id="copy-year">1970</span>. All Rights Reserved, All Wrongs Observed.</p>
+  <script>document.getElementById('copy-year').textContent=new Date().getFullYear();</script>
+</div></footer>
+<script>
+  (function () {
+    var input = document.getElementById('rep-search');
+    var results = document.getElementById('rep-search-results');
+    var status = document.getElementById('rep-search-status');
+    if (!input || !results || !status) return;
+    var manifest = null;
+    var pending = false;
+    function esc(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function fmtDate(sec) {
+      var d = new Date(sec * 1000);
+      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+    function highlight(text, q) {
+      if (!q) return esc(text);
+      var idx = text.toLowerCase().indexOf(q);
+      if (idx < 0) return esc(text);
+      return esc(text.slice(0, idx)) + '<mark class="rep-hit">' + esc(text.slice(idx, idx + q.length)) + '</mark>' + esc(text.slice(idx + q.length));
+    }
+    async function ensureManifest() {
+      if (manifest || pending) return;
+      pending = true;
+      status.textContent = 'Loading index…';
+      try {
+        var res = await fetch('/report/archive.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        manifest = await res.json();
+        status.textContent = '';
+      } catch (e) {
+        status.textContent = 'Could not load search index: ' + e.message;
+        status.setAttribute('data-empty', 'true');
+      } finally {
+        pending = false;
+      }
+    }
+    function render() {
+      var raw = input.value.trim();
+      var q = raw.toLowerCase();
+      if (!q) {
+        results.removeAttribute('data-open');
+        results.innerHTML = '';
+        status.textContent = '';
+        status.removeAttribute('data-empty');
+        return;
+      }
+      if (!manifest) return;
+      var hits = manifest.filter(function (p) {
+        return (p.subject || '').toLowerCase().indexOf(q) >= 0 ||
+               (p.subtitle || '').toLowerCase().indexOf(q) >= 0;
+      });
+      status.removeAttribute('data-empty');
+      if (hits.length === 0) {
+        status.textContent = 'No issues match "' + raw + '".';
+        status.setAttribute('data-empty', 'true');
+        results.setAttribute('data-open', 'true');
+        results.innerHTML = '';
+        return;
+      }
+      status.textContent = hits.length === 1 ? '1 match' : hits.length + ' matches';
+      results.setAttribute('data-open', 'true');
+      results.innerHTML = hits.slice(0, 60).map(function (p) {
+        return '<article class="rep-archive-card">' +
+          '<div class="date">' + fmtDate(p.sent_at) + '</div>' +
+          '<h2><a href="/report/p/' + esc(p.slug) + '">' + highlight(p.subject || '', q) + '</a></h2>' +
+          (p.subtitle ? '<p class="excerpt">' + highlight(p.subtitle, q) + '</p>' : '') +
+        '</article>';
+      }).join('') + (hits.length > 60 ? '<p class="rep-search-status">Showing first 60 of ' + hits.length + ' matches — narrow your search for more.</p>' : '');
+    }
+    input.addEventListener('focus', ensureManifest);
+    input.addEventListener('input', function () {
+      ensureManifest().then(render);
+      render();
+    });
+    // Prefill from ?q=…
+    var q = new URLSearchParams(window.location.search).get('q');
+    if (q) { input.value = q; ensureManifest().then(render); }
+  })();
+</script>
 </body>
 </html>
