@@ -78,6 +78,7 @@
   #rep-search-results[data-open="true"] ~ #rep-static-cards,
   #rep-search-results[data-open="true"] ~ .rep-pager { display: none; }
   mark.rep-hit { background: #ffec99; color: #000; padding: 0 1px; }
+  .rep-body-snippet { color: var(--gray-600); font-family: 'Source Serif 4', Georgia, serif; font-size: 0.95rem; line-height: 1.5; margin: 0.35rem 0 0; font-style: italic; }
   .rep-pager { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin: 3rem 0 1rem; padding: 1.25rem 0; border-top: 1px solid #000; border-bottom: 1px solid #000; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; }
   .rep-pager a { text-decoration: none; font-weight: 600; }
   .rep-pager a:hover { color: #6b6b6b; }
@@ -111,7 +112,7 @@
 
     <div class="rep-search-box">
       <label for="rep-search" style="display:none;">Search issues</label>
-      <input type="search" id="rep-search" placeholder="Search all 129 issues by title or subtitle…" autocomplete="off">
+      <input type="search" id="rep-search" placeholder="Search all 129 issues (title, subtitle, and article text)…" autocomplete="off">
       <p class="rep-search-status" id="rep-search-status"></p>
     </div>
 
@@ -217,6 +218,30 @@
         pending = false;
       }
     }
+    // Build a snippet of body_text around the first match of q. Returns the
+    // snippet with the match wrapped in <mark>. Leading/trailing text is
+    // trimmed at word boundaries where possible, with ellipses.
+    function bodySnippet(body, q) {
+      var lower = body.toLowerCase();
+      var idx = lower.indexOf(q);
+      if (idx < 0) return '';
+      var RADIUS = 90;
+      var start = Math.max(0, idx - RADIUS);
+      var end = Math.min(body.length, idx + q.length + RADIUS);
+      // Snap to word boundary so we don't cut off mid-word.
+      if (start > 0) {
+        var sp = body.indexOf(' ', start);
+        if (sp > 0 && sp < idx) start = sp + 1;
+      }
+      if (end < body.length) {
+        var sp2 = body.lastIndexOf(' ', end);
+        if (sp2 > idx + q.length) end = sp2;
+      }
+      var pre = (start > 0 ? '…' : '') + body.slice(start, idx);
+      var hit = body.slice(idx, idx + q.length);
+      var post = body.slice(idx + q.length, end) + (end < body.length ? '…' : '');
+      return esc(pre) + '<mark class="rep-hit">' + esc(hit) + '</mark>' + esc(post);
+    }
     function render() {
       var raw = input.value.trim();
       var q = raw.toLowerCase();
@@ -228,10 +253,17 @@
         return;
       }
       if (!manifest) return;
-      var hits = manifest.filter(function (p) {
-        return (p.subject || '').toLowerCase().indexOf(q) >= 0 ||
-               (p.subtitle || '').toLowerCase().indexOf(q) >= 0;
-      });
+      var hits = [];
+      for (var i = 0; i < manifest.length; i++) {
+        var p = manifest[i];
+        var subj = (p.subject || '').toLowerCase();
+        var subt = (p.subtitle || '').toLowerCase();
+        var body = (p.body_text || '').toLowerCase();
+        var inSubj = subj.indexOf(q) >= 0;
+        var inSubt = subt.indexOf(q) >= 0;
+        var inBody = body.indexOf(q) >= 0;
+        if (inSubj || inSubt || inBody) hits.push({ p: p, inSubj: inSubj, inSubt: inSubt, inBody: inBody });
+      }
       status.removeAttribute('data-empty');
       if (hits.length === 0) {
         status.textContent = 'No issues match "' + raw + '".';
@@ -242,11 +274,22 @@
       }
       status.textContent = hits.length === 1 ? '1 match' : hits.length + ' matches';
       results.setAttribute('data-open', 'true');
-      results.innerHTML = hits.slice(0, 60).map(function (p) {
+      results.innerHTML = hits.slice(0, 60).map(function (h) {
+        var p = h.p;
+        var subjHtml = h.inSubj ? highlight(p.subject || '', q) : esc(p.subject || '');
+        var subtHtml = p.subtitle
+          ? (h.inSubt ? highlight(p.subtitle, q) : esc(p.subtitle))
+          : '';
+        // Body snippet only when the match is body-only (title/subtitle already
+        // convey what matched otherwise). Keeps the results dense.
+        var bodyHtml = (!h.inSubj && !h.inSubt && h.inBody && p.body_text)
+          ? '<p class="rep-body-snippet">' + bodySnippet(p.body_text, q) + '</p>'
+          : '';
         return '<article class="rep-archive-card">' +
           '<div class="date">' + fmtDate(p.sent_at) + '</div>' +
-          '<h2><a href="/report/p/' + esc(p.slug) + '">' + highlight(p.subject || '', q) + '</a></h2>' +
-          (p.subtitle ? '<p class="excerpt">' + highlight(p.subtitle, q) + '</p>' : '') +
+          '<h2><a href="/report/p/' + esc(p.slug) + '">' + subjHtml + '</a></h2>' +
+          (subtHtml ? '<p class="excerpt">' + subtHtml + '</p>' : '') +
+          bodyHtml +
         '</article>';
       }).join('') + (hits.length > 60 ? '<p class="rep-search-status">Showing first 60 of ' + hits.length + ' matches — narrow your search for more.</p>' : '');
     }
