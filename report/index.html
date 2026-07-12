@@ -65,6 +65,28 @@
 <meta name="description" content="Geopolitical, technology, cybersecurity, and business news for people in the know.">
 <link rel="canonical" href="https://rsnake.com/report/">
 <link rel="alternate" type="application/rss+xml" title="RSnake Report" href="/report/feed.xml">
+
+<link rel="next" href="https://rsnake.com/report/page-2.html">
+<style>
+  .rep-search-box { margin: 0 0 2rem; }
+  .rep-search-box input { width: 100%; padding: 0.65rem 0.85rem; border: 1px solid #000; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; }
+  .rep-search-box input:focus { outline: 2px solid #000; outline-offset: 2px; }
+  .rep-search-status { color: #6b6b6b; font-size: 0.78rem; margin: 0.35rem 0 0; min-height: 1em; }
+  .rep-search-status[data-empty="true"] { color: #a00; }
+  #rep-search-results { display: none; margin: 1rem 0 2rem; }
+  #rep-search-results[data-open="true"] { display: block; }
+  #rep-search-results[data-open="true"] ~ #rep-static-cards,
+  #rep-search-results[data-open="true"] ~ .rep-pager { display: none; }
+  mark.rep-hit { background: #ffec99; color: #000; padding: 0 1px; }
+  .rep-pager { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin: 3rem 0 1rem; padding: 1.25rem 0; border-top: 1px solid #000; border-bottom: 1px solid #000; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; }
+  .rep-pager a { text-decoration: none; font-weight: 600; }
+  .rep-pager a:hover { color: #6b6b6b; }
+  .rep-pager-info { color: #6b6b6b; letter-spacing: 0.08em; }
+  .rep-pager-disabled { color: #b3b3b3; }
+  @media (max-width: 560px) {
+    .rep-pager { flex-direction: column; text-align: center; gap: 0.5rem; }
+  }
+</style>
 </head>
 <body>
 <nav class="rep-nav"><div class="rep-nav-inner">
@@ -86,7 +108,17 @@
         <button type="submit">Subscribe</button>
       </form>
     </div>
-    <article class="rep-archive-card">
+
+    <div class="rep-search-box">
+      <label for="rep-search" style="display:none;">Search issues</label>
+      <input type="search" id="rep-search" placeholder="Search all 129 issues by title or subtitle…" autocomplete="off">
+      <p class="rep-search-status" id="rep-search-status"></p>
+    </div>
+
+    <div id="rep-search-results"></div>
+
+    <div id="rep-static-cards">
+      <article class="rep-archive-card">
   <div class="date">July 11, 2026</div>
   <h2><a href="/report/p/russian-dark-fleet-attacked-chinese-space-orbiter-etc">RSnake Report 20260711</a></h2>
   <p class="excerpt">Russian dark fleet attacked, Chinese space orbiter, etc</p>
@@ -94,7 +126,7 @@
 <article class="rep-archive-card">
   <div class="date">July 5, 2026</div>
   <h2><a href="/report/p/russias-fuel-shortage-broadens-birthright-citizenship-upheld-by-scotus-etc">RSnake Report 20260705</a></h2>
-  <p class="excerpt">Russia's fuel shortage broadens, Birthright citizenship upheld by SCOTUS, etc.</p>
+  <p class="excerpt">Russias fuel shortage broadens, birthright citizenship upheld by SCOTUS, etc</p>
 </article>
 <article class="rep-archive-card">
   <div class="date">June 27, 2026</div>
@@ -146,7 +178,12 @@
   <h2><a href="/report/p/assassination-attempt-against-trump-splc-indictment">RSnake Report 20260426</a></h2>
   <p class="excerpt">Assassination attempt against Trump, SPLC indictment, etc</p>
 </article>
-    <p class="rep-back" style="text-align:center;margin-top:2rem;">Showing 12 of 129 issues.</p>
+    </div>
+    <nav class="rep-pager" aria-label="Archive pagination">
+  <span class="rep-pager-disabled">← Newer issues</span>
+  <span class="rep-pager-info">Page 1 of 11 · 129 issues total</span>
+  <a href="/report/page-2.html" rel="next">Older issues →</a>
+</nav>
   </div>
 </main>
 <footer class="rep-footer"><div class="rep-footer-inner">
@@ -158,5 +195,85 @@
   <p>Copyright <span id="copy-year">1970</span>. All Rights Reserved, All Wrongs Observed.</p>
   <script>document.getElementById('copy-year').textContent=new Date().getFullYear();</script>
 </div></footer>
+<script>
+  (function () {
+    var input = document.getElementById('rep-search');
+    var results = document.getElementById('rep-search-results');
+    var status = document.getElementById('rep-search-status');
+    if (!input || !results || !status) return;
+    var manifest = null;
+    var pending = false;
+    function esc(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function fmtDate(sec) {
+      var d = new Date(sec * 1000);
+      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+    function highlight(text, q) {
+      if (!q) return esc(text);
+      var idx = text.toLowerCase().indexOf(q);
+      if (idx < 0) return esc(text);
+      return esc(text.slice(0, idx)) + '<mark class="rep-hit">' + esc(text.slice(idx, idx + q.length)) + '</mark>' + esc(text.slice(idx + q.length));
+    }
+    async function ensureManifest() {
+      if (manifest || pending) return;
+      pending = true;
+      status.textContent = 'Loading index…';
+      try {
+        var res = await fetch('/report/archive.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        manifest = await res.json();
+        status.textContent = '';
+      } catch (e) {
+        status.textContent = 'Could not load search index: ' + e.message;
+        status.setAttribute('data-empty', 'true');
+      } finally {
+        pending = false;
+      }
+    }
+    function render() {
+      var raw = input.value.trim();
+      var q = raw.toLowerCase();
+      if (!q) {
+        results.removeAttribute('data-open');
+        results.innerHTML = '';
+        status.textContent = '';
+        status.removeAttribute('data-empty');
+        return;
+      }
+      if (!manifest) return;
+      var hits = manifest.filter(function (p) {
+        return (p.subject || '').toLowerCase().indexOf(q) >= 0 ||
+               (p.subtitle || '').toLowerCase().indexOf(q) >= 0;
+      });
+      status.removeAttribute('data-empty');
+      if (hits.length === 0) {
+        status.textContent = 'No issues match "' + raw + '".';
+        status.setAttribute('data-empty', 'true');
+        results.setAttribute('data-open', 'true');
+        results.innerHTML = '';
+        return;
+      }
+      status.textContent = hits.length === 1 ? '1 match' : hits.length + ' matches';
+      results.setAttribute('data-open', 'true');
+      results.innerHTML = hits.slice(0, 60).map(function (p) {
+        return '<article class="rep-archive-card">' +
+          '<div class="date">' + fmtDate(p.sent_at) + '</div>' +
+          '<h2><a href="/report/p/' + esc(p.slug) + '">' + highlight(p.subject || '', q) + '</a></h2>' +
+          (p.subtitle ? '<p class="excerpt">' + highlight(p.subtitle, q) + '</p>' : '') +
+        '</article>';
+      }).join('') + (hits.length > 60 ? '<p class="rep-search-status">Showing first 60 of ' + hits.length + ' matches — narrow your search for more.</p>' : '');
+    }
+    input.addEventListener('focus', ensureManifest);
+    input.addEventListener('input', function () {
+      ensureManifest().then(render);
+      render();
+    });
+    // Prefill from ?q=…
+    var q = new URLSearchParams(window.location.search).get('q');
+    if (q) { input.value = q; ensureManifest().then(render); }
+  })();
+</script>
 </body>
 </html>
