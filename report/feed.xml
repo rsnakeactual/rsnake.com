@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Sat, 18 Jul 2026 19:42:21 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 26 Jul 2026 19:26:46 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20260726</title>
+    <link>https://rsnake.com/report/p/wildberry-under-attack-peace-back-on-in-iran-etc</link>
+    <guid>https://rsnake.com/report/p/wildberry-under-attack-peace-back-on-in-iran-etc</guid>
+    <pubDate>Sun, 26 Jul 2026 19:26:44 GMT</pubDate>
+    <description>Wildberry under attack, Peace back on in Iran, etc...</description>
+  </item>
   <item>
     <title>RSnake Report 20260718</title>
     <link>https://rsnake.com/report/p/more-ships-sanctioned-in-russia-us-and-iran-back-at-war-etc</link>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/maduro-captured-uae-involvement-in-somaliland-and-yemen</guid>
     <pubDate>Sat, 03 Jan 2026 21:36:40 GMT</pubDate>
     <description>Maduro captured, UAE involvement in Somaliland and Yemen, etc</description>
-  </item>
-  <item>
-    <title>RSnake Report 20251228</title>
-    <link>https://rsnake.com/report/p/maritime-seizures-the-us-holy-war</link>
-    <guid>https://rsnake.com/report/p/maritime-seizures-the-us-holy-war</guid>
-    <pubDate>Sun, 28 Dec 2025 22:09:47 GMT</pubDate>
-    <description>Maritime seizures, the US holy war, etc</description>
   </item>
 </channel>
 </rss>
