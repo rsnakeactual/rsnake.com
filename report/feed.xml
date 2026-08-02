@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Sun, 26 Jul 2026 19:26:46 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 02 Aug 2026 21:21:50 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20260802</title>
+    <link>https://rsnake.com/report/p/moscow-food-price-jumps-fauci-pleads-the-5th-etc</link>
+    <guid>https://rsnake.com/report/p/moscow-food-price-jumps-fauci-pleads-the-5th-etc</guid>
+    <pubDate>Sun, 02 Aug 2026 21:21:48 GMT</pubDate>
+    <description>Moscow food price jumps, Fauci pleads the 5th, etc.</description>
+  </item>
   <item>
     <title>RSnake Report 20260726</title>
     <link>https://rsnake.com/report/p/wildberry-under-attack-peace-back-on-in-iran-etc</link>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/iran-protests-ice-shoots-protester</guid>
     <pubDate>Sat, 10 Jan 2026 19:01:11 GMT</pubDate>
     <description>Iran protests, ICE shoots protester, etc.</description>
-  </item>
-  <item>
-    <title>RSnake Report 20260103</title>
-    <link>https://rsnake.com/report/p/maduro-captured-uae-involvement-in-somaliland-and-yemen</link>
-    <guid>https://rsnake.com/report/p/maduro-captured-uae-involvement-in-somaliland-and-yemen</guid>
-    <pubDate>Sat, 03 Jan 2026 21:36:40 GMT</pubDate>
-    <description>Maduro captured, UAE involvement in Somaliland and Yemen, etc</description>
   </item>
 </channel>
 </rss>
