@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#000; --paper:#fff; --gray-100:#f7f7f7; --gray-200:#e6e6e6; --gray-400:#b3b3b3; --gray-600:#6b6b6b; --gray-800:#2a2a2a; }
+  * { box-sizing: border-box; }
+  html, body { background: var(--paper); color: var(--ink); }
+  body { font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.55; margin: 0; -webkit-font-smoothing: antialiased; }
+  a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--gray-600); }
+  .rep-nav { background: var(--paper); border-bottom: 1px solid var(--ink); padding: 18px 0; }
+  .rep-nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+  .rep-brand { font-weight: 800; font-size: 0.85rem; letter-spacing: 0.22em; text-transform: uppercase; text-decoration: none; }
+  .rep-nav-links { list-style: none; margin: 0; padding: 0; display: flex; gap: 24px; }
+  .rep-nav-links a { color: var(--gray-600); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 500; text-decoration: none; }
+  .rep-nav-links a:hover, .rep-nav-links a.active { color: var(--ink); font-weight: 700; }
+  main.rep-container { max-width: 1100px; margin: 0 auto; padding: 3rem 1.25rem 5rem; }
+  .rep-content { max-width: 720px; margin: 0 auto; }
+  /* Match the email renderer's image style (buildRecipientHtml force-rule):
+     display:block + width:100% so inline <img>s fill the column instead of
+     showing at their natural width. height:auto preserves aspect ratio. */
+  .rep-content img { display: block !important; width: 100% !important; max-width: 100% !important; height: auto !important; margin: 0 auto !important; }
+  /* Newsletter intro paragraphs come through as bare <div>s (from the editor's
+     textToHtml). Browser default <div> margin is 0, so without help they
+     touch each other. Old (pre-Beehiiv) issues used styled <p> tags with
+     line-height + margin and looked fine; this restores that spacing for the
+     bare-<div> output, both retro (existing posts) and forward. */
+  .rep-content > div { margin-bottom: 1em; line-height: 1.5; }
+  .rep-content > div:last-child { margin-bottom: 0; }
+  h1, h2, h3 { font-weight: 700; letter-spacing: -0.012em; line-height: 1.1; margin-top: 0; }
+  h1.rep-title { font-size: 2.4rem; margin-bottom: 0.5rem; }
+  .rep-subtitle { font-size: 1.25rem; line-height: 1.4; color: var(--gray-800); font-weight: 400; margin: 0 0 1.25rem; font-family: 'Source Serif 4', Georgia, serif; }
+  .rep-meta { color: var(--gray-600); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 2rem; }
+  .rep-back { color: var(--gray-600); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none; }
+  .rep-back:hover { color: var(--ink); }
+  .rep-archive-card { border-top: 1px solid var(--ink); padding: 1.5rem 0; }
+  .rep-archive-card:last-child { border-bottom: 1px solid var(--ink); }
+  .rep-archive-card .date { color: var(--gray-600); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 0.5rem; }
+  .rep-archive-card h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .rep-archive-card h2 a { color: var(--ink); text-decoration: none; }
+  .rep-archive-card h2 a:hover { color: var(--gray-600); }
+  .rep-archive-card .excerpt { color: var(--gray-800); font-family: 'Source Serif 4', Georgia, serif; font-size: 1.05rem; line-height: 1.5; margin: 0; }
+  .rep-subscribe { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); padding: 2rem 0; margin: 3rem 0; text-align: center; }
+  .rep-subscribe h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 1rem; }
+  .rep-subscribe form { display: flex; gap: 0.5rem; max-width: 480px; margin: 0 auto; }
+  .rep-subscribe input[type=email] { flex: 1; padding: 0.55rem 0.75rem; border: 1px solid var(--ink); border-radius: 0; font-family: inherit; font-size: 0.875rem; }
+  .rep-subscribe button { background: var(--ink); color: var(--paper); border: 1px solid var(--ink); padding: 0.55rem 1.1rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; cursor: pointer; }
+  .rep-footer { background: var(--paper); border-top: 1px solid var(--ink); padding: 2.5rem 0; margin-top: 4rem; }
+  .rep-footer-inner { max-width: 1100px; margin: 0 auto; padding: 0 20px; text-align: center; color: var(--gray-600); }
+  .rep-footer-links { list-style: none; margin: 0 0 1rem; padding: 0; display: flex; gap: 24px; justify-content: center; }
+  .rep-footer-links a { color: var(--gray-600); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none; }
+  .rep-footer p { font-size: 0.7rem; margin: 0; letter-spacing: 0.04em; }
+</style>
+<title>RSnake Report — archive — page 12</title>
+<meta name="description" content="Geopolitical, technology, cybersecurity, and business news for people in the know.">
+<link rel="canonical" href="https://rsnake.com/report/page-12.html">
+<link rel="alternate" type="application/rss+xml" title="RSnake Report" href="/report/feed.xml">
+<link rel="prev" href="https://rsnake.com/report/page-11.html">
+
+<style>
+  .rep-search-box { margin: 0 0 2rem; }
+  .rep-search-box input { width: 100%; padding: 0.65rem 0.85rem; border: 1px solid #000; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; }
+  .rep-search-box input:focus { outline: 2px solid #000; outline-offset: 2px; }
+  .rep-search-status { color: #6b6b6b; font-size: 0.78rem; margin: 0.35rem 0 0; min-height: 1em; }
+  .rep-search-status[data-empty="true"] { color: #a00; }
+  #rep-search-results { display: none; margin: 1rem 0 2rem; }
+  #rep-search-results[data-open="true"] { display: block; }
+  #rep-search-results[data-open="true"] ~ #rep-static-cards,
+  #rep-search-results[data-open="true"] ~ .rep-pager { display: none; }
+  mark.rep-hit { background: #ffec99; color: #000; padding: 0 1px; }
+  .rep-body-snippet { color: var(--gray-600); font-family: 'Source Serif 4', Georgia, serif; font-size: 0.95rem; line-height: 1.5; margin: 0.35rem 0 0; font-style: italic; }
+  .rep-pager { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin: 3rem 0 1rem; padding: 1.25rem 0; border-top: 1px solid #000; border-bottom: 1px solid #000; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; }
+  .rep-pager a { text-decoration: none; font-weight: 600; }
+  .rep-pager a:hover { color: #6b6b6b; }
+  .rep-pager-info { color: #6b6b6b; letter-spacing: 0.08em; }
+  .rep-pager-disabled { color: #b3b3b3; }
+  @media (max-width: 560px) {
+    .rep-pager { flex-direction: column; text-align: center; gap: 0.5rem; }
+  }
+</style>
+</head>
+<body>
+<nav class="rep-nav"><div class="rep-nav-inner">
+  <a class="rep-brand" href="/">RSnake</a>
+  <ul class="rep-nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/about.html">About</a></li>
+    <li><a href="https://youtube.com/@thersnakeshow">The RSnake Show</a></li>
+    <li><a href="/report/" class="active">Report</a></li>
+  </ul>
+</div></nav>
+<main class="rep-container">
+  <div style="max-width:780px;margin:0 auto;">
+    <h1 class="rep-title" style="font-size:2.8rem;">RSnake Report</h1>
+    <p class="rep-subtitle">Geopolitical, technology, cybersecurity, and business news for people in the know.</p>
+    <div class="rep-subscribe" style="text-align:left;margin:1.5rem 0 3rem;border-top:none;padding:0 0 2rem;">
+      <form action="https://rsnake.com/api/subscribe" method="post" style="margin:0;">
+        <input type="email" name="email" placeholder="you@example.com" required>
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+
+    <div class="rep-search-box">
+      <label for="rep-search" style="display:none;">Search issues</label>
+      <input type="search" id="rep-search" placeholder="Search all 133 issues (title, subtitle, and article text)…" autocomplete="off">
+      <p class="rep-search-status" id="rep-search-status"></p>
+    </div>
+
+    <div id="rep-search-results"></div>
+
+    <div id="rep-static-cards">
+      <article class="rep-archive-card">
+  <div class="date">July 30, 2024</div>
+  <h2><a href="/report/p/rsnake-report-20240730">RSnake Report 20240730</a></h2>
+  <p class="excerpt">Hello world!</p>
+</article>
+    </div>
+    <nav class="rep-pager" aria-label="Archive pagination">
+  <a href="/report/page-11.html" rel="prev">← Newer issues</a>
+  <span class="rep-pager-info">Page 12 of 12 · 133 issues total</span>
+  <span class="rep-pager-disabled">Older issues →</span>
+</nav>
+  </div>
+</main>
+<footer class="rep-footer"><div class="rep-footer-inner">
+  <ul class="rep-footer-links">
+    <li><a href="/about.html">About</a></li>
+    <li><a href="/report/">Newsletter</a></li>
+    <li><a href="https://youtube.com/@thersnakeshow">Podcast</a></li>
+  </ul>
+  <p>Copyright <span id="copy-year">1970</span>. All Rights Reserved, All Wrongs Observed.</p>
+  <script>document.getElementById('copy-year').textContent=new Date().getFullYear();</script>
+</div></footer>
+<script>
+  (function () {
+    var input = document.getElementById('rep-search');
+    var results = document.getElementById('rep-search-results');
+    var status = document.getElementById('rep-search-status');
+    if (!input || !results || !status) return;
+    var manifest = null;
+    var pending = false;
+    function esc(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function fmtDate(sec) {
+      var d = new Date(sec * 1000);
+      return d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+    function highlight(text, q) {
+      if (!q) return esc(text);
+      var idx = text.toLowerCase().indexOf(q);
+      if (idx < 0) return esc(text);
+      return esc(text.slice(0, idx)) + '<mark class="rep-hit">' + esc(text.slice(idx, idx + q.length)) + '</mark>' + esc(text.slice(idx + q.length));
+    }
+    async function ensureManifest() {
+      if (manifest || pending) return;
+      pending = true;
+      status.textContent = 'Loading index…';
+      try {
+        var res = await fetch('/report/archive.json');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        manifest = await res.json();
+        status.textContent = '';
+      } catch (e) {
+        status.textContent = 'Could not load search index: ' + e.message;
+        status.setAttribute('data-empty', 'true');
+      } finally {
+        pending = false;
+      }
+    }
+    // Build a snippet of body_text around the first match of q. Returns the
+    // snippet with the match wrapped in <mark>. Leading/trailing text is
+    // trimmed at word boundaries where possible, with ellipses.
+    function bodySnippet(body, q) {
+      var lower = body.toLowerCase();
+      var idx = lower.indexOf(q);
+      if (idx < 0) return '';
+      var RADIUS = 90;
+      var start = Math.max(0, idx - RADIUS);
+      var end = Math.min(body.length, idx + q.length + RADIUS);
+      // Snap to word boundary so we don't cut off mid-word.
+      if (start > 0) {
+        var sp = body.indexOf(' ', start);
+        if (sp > 0 && sp < idx) start = sp + 1;
+      }
+      if (end < body.length) {
+        var sp2 = body.lastIndexOf(' ', end);
+        if (sp2 > idx + q.length) end = sp2;
+      }
+      var pre = (start > 0 ? '…' : '') + body.slice(start, idx);
+      var hit = body.slice(idx, idx + q.length);
+      var post = body.slice(idx + q.length, end) + (end < body.length ? '…' : '');
+      return esc(pre) + '<mark class="rep-hit">' + esc(hit) + '</mark>' + esc(post);
+    }
+    function render() {
+      var raw = input.value.trim();
+      var q = raw.toLowerCase();
+      if (!q) {
+        results.removeAttribute('data-open');
+        results.innerHTML = '';
+        status.textContent = '';
+        status.removeAttribute('data-empty');
+        return;
+      }
+      if (!manifest) return;
+      var hits = [];
+      for (var i = 0; i < manifest.length; i++) {
+        var p = manifest[i];
+        var subj = (p.subject || '').toLowerCase();
+        var subt = (p.subtitle || '').toLowerCase();
+        var body = (p.body_text || '').toLowerCase();
+        var inSubj = subj.indexOf(q) >= 0;
+        var inSubt = subt.indexOf(q) >= 0;
+        var inBody = body.indexOf(q) >= 0;
+        if (inSubj || inSubt || inBody) hits.push({ p: p, inSubj: inSubj, inSubt: inSubt, inBody: inBody });
+      }
+      status.removeAttribute('data-empty');
+      if (hits.length === 0) {
+        status.textContent = 'No issues match "' + raw + '".';
+        status.setAttribute('data-empty', 'true');
+        results.setAttribute('data-open', 'true');
+        results.innerHTML = '';
+        return;
+      }
+      status.textContent = hits.length === 1 ? '1 match' : hits.length + ' matches';
+      results.setAttribute('data-open', 'true');
+      results.innerHTML = hits.slice(0, 60).map(function (h) {
+        var p = h.p;
+        var subjHtml = h.inSubj ? highlight(p.subject || '', q) : esc(p.subject || '');
+        var subtHtml = p.subtitle
+          ? (h.inSubt ? highlight(p.subtitle, q) : esc(p.subtitle))
+          : '';
+        // Body snippet only when the match is body-only (title/subtitle already
+        // convey what matched otherwise). Keeps the results dense.
+        var bodyHtml = (!h.inSubj && !h.inSubt && h.inBody && p.body_text)
+          ? '<p class="rep-body-snippet">' + bodySnippet(p.body_text, q) + '</p>'
+          : '';
+        return '<article class="rep-archive-card">' +
+          '<div class="date">' + fmtDate(p.sent_at) + '</div>' +
+          '<h2><a href="/report/p/' + esc(p.slug) + '">' + subjHtml + '</a></h2>' +
+          (subtHtml ? '<p class="excerpt">' + subtHtml + '</p>' : '') +
+          bodyHtml +
+        '</article>';
+      }).join('') + (hits.length > 60 ? '<p class="rep-search-status">Showing first 60 of ' + hits.length + ' matches — narrow your search for more.</p>' : '');
+    }
+    input.addEventListener('focus', ensureManifest);
+    input.addEventListener('input', function () {
+      ensureManifest().then(render);
+      render();
+    });
+    // Prefill from ?q=…
+    var q = new URLSearchParams(window.location.search).get('q');
+    if (q) { input.value = q; ensureManifest().then(render); }
+  })();
+</script>
+</body>
+</html>
