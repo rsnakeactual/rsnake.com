@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Sat, 08 Aug 2026 20:43:33 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 16 Aug 2026 18:50:31 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20260816</title>
+    <link>https://rsnake.com/report/p/iran-issues-bounty-for-any-us-military-more-north-korean-troops-in-russia-etc</link>
+    <guid>https://rsnake.com/report/p/iran-issues-bounty-for-any-us-military-more-north-korean-troops-in-russia-etc</guid>
+    <pubDate>Sun, 16 Aug 2026 18:50:29 GMT</pubDate>
+    <description>Iran issues bounty for any US military, more North Korean troops in Russia, etc</description>
+  </item>
   <item>
     <title>RSnake Report 20260808</title>
     <link>https://rsnake.com/report/p/russian-cars-start-breaking-down-kimi-3-escapes-sandbox-etc</link>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/us-leaves-who-tehran-protests-quelled-for-now</guid>
     <pubDate>Sat, 24 Jan 2026 22:39:10 GMT</pubDate>
     <description>US leaves WHO, Tehran protests quelled for now, etc.</description>
-  </item>
-  <item>
-    <title>RSnake Report 20260118</title>
-    <link>https://rsnake.com/report/p/winter-woes-in-russia-iran-protests-slowing</link>
-    <guid>https://rsnake.com/report/p/winter-woes-in-russia-iran-protests-slowing</guid>
-    <pubDate>Sun, 18 Jan 2026 19:40:59 GMT</pubDate>
-    <description>Winter woes in Russia, Iran protests slowing, etc.</description>
   </item>
 </channel>
 </rss>
