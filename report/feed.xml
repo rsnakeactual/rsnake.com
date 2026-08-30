@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Sun, 23 Aug 2026 20:51:17 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 30 Aug 2026 19:24:24 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20260830</title>
+    <link>https://rsnake.com/report/p/new-ukrainian-shortages-shortages-in-iran-etc</link>
+    <guid>https://rsnake.com/report/p/new-ukrainian-shortages-shortages-in-iran-etc</guid>
+    <pubDate>Sun, 30 Aug 2026 19:24:21 GMT</pubDate>
+    <description>New Ukrainian shortages, shortages in Iran, etc.</description>
+  </item>
   <item>
     <title>RSnake Report 20260823</title>
     <link>https://rsnake.com/report/p/fuel-situation-worsens-in-russia-us-canada-tariff-war-kicks-off-etc</link>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/iran-s-economy-tanked-by-us-two-new-healthcare-frauds</guid>
     <pubDate>Sun, 08 Feb 2026 20:16:37 GMT</pubDate>
     <description>Iran's economy tanked by US, Two new healthcare frauds, etc.</description>
-  </item>
-  <item>
-    <title>RSnake Report 20260201</title>
-    <link>https://rsnake.com/report/p/epstein-tranche-released-minnesota-riots</link>
-    <guid>https://rsnake.com/report/p/epstein-tranche-released-minnesota-riots</guid>
-    <pubDate>Sun, 01 Feb 2026 22:32:46 GMT</pubDate>
-    <description>Epstein tranche released, Minnesota riots, etc</description>
   </item>
 </channel>
 </rss>
