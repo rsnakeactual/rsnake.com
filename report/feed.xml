@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Sun, 30 Aug 2026 19:24:24 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 06 Sep 2026 20:33:40 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20260906</title>
+    <link>https://rsnake.com/report/p/russia-set-to-mint-a-quadrillion-rubles-us-hits-iranian-oil-tankers-etc</link>
+    <guid>https://rsnake.com/report/p/russia-set-to-mint-a-quadrillion-rubles-us-hits-iranian-oil-tankers-etc</guid>
+    <pubDate>Sun, 06 Sep 2026 20:33:38 GMT</pubDate>
+    <description>Russia set to mint a quadrillion rubles, US hits Iranian oil tankers, etc</description>
+  </item>
   <item>
     <title>RSnake Report 20260830</title>
     <link>https://rsnake.com/report/p/new-ukrainian-shortages-shortages-in-iran-etc</link>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/starlink-ruse-job-numbers-talk-of-deportations</guid>
     <pubDate>Sun, 15 Feb 2026 22:47:09 GMT</pubDate>
     <description>Starlink ruse, job numbers talk of deportations, etc</description>
-  </item>
-  <item>
-    <title>RSnake Report 20260208</title>
-    <link>https://rsnake.com/report/p/iran-s-economy-tanked-by-us-two-new-healthcare-frauds</link>
-    <guid>https://rsnake.com/report/p/iran-s-economy-tanked-by-us-two-new-healthcare-frauds</guid>
-    <pubDate>Sun, 08 Feb 2026 20:16:37 GMT</pubDate>
-    <description>Iran's economy tanked by US, Two new healthcare frauds, etc.</description>
   </item>
 </channel>
 </rss>
