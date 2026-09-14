@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Mon, 07 Sep 2026 00:00:36 GMT</lastBuildDate>
+  <lastBuildDate>Mon, 14 Sep 2026 01:35:45 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20260913</title>
+    <link>https://rsnake.com/report/p/houthis-take-straight-of-bab-el-mandeb-trump-offers-5k-to-elect-republicans-etc</link>
+    <guid>https://rsnake.com/report/p/houthis-take-straight-of-bab-el-mandeb-trump-offers-5k-to-elect-republicans-etc</guid>
+    <pubDate>Mon, 14 Sep 2026 00:42:25 GMT</pubDate>
+    <description>Houthis take Straight of Bab el-Mandeb, Trump offers $5k to elect Republicans, etc.</description>
+  </item>
   <item>
     <title>RSnake Report 20260906</title>
     <link>https://rsnake.com/report/p/russia-set-to-mint-a-quadrillion-rubles-us-hits-iranian-oil-tankers-etc</link>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/trump-assassination-attempt-ccp-caught-buying-uranium</guid>
     <pubDate>Sun, 22 Feb 2026 19:21:51 GMT</pubDate>
     <description>Trump assassination attempt, CCP caught buying Uranium, etc</description>
-  </item>
-  <item>
-    <title>RSnake Report 20260215</title>
-    <link>https://rsnake.com/report/p/starlink-ruse-job-numbers-talk-of-deportations</link>
-    <guid>https://rsnake.com/report/p/starlink-ruse-job-numbers-talk-of-deportations</guid>
-    <pubDate>Sun, 15 Feb 2026 22:47:09 GMT</pubDate>
-    <description>Starlink ruse, job numbers talk of deportations, etc</description>
   </item>
 </channel>
 </rss>
