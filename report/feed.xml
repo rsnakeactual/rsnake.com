@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Mon, 14 Sep 2026 01:35:45 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 20 Sep 2026 13:05:16 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20260920</title>
+    <link>https://rsnake.com/report/p/moscow-refinery-hit-saudi-arabia-seeks-help-against-houthis-etc</link>
+    <guid>https://rsnake.com/report/p/moscow-refinery-hit-saudi-arabia-seeks-help-against-houthis-etc</guid>
+    <pubDate>Sun, 20 Sep 2026 13:05:11 GMT</pubDate>
+    <description>Moscow refinery hit, Saudi Arabia seeks help against Houthis, etc</description>
+  </item>
   <item>
     <title>RSnake Report 20260913</title>
     <link>https://rsnake.com/report/p/houthis-take-straight-of-bab-el-mandeb-trump-offers-5k-to-elect-republicans-etc</link>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/iran-attacked-by-us-and-israel-cartels-attack-mexico</guid>
     <pubDate>Sun, 01 Mar 2026 03:18:13 GMT</pubDate>
     <description>Iran attacked by US and Israel, Cartels attack Mexico, etc</description>
-  </item>
-  <item>
-    <title>RSnake Report 20260221</title>
-    <link>https://rsnake.com/report/p/trump-assassination-attempt-ccp-caught-buying-uranium</link>
-    <guid>https://rsnake.com/report/p/trump-assassination-attempt-ccp-caught-buying-uranium</guid>
-    <pubDate>Sun, 22 Feb 2026 19:21:51 GMT</pubDate>
-    <description>Trump assassination attempt, CCP caught buying Uranium, etc</description>
   </item>
 </channel>
 </rss>
