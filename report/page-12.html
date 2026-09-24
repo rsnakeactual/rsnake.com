@@ -106,6 +106,7 @@
     <div class="rep-subscribe" style="text-align:left;margin:1.5rem 0 3rem;border-top:none;padding:0 0 2rem;">
       <form action="https://rsnake.com/api/subscribe" method="post" style="margin:0;">
         <input type="email" name="email" placeholder="you@example.com" required>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFB91HwlWcZKQOMA" data-theme="auto"></div>
         <button type="submit">Subscribe</button>
       </form>
     </div>
@@ -293,5 +294,6 @@
     if (q) { input.value = q; ensureManifest().then(render); }
   })();
 </script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </body>
 </html>

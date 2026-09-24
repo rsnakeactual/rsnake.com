@@ -360,6 +360,7 @@
       <h3>Subscribe to RSnake Report</h3>
       <form action="https://rsnake.com/api/subscribe" method="post">
         <input type="email" name="email" placeholder="you@example.com" required>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFB91HwlWcZKQOMA" data-theme="auto"></div>
         <button type="submit">Subscribe</button>
       </form>
     </div>
@@ -376,5 +377,6 @@
     <script>document.getElementById('copy-year').textContent=new Date().getFullYear();</script>
   </div>
 </footer>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </body>
 </html>
