@@ -42,7 +42,10 @@
   .rep-archive-card .excerpt { color: var(--gray-800); font-family: 'Source Serif 4', Georgia, serif; font-size: 1.05rem; line-height: 1.5; margin: 0; }
   .rep-subscribe { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); padding: 2rem 0; margin: 3rem 0; text-align: center; }
   .rep-subscribe h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 1rem; }
-  .rep-subscribe form { display: flex; gap: 0.5rem; max-width: 480px; margin: 0 auto; }
+  .rep-subscribe form { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.5rem; max-width: 480px; margin: 0 auto; }
+  .rep-subscribe input[type=email] { order: 1; }
+  .rep-subscribe button { order: 2; }
+  .rep-subscribe .cf-turnstile { order: 3; flex: 0 0 100%; display: flex; justify-content: center; margin-top: 0.25rem; }
   .rep-subscribe input[type=email] { flex: 1; padding: 0.55rem 0.75rem; border: 1px solid var(--ink); border-radius: 0; font-family: inherit; font-size: 0.875rem; }
   .rep-subscribe button { background: var(--ink); color: var(--paper); border: 1px solid var(--ink); padding: 0.55rem 1.1rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; cursor: pointer; }
   .rep-footer { background: var(--paper); border-top: 1px solid var(--ink); padding: 2.5rem 0; margin-top: 4rem; }
