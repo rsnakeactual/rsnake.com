@@ -1,2 +1,37 @@
+# robots.txt for rsnake.com
+
+# Global rules
+# -----------------
 User-agent: *
-Allow:
+# Admin and API endpoints: nothing to index there.
+Disallow: /admin
+Disallow: /api/
+
+# Prevent crawling Cloudflare challenge URLs
+Disallow: /cdn-cgi/bm/cv/
+Disallow: /cdn-cgi/challenge-platform/
+
+# Sitemap
+# -----------------
+# Both are regenerated automatically whenever a new RSnake Report is
+# published, in the same commit that adds the issue page.
+Sitemap: https://rsnake.com/sitemap.xml
+Schemamap: https://rsnake.com/schemamap.xml
+
+# Ban bots that don't benefit this site.
+# --------------------------------
+
+User-agent: Nuclei
+User-agent: WikiDo
+User-agent: Riddler
+User-agent: PetalBot
+User-agent: Zoominfobot
+User-agent: Go-http-client
+User-agent: Node/simplecrawler
+User-agent: CazoodleBot
+User-agent: dotbot/1.0
+User-agent: Gigabot
+User-agent: Barkrowler
+User-agent: BLEXBot
+User-agent: magpie-crawler
+Disallow: /
