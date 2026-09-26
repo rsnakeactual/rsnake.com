@@ -1,304 +1,1827 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" class="no-js">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="RSnake.com - Interesting discussions with people in the know. All rights reserved. All wrongs observed.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RSnake / Robert Hansen</title>
+<meta name="description" content="Robert 'RSnake' Hansen. Security research, venture investing, and a weekly intelligence report read by people in the know.">
+<meta name="theme-color" content="#08080E">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://rsnake.com/">
 
-    <!-- Open Graph / Social Media Meta Tags -->
-    <meta property="og:locale" content="en_US">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="RSnake.com">
-    <meta property="og:description" content="Interesting discussions with people in the know. All rights reserved. All wrongs observed.">
-    <meta property="og:url" content="https://rsnake.com/">
-    <meta property="og:site_name" content="RSnake.com">
-    
-    <!-- Twitter Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@rsnake">
-    
-    <title>RSnake.com - faster ideation</title>
-    
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/styles/main.css">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="RSnake / Robert Hansen">
+<meta property="og:description" content="Security research, venture investing, and a weekly intelligence report.">
+<meta property="og:url" content="https://rsnake.com/">
+<meta name="twitter:card" content="summary_large_image">
+
+<style>
+/* tokens */
+:root{
+  --bg:#08080E;
+  --bg-2:#0D0D16;
+  --line:rgba(255,255,255,.09);
+  --line-2:rgba(255,255,255,.16);
+  --ink:#F4F4F8;
+  --muted:#9492BA;
+  --dim:#6A688C;
+  --signal:#5BE9C3;
+  --violet:#B08CFF;
+  --pad:clamp(20px,5vw,64px);
+  --maxw:1180px;
+  --r:2px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;overflow-x:clip;scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font:400 16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-feature-settings:"kern" 1,"liga" 1;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.02em;line-height:1.05}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;height:auto;display:block}
+::selection{background:var(--signal);color:#04120D}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:var(--r)}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--pad)}
+.eyebrow{
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dim);font-weight:600;margin:0 0 18px;
+  display:flex;align-items:center;gap:10px;
+}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--line-2)}
+
+/* top bar */
+.bar{
+  position:sticky;top:0;z-index:40;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  background:color-mix(in srgb,var(--bg) 78%,transparent);
+  border-bottom:1px solid var(--line);
+}
+.bar-in{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.03em;font-size:17px}
+.brand svg{width:22px;height:22px;flex:none}
+/* The mark is a travelling sine. Five periods are drawn and exactly one
+   period is travelled, so the loop has no seam. transform-box makes the
+   translate resolve in user units rather than the element's own bbox. */
+#brand-wave{
+  animation:k-brandwave 7s linear infinite;
+  transform-box:view-box;transform-origin:0 0;
+}
+@keyframes k-brandwave{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(12px)}
+}
+.nav{display:flex;gap:28px;font-size:13.5px;color:var(--muted);min-width:0;flex-shrink:1}
+.nav a{position:relative;padding:4px 0;transition:color .18s}
+.nav a::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--signal);
+  transform:scaleX(0);transform-origin:left;transition:transform .28s cubic-bezier(.2,.8,.2,1);
+}
+.nav a:hover{color:var(--ink)}
+.nav a:hover::after{transform:scaleX(1)}
+@media(max-width:820px){.nav{gap:20px;font-size:13px}.nav .hide-s{display:none}}
+@media(max-width:480px){.nav{gap:16px;font-size:12.5px}.nav .hide-xs{display:none}}
+
+/* hero */
+.hero{position:relative;min-height:clamp(600px,90svh,900px);display:flex;align-items:center;isolation:isolate}
+.hero-canvas{
+  position:absolute;inset:0;z-index:-1;overflow:hidden;
+  mask-image:radial-gradient(125% 95% at 64% 46%,#000 34%,transparent 80%);
+  -webkit-mask-image:radial-gradient(125% 95% at 64% 46%,#000 34%,transparent 80%);
+}
+.hero-canvas svg{width:100%;height:100%;display:block}
+.hero-in{position:relative;width:100%}
+.hero h1{font-size:clamp(38px,8.1vw,96px);letter-spacing:-.045em;margin:0 0 22px;max-width:16ch}
+.hero h1 .accent{
+  background:linear-gradient(100deg,var(--signal),var(--violet) 70%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.lede{font-size:clamp(15.5px,2.1vw,20px);color:var(--muted);max-width:54ch;margin:0 0 34px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;padding:13px 22px;border-radius:var(--r);
+  font-size:14px;font-weight:600;letter-spacing:.01em;border:1px solid var(--line-2);
+  transition:transform .2s cubic-bezier(.2,.8,.2,1),background .2s,border-color .2s,color .2s;
+}
+.btn-primary{background:var(--ink);color:#08080E;border-color:var(--ink)}
+.btn-primary:hover{transform:translateY(-2px);background:var(--signal);border-color:var(--signal)}
+.btn-ghost{color:var(--muted)}
+.btn-ghost:hover{transform:translateY(-2px);color:var(--ink);border-color:var(--line-2);background:rgba(255,255,255,.04)}
+.btn svg{width:14px;height:14px;transition:transform .2s}
+.btn:hover svg{transform:translateX(3px)}
+.scroll-hint{
+  position:absolute;cursor:pointer;transition:color .2s;
+  left:var(--pad);bottom:26px;font-size:10.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:10px;
+}
+.scroll-hint:hover{color:var(--ink)}
+.scroll-hint i{display:block;width:1px;height:26px;background:linear-gradient(var(--line-2),transparent);animation:drip 2.6s ease-in-out infinite}
+@keyframes drip{0%,100%{transform:scaleY(.4);opacity:.4;transform-origin:top}50%{transform:scaleY(1);opacity:1;transform-origin:top}}
+
+/* Two rules:
+   1. EVERY animation ends with an explicit 100% keyframe. A keyframe set that
+      stops early holds its last value for the rest of the loop, which is how
+      all eleven scenes ended up painted on top of each other at the end.
+   2. Any property that should be invisible until its beat gets a hold frame
+      immediately before that beat. Without one it ramps from 0% and is
+      half-visible for the whole preceding minute.
+   Stagger comes from negative delays, which must be re-based whenever the
+   period changes: delay = -(period) + offset. */
+.seq{animation-duration:41.25s;animation-iteration-count:infinite;animation-fill-mode:both}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+#hud{animation-name:k-hud}
+@keyframes k-hud{
+  0%{opacity:0;transform:translateY(6px)}
+  0.9%{animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  2.4%{opacity:1;transform:translateY(0)}
+  97.8%{opacity:1;transform:translateY(0)}
+  100%{opacity:0;transform:translateY(-4px)}
+}
+#hud-rule{animation-name:k-rule}
+@keyframes k-rule{
+  0%,1.2%{transform:scaleX(0)}
+  1.8%{animation-timing-function:cubic-bezier(.65,0,.2,1)}
+  4.8%{transform:scaleX(1)}
+  100%{transform:scaleX(1)}
+}
+#s1,#s1-t{animation-name:k-s1}
+@keyframes k-s1{
+  0%{opacity:0}
+  0%{opacity:0}
+  0.848%{opacity:1}
+  8.242%{opacity:1}
+  9.091%{opacity:0}
+  100%{opacity:0}
+}
+#s2,#s2-t{animation-name:k-s2}
+@keyframes k-s2{
+  0%{opacity:0}
+  8.891%{opacity:0}
+  9.939%{opacity:1}
+  17.333%{opacity:1}
+  18.182%{opacity:0}
+  100%{opacity:0}
+}
+#s3,#s3-t{animation-name:k-s3}
+@keyframes k-s3{
+  0%{opacity:0}
+  17.982%{opacity:0}
+  19.03%{opacity:1}
+  26.424%{opacity:1}
+  27.273%{opacity:0}
+  100%{opacity:0}
+}
+#s4,#s4-t{animation-name:k-s4}
+@keyframes k-s4{
+  0%{opacity:0}
+  27.073%{opacity:0}
+  28.121%{opacity:1}
+  35.515%{opacity:1}
+  36.364%{opacity:0}
+  100%{opacity:0}
+}
+#s5,#s5-t{animation-name:k-s5}
+@keyframes k-s5{
+  0%{opacity:0}
+  36.163999999999994%{opacity:0}
+  37.212%{opacity:1}
+  44.606%{opacity:1}
+  45.455%{opacity:0}
+  100%{opacity:0}
+}
+#s6,#s6-t{animation-name:k-s6}
+@keyframes k-s6{
+  0%{opacity:0}
+  45.254999999999995%{opacity:0}
+  46.303%{opacity:1}
+  53.697%{opacity:1}
+  54.545%{opacity:0}
+  100%{opacity:0}
+}
+#s7,#s7-t{animation-name:k-s7}
+@keyframes k-s7{
+  0%{opacity:0}
+  54.345%{opacity:0}
+  55.394%{opacity:1}
+  62.788%{opacity:1}
+  63.636%{opacity:0}
+  100%{opacity:0}
+}
+#s8,#s8-t{animation-name:k-s8}
+@keyframes k-s8{
+  0%{opacity:0}
+  63.436%{opacity:0}
+  64.485%{opacity:1}
+  71.879%{opacity:1}
+  72.727%{opacity:0}
+  100%{opacity:0}
+}
+#s9,#s9-t{animation-name:k-s9}
+@keyframes k-s9{
+  0%{opacity:0}
+  72.527%{opacity:0}
+  73.576%{opacity:1}
+  80.97%{opacity:1}
+  81.818%{opacity:0}
+  100%{opacity:0}
+}
+#s10,#s10-t{animation-name:k-s10}
+@keyframes k-s10{
+  0%{opacity:0}
+  81.618%{opacity:0}
+  82.667%{opacity:1}
+  90.061%{opacity:1}
+  90.909%{opacity:0}
+  100%{opacity:0}
+}
+#s11,#s11-t{animation-name:k-s11}
+@keyframes k-s11{
+  0%{opacity:0}
+  90.709%{opacity:0}
+  91.758%{opacity:1}
+  99.152%{opacity:1}
+  100.0%{opacity:0}
+  100%{opacity:0}
+}
+#c0{animation-name:k-c0}
+@keyframes k-c0{
+  0%{opacity:0}
+  5.939%{opacity:0}
+  6.788%{opacity:1}
+  11.03%{opacity:1}
+  12.121%{opacity:0}
+  100%{opacity:0}
+}
+#c1{animation-name:k-c1}
+@keyframes k-c1{
+  0%{opacity:0}
+  15.03%{opacity:0}
+  15.879%{opacity:1}
+  20.121%{opacity:1}
+  21.212%{opacity:0}
+  100%{opacity:0}
+}
+#c2{animation-name:k-c2}
+@keyframes k-c2{
+  0%{opacity:0}
+  24.121%{opacity:0}
+  24.97%{opacity:1}
+  29.212%{opacity:1}
+  30.303%{opacity:0}
+  100%{opacity:0}
+}
+#c3{animation-name:k-c3}
+@keyframes k-c3{
+  0%{opacity:0}
+  33.212%{opacity:0}
+  34.061%{opacity:1}
+  38.303%{opacity:1}
+  39.394%{opacity:0}
+  100%{opacity:0}
+}
+#c4{animation-name:k-c4}
+@keyframes k-c4{
+  0%{opacity:0}
+  42.303%{opacity:0}
+  43.152%{opacity:1}
+  47.394%{opacity:1}
+  48.485%{opacity:0}
+  100%{opacity:0}
+}
+#c5{animation-name:k-c5}
+@keyframes k-c5{
+  0%{opacity:0}
+  51.394%{opacity:0}
+  52.242%{opacity:1}
+  56.485%{opacity:1}
+  57.576%{opacity:0}
+  100%{opacity:0}
+}
+#c6{animation-name:k-c6}
+@keyframes k-c6{
+  0%{opacity:0}
+  60.485%{opacity:0}
+  61.333%{opacity:1}
+  65.576%{opacity:1}
+  66.667%{opacity:0}
+  100%{opacity:0}
+}
+#c7{animation-name:k-c7}
+@keyframes k-c7{
+  0%{opacity:0}
+  69.576%{opacity:0}
+  70.424%{opacity:1}
+  74.667%{opacity:1}
+  75.758%{opacity:0}
+  100%{opacity:0}
+}
+#c8{animation-name:k-c8}
+@keyframes k-c8{
+  0%{opacity:0}
+  78.667%{opacity:0}
+  79.515%{opacity:1}
+  83.758%{opacity:1}
+  84.848%{opacity:0}
+  100%{opacity:0}
+}
+#c9{animation-name:k-c9}
+@keyframes k-c9{
+  0%{opacity:0}
+  87.758%{opacity:0}
+  88.606%{opacity:1}
+  92.848%{opacity:1}
+  93.939%{opacity:0}
+  100%{opacity:0}
+}
+.cmd{animation-name:k-cmd}
+@keyframes k-cmd{
+  0%{clip-path:inset(0 100% 0 0)}
+  0.97%{clip-path:inset(0 100% 0 0);animation-timing-function:steps(27,end)}
+  5.333%{clip-path:inset(0 0 0 0)}
+  100%{clip-path:inset(0 0 0 0)}
+}
+#caret{animation-name:k-caret-x,k-caret-blink;animation-duration:41.25s,1.06s;
+       animation-iteration-count:infinite,infinite;animation-fill-mode:both,none}
+@keyframes k-caret-x{
+  0%,0.97%{transform:translateX(0);opacity:1}
+  0.994%{transform:translateX(0);animation-timing-function:steps(27,end)}
+  5.333%{transform:translateX(170.69px)}
+  8.242%{transform:translateX(170.69px);opacity:1}
+  9.091%{transform:translateX(170.69px);opacity:0}
+  100%{transform:translateX(170.69px);opacity:0}
+}
+@keyframes k-caret-blink{0%,54%{opacity:1}55%,100%{opacity:.15}}
+.host{animation-name:k-host}
+@keyframes k-host{
+  0%{opacity:0;transform:translateX(-6px)}
+  5.333%{opacity:0;transform:translateX(-6px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  6.667%{opacity:1;transform:translateX(0)}
+  8.242%{opacity:1}
+  9.091%{opacity:0}
+  100%{opacity:0}
+}
+#sweep{animation-name:k-sweep}
+@keyframes k-sweep{
+  0%{transform:rotate(0deg)}
+  9.697%{transform:rotate(0deg);animation-timing-function:linear}
+  17.455%{transform:rotate(540deg)}
+  100%{transform:rotate(540deg)}
+}
+.blip{animation-name:k-blip}
+@keyframes k-blip{
+  0%{opacity:0;transform:scale(.2)}
+  10.667%{opacity:0;transform:scale(.2);animation-timing-function:cubic-bezier(.16,1.5,.3,1)}
+  12.0%{opacity:1;transform:scale(1)}
+  17.333%{opacity:.85;transform:scale(1)}
+  18.182%{opacity:0}
+  100%{opacity:0}
+}
+.ring-r{animation-name:k-ringr}
+@keyframes k-ringr{
+  0%{opacity:0;transform:scale(.3)}
+  10.545%{opacity:0;transform:scale(.3)}
+  10.788%{opacity:.5;animation-timing-function:cubic-bezier(.2,.7,.3,1)}
+  14.182%{opacity:0;transform:scale(1)}
+  100%{opacity:0;transform:scale(1)}
+}
+.gedge{animation-name:k-gedge}
+@keyframes k-gedge{
+  0%{stroke-dashoffset:1}
+  19.03%{stroke-dashoffset:1;animation-timing-function:cubic-bezier(.65,0,.2,1)}
+  21.697%{stroke-dashoffset:0}
+  100%{stroke-dashoffset:0}
+}
+.gnode{animation-name:k-gnode}
+@keyframes k-gnode{
+  0%{opacity:0;transform:scale(0)}
+  18.861%{opacity:0;transform:scale(0);animation-timing-function:cubic-bezier(.16,1.55,.3,1)}
+  20.242%{opacity:1;transform:scale(1.3)}
+  20.97%{opacity:1;transform:scale(1)}
+  27.273%{opacity:1;transform:scale(1)}
+  100%{opacity:1;transform:scale(1)}
+}
+#gpath{animation-name:k-gpath}
+@keyframes k-gpath{
+  0%{stroke-dashoffset:1;opacity:0}
+  23.394%{stroke-dashoffset:1;opacity:0}
+  23.636%{stroke-dashoffset:1;opacity:1;animation-timing-function:cubic-bezier(.7,0,.2,1)}
+  25.818%{stroke-dashoffset:0;opacity:1}
+  100%{stroke-dashoffset:0;opacity:1}
+}
+#gpwn{animation-name:k-gpwn}
+@keyframes k-gpwn{
+  0%{opacity:0;transform:scale(.4)}
+  25.576%{opacity:0;transform:scale(.4);animation-timing-function:cubic-bezier(.16,1.55,.3,1)}
+  26.545%{opacity:1;transform:scale(1)}
+  100%{opacity:1;transform:scale(1)}
+}
+.sock{animation-name:k-sock}
+@keyframes k-sock{
+  0%{stroke-dashoffset:1;opacity:0}
+  28.0%{stroke-dashoffset:1;opacity:0}
+  28.242%{stroke-dashoffset:1;opacity:.9;animation-timing-function:cubic-bezier(.6,0,.3,1)}
+  31.152%{stroke-dashoffset:0;opacity:.9}
+  100%{stroke-dashoffset:0;opacity:.9}
+}
+#srv{animation-name:k-srv}
+@keyframes k-srv{
+  0%{stroke:#5BE9C3}
+  32.606%{stroke:#5BE9C3}
+  34.788%{stroke:#FF6B8A}
+  100%{stroke:#FF6B8A}
+}
+#cj-follow{animation-name:k-cjfollow}
+@keyframes k-cjfollow{
+  0%{transform:translate(0,0)}
+  38.545%{transform:translate(0,0);animation-timing-function:cubic-bezier(.45,0,.35,1)}
+  40.485%{transform:translate(96px,14px)}
+  41.091%{transform:translate(96px,14px);animation-timing-function:cubic-bezier(.45,0,.35,1)}
+  42.667%{transform:translate(38px,58px)}
+  100%{transform:translate(38px,58px)}
+}
+#cj-over{animation-name:k-cjover}
+@keyframes k-cjover{
+  0%{opacity:0}
+  37.697%{opacity:0}
+  39.152%{opacity:.92}
+  100%{opacity:.92}
+}
+#cj-press{animation-name:k-cjpress}
+@keyframes k-cjpress{
+  0%{transform:scale(1)}
+  43.03%{transform:scale(1)}
+  43.515%{transform:scale(.86)}
+  44.0%{transform:scale(1)}
+  100%{transform:scale(1)}
+}
+#cj-hit{animation-name:k-cjhit}
+@keyframes k-cjhit{
+  0%{opacity:0;transform:scale(.6)}
+  43.345%{opacity:0;transform:scale(.6)}
+  43.588%{opacity:1;transform:scale(.6);animation-timing-function:cubic-bezier(.2,.7,.3,1)}
+  44.97%{opacity:0;transform:scale(1.7)}
+  100%{opacity:0;transform:scale(1.7)}
+}
+.ph0{animation-name:k-ph0}
+@keyframes k-ph0{
+  0%{opacity:0;transform:translateX(-5px)}
+  46.424%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  47.879%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.ph1{animation-name:k-ph1}
+@keyframes k-ph1{
+  0%{opacity:0;transform:translateX(-5px)}
+  48.242%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  49.455%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.ph2{animation-name:k-ph2}
+@keyframes k-ph2{
+  0%{opacity:0;transform:translateX(-5px)}
+  49.818%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  51.03%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.ph3{animation-name:k-ph3}
+@keyframes k-ph3{
+  0%{opacity:0;transform:translateX(-5px)}
+  51.394%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  52.606%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.ph4{animation-name:k-ph4}
+@keyframes k-ph4{
+  0%{opacity:0;transform:translateX(-5px)}
+  52.727%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  53.576%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.rc0{animation-name:k-rc0}
+@keyframes k-rc0{
+  0%{opacity:0;transform:translateX(-5px)}
+  55.515%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  56.97%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.rc1{animation-name:k-rc1}
+@keyframes k-rc1{
+  0%{opacity:0;transform:translateX(-5px)}
+  57.212%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  58.424%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.rc2{animation-name:k-rc2}
+@keyframes k-rc2{
+  0%{opacity:0;transform:translateX(-5px)}
+  58.788%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  60.0%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.rc3{animation-name:k-rc3}
+@keyframes k-rc3{
+  0%{opacity:0;transform:translateX(-5px)}
+  60.364%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  61.576%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.rc4{animation-name:k-rc4}
+@keyframes k-rc4{
+  0%{opacity:0;transform:translateX(-5px)}
+  61.697%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  62.545%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.rb0{animation-name:k-rb0}
+@keyframes k-rb0{
+  0%{opacity:0;transform:translateX(-5px)}
+  64.606%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  66.182%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.rb1{animation-name:k-rb1}
+@keyframes k-rb1{
+  0%{opacity:0;transform:translateX(-5px)}
+  66.545%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  67.879%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.rb2{animation-name:k-rb2}
+@keyframes k-rb2{
+  0%{opacity:0;transform:translateX(-5px)}
+  68.364%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  69.697%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.rb3{animation-name:k-rb3}
+@keyframes k-rb3{
+  0%{opacity:0;transform:translateX(-5px)}
+  70.061%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  71.394%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.py0{animation-name:k-py0}
+@keyframes k-py0{
+  0%{opacity:0;transform:translateX(-5px)}
+  73.697%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  75.152%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.py1{animation-name:k-py1}
+@keyframes k-py1{
+  0%{opacity:0;transform:translateX(-5px)}
+  75.758%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  76.97%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.py2{animation-name:k-py2}
+@keyframes k-py2{
+  0%{opacity:0;transform:translateX(-5px)}
+  77.333%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  78.303%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.py3{animation-name:k-py3}
+@keyframes k-py3{
+  0%{opacity:0;transform:translateX(-5px)}
+  78.788%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  80.0%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.py4{animation-name:k-py4}
+@keyframes k-py4{
+  0%{opacity:0;transform:translateX(-5px)}
+  80.0%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  80.848%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.mh0{animation-name:k-mh0}
+@keyframes k-mh0{
+  0%{opacity:0;transform:translateX(-5px)}
+  82.788%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  84.242%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.mh1{animation-name:k-mh1}
+@keyframes k-mh1{
+  0%{opacity:0;transform:translateX(-5px)}
+  84.848%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  86.061%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.mh2{animation-name:k-mh2}
+@keyframes k-mh2{
+  0%{opacity:0;transform:translateX(-5px)}
+  86.545%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  87.758%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.mh3{animation-name:k-mh3}
+@keyframes k-mh3{
+  0%{opacity:0;transform:translateX(-5px)}
+  88.121%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  89.333%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+.mh4{animation-name:k-mh4}
+@keyframes k-mh4{
+  0%{opacity:0;transform:translateX(-5px)}
+  89.333%{opacity:0;transform:translateX(-5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  90.061%{opacity:1;transform:translateX(0)}
+  100%{opacity:1;transform:translateX(0)}
+}
+#rc-flip{animation-name:k-rcflip}
+@keyframes k-rcflip{
+  0%{opacity:0;transform:scale(.5)}
+  61.939%{opacity:0;transform:scale(.5);animation-timing-function:cubic-bezier(.16,1.55,.3,1)}
+  62.909%{opacity:1;transform:scale(1)}
+  100%{opacity:1;transform:scale(1)}
+}
+#rb-flip{animation-name:k-rbflip}
+@keyframes k-rbflip{
+  0%{opacity:0;transform:scale(.5)}
+  70.182%{opacity:0;transform:scale(.5);animation-timing-function:cubic-bezier(.16,1.55,.3,1)}
+  71.394%{opacity:1;transform:scale(1)}
+  100%{opacity:1;transform:scale(1)}
+}
+#csp-line{animation-name:k-csp}
+@keyframes k-csp{
+  0%{clip-path:inset(0 100% 0 0)}
+  92.0%{clip-path:inset(0 100% 0 0);animation-timing-function:steps(43,end)}
+  96.727%{clip-path:inset(0 0 0 0)}
+  100%{clip-path:inset(0 0 0 0)}
+}
+#signoff{animation-name:k-signoff}
+@keyframes k-signoff{
+  0%{opacity:0;transform:translateY(5px)}
+  96.848%{opacity:0;transform:translateY(5px);animation-timing-function:cubic-bezier(.2,.9,.25,1)}
+  98.303%{opacity:1;transform:translateY(0)}
+  100%{opacity:1;transform:translateY(0)}
+}
+
+/* ── ambient bed ─────────────────────────────────────────────────────────
+   Deliberately on its own clocks, not the 22s one. Layers that drift at
+   unrelated speeds read as depth; layers that all restart together read as
+   a loop. */
+#amb-floor{animation:k-floor 9s linear infinite;transform-origin:400px 470px;transform-box:view-box}
+@keyframes k-floor{0%{transform:translateY(0)}100%{transform:translateY(26px)}}
+.rain{animation-name:k-rain;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes k-rain{0%{transform:translateY(-280px)}100%{transform:translateY(470px)}}
+.mote{animation-name:k-mote;animation-timing-function:ease-in-out;animation-iteration-count:infinite}
+@keyframes k-mote{
+  0%,100%{transform:translate3d(0,0,0) scale(1);opacity:.20}
+  50%{transform:translate3d(14px,-22px,0) scale(1.9);opacity:.6}
+}
+#amb-scan{animation:k-ambscan 6.5s cubic-bezier(.5,0,.5,1) infinite}
+@keyframes k-ambscan{
+  0%{opacity:0;transform:translateY(-10px)}
+  4%{opacity:.85}
+  26%{opacity:.5;transform:translateY(470px)}
+  30%,100%{opacity:0;transform:translateY(470px)}
+}
+
+/* ── depth ───────────────────────────────────────────────────────────────
+   The 3D lives on the <svg> box, not on SVG children: 3D transforms inside
+   an SVG are inconsistent across browsers, but the element itself is a
+   normal replaced box and behaves. Everything inside then inherits the
+   perspective for free. */
+/* Depth without a raster. Everything here is a 2D transform applied to SVG
+   geometry, so the browser renders vectors at full device resolution every
+   frame instead of warping a bitmap. A perspective() transform on the <svg>
+   looked better in stills and measured ~30% softer in practice. */
+#stage{
+  transform:skewY(-1.9deg) scale(1.012);
+  transform-origin:600px 238px;transform-box:view-box;
+  animation:k-tilt 26s ease-in-out infinite;
+}
+@keyframes k-tilt{
+  0%,100%{transform:skewY(-1.9deg) scale(1.012)}
+  33%{transform:skewY(-1.1deg) scale(1.026)}
+  66%{transform:skewY(-2.5deg) scale(1.018)}
+}
+
+
+/* Below this width the console is more off screen than on, and a half cut
+   command line reads as a bug rather than a flourish. Keep the ambient bed,
+   which is full bleed and works at any size, and drop the film. */
+@media(max-width:900px){
+  #hud,#s1,#s2,#s3,#s4,#s5,#s6,#s7,#s8,#s9,#s10,#s11,.plate,
+  #s1-t,#s2-t,#s3-t,#s4-t,#s5-t,#s6-t,#s7-t,#s8-t,#s9-t,#s10-t,#s11-t,
+  #c0,#c1,#c2,#c3,#c4,#c5,#c6,#c7,#c8,#c9{display:none}
+  #stage{transform:none;animation:none}
+  .hero-canvas{mask-image:radial-gradient(130% 100% at 55% 45%,#000 30%,transparent 82%);
+               -webkit-mask-image:radial-gradient(130% 100% at 55% 45%,#000 30%,transparent 82%)}
+}
+
+/* ── the record ──────────────────────────────────────────────────────── */
+.record{display:grid;grid-template-columns:auto 1fr;border-top:1px solid var(--line)}
+.rec{display:contents}
+.rec-y{
+  padding:15px 22px 15px 0;border-bottom:1px solid var(--line);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12px;color:var(--signal);white-space:nowrap;transition:color .2s;
+}
+.rec-b{padding:15px 0;border-bottom:1px solid var(--line)}
+.rec-b b{display:block;font-weight:600;font-size:15px;letter-spacing:-.01em;margin-bottom:4px;transition:color .2s}
+.rec-b span{display:block;color:var(--muted);font-size:13.5px;line-height:1.55}
+.rec:hover .rec-y{color:var(--violet)}
+.rec:hover .rec-b b{color:var(--signal)}
+@media(max-width:560px){
+  .record{grid-template-columns:1fr}
+  .rec-y{padding:15px 0 0;border-bottom:0}
+  .rec-b{padding:3px 0 15px}
+}
+
+/* known for */
+.strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}
+.strip-in{display:flex;gap:0;flex-wrap:wrap;padding-inline:0}
+.strip-item{
+  flex:1 1 auto;padding:22px clamp(14px,2.2vw,28px);border-right:1px solid var(--line);
+  font-size:12.5px;color:var(--dim);
+}
+.strip-item b{display:block;color:var(--ink);font-size:14.5px;font-weight:600;letter-spacing:-.01em;margin-bottom:3px}
+.strip-item:last-child{border-right:0}
+@media(max-width:760px){.strip-item{flex:1 1 44%}}
+
+/* sections */
+section{border-top:1px solid var(--line)}
+.pad{padding-block:clamp(64px,10vw,124px)}
+.defer{content-visibility:auto;contain-intrinsic-size:auto 640px}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:clamp(30px,5vw,54px)}
+.sec-head h2{font-size:clamp(26px,4.2vw,44px)}
+.sec-head p{margin:10px 0 0;color:var(--muted);max-width:46ch;font-size:15px}
+
+.grid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:620px){.grid-2{grid-template-columns:1fr}}
+
+.card{
+  background:var(--bg);padding:clamp(22px,3vw,34px);display:flex;flex-direction:column;gap:12px;
+  min-height:230px;position:relative;overflow:hidden;transition:background .25s;
+}
+.card::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(420px 220px at var(--mx,50%) var(--my,0%),rgba(91,233,195,.09),transparent 65%);
+  opacity:0;transition:opacity .3s;
+}
+.card:hover{background:var(--bg-2)}
+.card:hover::after{opacity:1}
+.card .role{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--signal);font-weight:600}
+.card h3{font-size:20px;letter-spacing:-.02em}
+.card p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.55}
+.card .go{margin-top:auto;padding-top:14px;font-size:13px;color:var(--dim);display:flex;align-items:center;gap:7px;transition:color .2s,gap .2s}
+.card:hover .go{color:var(--ink);gap:11px}
+
+.work{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,5vw,64px);align-items:center}
+@media(max-width:820px){.work{grid-template-columns:1fr}}
+.shot{border:1px solid var(--line);background:var(--bg-2);border-radius:var(--r);aspect-ratio:16/10;overflow:hidden;position:relative}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:center top;opacity:.92;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .3s}
+.work:hover .shot img{transform:scale(1.03);opacity:1}
+
+/* books */
+.books{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+@media(max-width:900px){.books{grid-template-columns:1fr 1fr}.books .book-lead{grid-column:1/-1}}
+@media(max-width:560px){.books{grid-template-columns:1fr}}
+.book{background:var(--bg);padding:clamp(22px,3vw,30px);display:flex;flex-direction:column;gap:14px;position:relative;transition:background .25s}
+.book:hover{background:var(--bg-2)}
+.book-cover{
+  position:relative;
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
+  display:grid;place-items:center;aspect-ratio:3/2;background:var(--bg-2);
+}
+/* Sizing a cover is fiddlier than it looks. A percentage height resolves to
+   auto inside a centred grid area, and an absolutely positioned replaced
+   element ignores right/bottom when width/height are auto, falling back to
+   its intrinsic size. Both routes overflowed the box and clipped the authors
+   off the bottom of the cover. An explicit calc box is what actually binds,
+   and object-fit letterboxes the cover inside it. */
+.book-cover img{
+  position:absolute;top:12px;left:12px;
+  width:calc(100% - 24px);height:calc(100% - 24px);
+  object-fit:contain;
+  transition:transform .5s cubic-bezier(.2,.8,.2,1);
+}
+.book:hover .book-cover img{transform:scale(1.04)}
+.book-cover--paper{background:#E4E4EC}
+.book-lead .book-cover{aspect-ratio:4/3}
+.book .meta{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--signal);font-weight:600}
+.book h3{font-size:19px}
+.book p{margin:0;color:var(--muted);font-size:14px;line-height:1.55}
+.book .go{margin-top:auto;padding-top:10px;font-size:13px;color:var(--dim);transition:color .2s}
+.book:hover .go{color:var(--ink)}
+.badge{
+  position:absolute;top:14px;right:14px;z-index:1;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+  background:var(--signal);color:#04120D;padding:4px 9px;border-radius:99px;
+}
+
+/* quiet row */
+.quiet{display:flex;flex-wrap:wrap;align-items:center;gap:clamp(16px,3vw,32px);
+  padding:clamp(20px,3vw,28px);border:1px solid var(--line);border-radius:var(--r);background:var(--bg-2)}
+.quiet .thumb{flex:0 0 clamp(120px,18vw,190px);aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;position:relative;display:grid;place-items:center}
+.quiet .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55;transition:opacity .35s,transform .6s cubic-bezier(.2,.8,.2,1)}
+.quiet:hover .thumb img{opacity:.8;transform:scale(1.04)}
+.quiet .thumb svg{position:relative;z-index:1;width:34px;height:34px}
+.quiet .txt{flex:1 1 260px;min-width:0}
+.quiet h3{font-size:18px;margin-bottom:5px}
+.quiet p{margin:0;color:var(--muted);font-size:14px}
+.quiet .links{display:flex;gap:16px;font-size:13px;color:var(--dim)}
+.quiet .links a:hover{color:var(--ink)}
+
+/* newsletter */
+.sub{border:1px solid var(--line);background:linear-gradient(180deg,rgba(176,140,255,.06),transparent 55%),var(--bg-2);padding:clamp(28px,5vw,56px);border-radius:var(--r)}
+.sub h2{font-size:clamp(24px,3.6vw,38px);margin-bottom:10px}
+.sub p{color:var(--muted);margin:0 0 26px;max-width:52ch;font-size:15px}
+.sub form{display:flex;flex-wrap:wrap;gap:10px;max-width:520px}
+.sub input[type=email]{
+  flex:1 1 240px;padding:13px 15px;border-radius:var(--r);border:1px solid var(--line-2);
+  background:rgba(0,0,0,.35);color:var(--ink);font:inherit;font-size:14.5px;transition:border-color .2s,background .2s;
+}
+.sub input[type=email]::placeholder{color:var(--dim)}
+.sub input[type=email]:focus{outline:none;border-color:var(--signal);background:rgba(0,0,0,.6)}
+.sub button{
+  padding:13px 24px;border-radius:var(--r);border:1px solid var(--ink);background:var(--ink);
+  color:#08080E;font:inherit;font-weight:600;font-size:14px;cursor:pointer;
+  transition:background .2s,border-color .2s,transform .2s;
+}
+.sub button:hover{background:var(--signal);border-color:var(--signal);transform:translateY(-2px)}
+.sub button[disabled]{opacity:.55;cursor:default;transform:none}
+.ts-slot{flex:0 0 100%;min-height:65px;display:flex;align-items:center}
+.sub-msg{margin:14px 0 0;font-size:13.5px;min-height:1.3em;color:var(--muted)}
+.sub-msg[data-state=err]{color:#FF9B9B}
+.sub-msg[data-state=ok]{color:var(--signal)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding-block:44px;color:var(--dim);font-size:13px}
+.foot{display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
+.social{display:flex;gap:18px}
+.social a{color:var(--dim);transition:color .2s}
+.social a:hover{color:var(--ink)}
+.social svg{width:17px;height:17px;display:block}
+
+.no-js .rise{opacity:1;transform:none}
+.rise{opacity:0;transform:translateY(14px);transition:opacity .6s cubic-bezier(.2,.8,.2,1),transform .6s cubic-bezier(.2,.8,.2,1)}
+.rise.in{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  /* With the animations off, every scene would otherwise paint at once on
+     top of itself. Show the console holding one representative frame. */
+  .seq{animation:none!important}
+  #hud{opacity:1!important;transform:none!important}
+  #hud-rule{transform:scaleX(1)!important}
+  #s1,#s2,#s4,#s5,#s6,#s7,#s8,#s9,#s10,#s11,#s1-t,#s2-t,#s4-t,#s5-t,#s6-t,#s7-t,#s8-t,#s9-t,#s10-t,#s11-t,
+  #c0,#c1,#c2,#c3,#c4,#c5,#c6,#c7,#c8,#c9{opacity:0!important}
+  #s3,#s3-t{opacity:1!important}
+  .gedge,#gpath{stroke-dashoffset:0!important;opacity:1!important}
+  .gnode,#gpwn{opacity:1!important;transform:none!important}
+  .rise{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+  #brand-wave{animation:none}
+}
+</style>
+<script>document.documentElement.className="js"</script>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="/">RSnake</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about.html">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://youtube.com/@thersnakeshow">The RSnake Show</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/report/">RSnake Report</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" href="/" aria-label="RSnake home">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path id="brand-wave" d="M-12 12 c2,-6 4,-6 6,0 c2,6 4,6 6,0 c2,-6 4,-6 6,0 c2,6 4,6 6,0 c2,-6 4,-6 6,0 c2,6 4,6 6,0 c2,-6 4,-6 6,0 c2,6 4,6 6,0 c2,-6 4,-6 6,0 c2,6 4,6 6,0"
+              stroke="#5BE9C3" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      RSnake
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#work">Work</a>
+      <a href="#writing" class="hide-s">Writing</a>
+      <a href="/report/">Report</a>
+      <a href="/about.html" class="hide-xs">About</a>
     </nav>
+  </div>
+</header>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container">
-            <div class="hero-content">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <h1 class="display-4 mb-4">Interesting discussions with people in the know</h1>
-                        <p class="lead mb-4">Join us for thought-provoking conversations about technology, security, and the future of the internet.</p>
-                        <a href="https://youtube.com/@thersnakeshow" class="btn btn-primary">Listen to Episodes of The RSnake Show</a>
-                    </div>
-                </div>
-            </div>
+<main>
+<!-- HERO -->
+<section class="hero" style="border-top:0">
+  <div class="hero-canvas" aria-hidden="true">
+    <svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" role="presentation" focusable="false">
+      <defs>
+        <linearGradient id="gs" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#5BE9C3" stop-opacity="0"/>
+          <stop offset=".42" stop-color="#5BE9C3"/>
+          <stop offset="1" stop-color="#B08CFF" stop-opacity=".35"/>
+        </linearGradient>
+        <linearGradient id="gslit" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#5BE9C3" stop-opacity="0"/>
+          <stop offset=".5" stop-color="#ffffff"/>
+          <stop offset="1" stop-color="#B08CFF" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="gsweep" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#5BE9C3" stop-opacity=".5"/>
+          <stop offset="1" stop-color="#5BE9C3" stop-opacity="0"/>
+        </linearGradient>
+        <radialGradient id="ghalo">
+          <stop offset="0" stop-color="#5BE9C3" stop-opacity=".40"/>
+          <stop offset=".55" stop-color="#B08CFF" stop-opacity=".15"/>
+          <stop offset="1" stop-color="#B08CFF" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- ambient bed: runs on its own clocks, behind the console -->
+      <g id="amb" opacity=".9">
+        <g id="amb-floor">
+          <path d="M-60 300 H860" stroke="rgba(148,146,186,0.02)" stroke-width=".8"/>
+          <path d="M-60 304 H860" stroke="rgba(148,146,186,0.02)" stroke-width=".8"/>
+          <path d="M-60 309 H860" stroke="rgba(148,146,186,0.03)" stroke-width=".8"/>
+          <path d="M-60 316 H860" stroke="rgba(148,146,186,0.03)" stroke-width=".8"/>
+          <path d="M-60 324 H860" stroke="rgba(148,146,186,0.04)" stroke-width=".8"/>
+          <path d="M-60 335 H860" stroke="rgba(148,146,186,0.05)" stroke-width=".8"/>
+          <path d="M-60 349 H860" stroke="rgba(148,146,186,0.06)" stroke-width=".8"/>
+          <path d="M-60 366 H860" stroke="rgba(148,146,186,0.07)" stroke-width=".8"/>
+          <path d="M-60 389 H860" stroke="rgba(148,146,186,0.09)" stroke-width=".8"/>
+          <path d="M-60 417 H860" stroke="rgba(148,146,186,0.12)" stroke-width=".8"/>
+          <path d="M-60 454 H860" stroke="rgba(148,146,186,0.15)" stroke-width=".8"/>
+          <path d="M400 300 L-380 470" stroke="rgba(148,146,186,.07)" stroke-width=".8"/>
+          <path d="M400 300 L-250 470" stroke="rgba(148,146,186,.07)" stroke-width=".8"/>
+          <path d="M400 300 L-120 470" stroke="rgba(148,146,186,.07)" stroke-width=".8"/>
+          <path d="M400 300 L10 470" stroke="rgba(148,146,186,.07)" stroke-width=".8"/>
+          <path d="M400 300 L140 470" stroke="rgba(148,146,186,.07)" stroke-width=".8"/>
+          <path d="M400 300 L270 470" stroke="rgba(148,146,186,.07)" stroke-width=".8"/>
+          <path d="M400 300 L400 470" stroke="rgba(148,146,186,.07)" stroke-width=".8"/>
+          <path d="M400 300 L530 470" stroke="rgba(148,146,186,.07)" stroke-width=".8"/>
+          <path d="M400 300 L660 470" stroke="rgba(148,146,186,.07)" stroke-width=".8"/>
+          <path d="M400 300 L790 470" stroke="rgba(148,146,186,.07)" stroke-width=".8"/>
+          <path d="M400 300 L920 470" stroke="rgba(148,146,186,.07)" stroke-width=".8"/>
+          <path d="M400 300 L1050 470" stroke="rgba(148,146,186,.07)" stroke-width=".8"/>
+          <path d="M400 300 L1180 470" stroke="rgba(148,146,186,.07)" stroke-width=".8"/>
+        </g>
+          <text class="mono rain" x="38" y="0" fill="#5BE9C3" font-size="9" opacity=".13"
+                style="animation-duration:13.0s;animation-delay:-0.0s">
+            <tspan x="38" dy="17">"&gt;</tspan>
+            <tspan x="38" dy="17">sc</tspan>
+            <tspan x="38" dy="17">=1</tspan>
+            <tspan x="38" dy="17">/p</tspan>
+            <tspan x="38" dy="17">0d</tspan>
+            <tspan x="38" dy="17">X-</tspan>
+            <tspan x="38" dy="17">"n</tspan>
+            <tspan x="38" dy="17">tl</tspan>
+            <tspan x="38" dy="17">on</tspan>
+            <tspan x="38" dy="17">it</tspan>
+            <tspan x="38" dy="17">co</tspan>
+            <tspan x="38" dy="17">14</tspan>
+            <tspan x="38" dy="17">nl</tspan>
+            <tspan x="38" dy="17">sc</tspan>
+            <tspan x="38" dy="17">OR</tspan>
+            <tspan x="38" dy="17">sw</tspan>
+          </text>
+          <text class="mono rain" x="96" y="0" fill="#5BE9C3" font-size="9" opacity=".13"
+                style="animation-duration:15.6s;animation-delay:-3.1s">
+            <tspan x="96" dy="17">%3</tspan>
+            <tspan x="96" dy="17">R </tspan>
+            <tspan x="96" dy="17">et</tspan>
+            <tspan x="96" dy="17">d0</tspan>
+            <tspan x="96" dy="17">on</tspan>
+            <tspan x="96" dy="17">at</tspan>
+            <tspan x="96" dy="17"> 0</tspan>
+            <tspan x="96" dy="17">ct</tspan>
+            <tspan x="96" dy="17">pa</tspan>
+            <tspan x="96" dy="17">il</tspan>
+            <tspan x="96" dy="17">0x</tspan>
+            <tspan x="96" dy="17">g/</tspan>
+            <tspan x="96" dy="17">%3</tspan>
+            <tspan x="96" dy="17">-</tspan>
+            <tspan x="96" dy="17">pa</tspan>
+            <tspan x="96" dy="17">d0</tspan>
+          </text>
+          <text class="mono rain" x="150" y="0" fill="#5BE9C3" font-size="9" opacity=".13"
+                style="animation-duration:18.2s;animation-delay:-6.2s">
+            <tspan x="150" dy="17">' </tspan>
+            <tspan x="150" dy="17">..</tspan>
+            <tspan x="150" dy="17">0a</tspan>
+            <tspan x="150" dy="17">pt</tspan>
+            <tspan x="150" dy="17">fl</tspan>
+            <tspan x="150" dy="17">tt</tspan>
+            <tspan x="150" dy="17">nn</tspan>
+            <tspan x="150" dy="17">e </tspan>
+            <tspan x="150" dy="17"> e</tspan>
+            <tspan x="150" dy="17">14</tspan>
+            <tspan x="150" dy="17">&lt;s</tspan>
+            <tspan x="150" dy="17">%3</tspan>
+            <tspan x="150" dy="17">=1</tspan>
+            <tspan x="150" dy="17">tc</tspan>
+            <tspan x="150" dy="17">0a</tspan>
+            <tspan x="150" dy="17">X-</tspan>
+          </text>
+          <text class="mono rain" x="212" y="0" fill="#5BE9C3" font-size="9" opacity=".13"
+                style="animation-duration:20.8s;animation-delay:-9.3s">
+            <tspan x="212" dy="17">..</tspan>
+            <tspan x="212" dy="17">a0</tspan>
+            <tspan x="212" dy="17">e-</tspan>
+            <tspan x="212" dy="17">n"</tspan>
+            <tspan x="212" dy="17">l </tspan>
+            <tspan x="212" dy="17">p</tspan>
+            <tspan x="212" dy="17">ra</tspan>
+            <tspan x="212" dy="17">m</tspan>
+            <tspan x="212" dy="17">41</tspan>
+            <tspan x="212" dy="17">=</tspan>
+            <tspan x="212" dy="17">ip</tspan>
+            <tspan x="212" dy="17">R </tspan>
+            <tspan x="212" dy="17">./</tspan>
+            <tspan x="212" dy="17">a</tspan>
+            <tspan x="212" dy="17">on</tspan>
+            <tspan x="212" dy="17">n"</tspan>
+          </text>
+          <text class="mono rain" x="268" y="0" fill="#5BE9C3" font-size="9" opacity=".13"
+                style="animation-duration:23.4s;animation-delay:-12.4s">
+            <tspan x="268" dy="17">0d</tspan>
+            <tspan x="268" dy="17">ra</tspan>
+            <tspan x="268" dy="17">"n</tspan>
+            <tspan x="268" dy="17">0</tspan>
+            <tspan x="268" dy="17">ke</tspan>
+            <tspan x="268" dy="17">&lt;i</tspan>
+            <tspan x="268" dy="17">.c</tspan>
+            <tspan x="268" dy="17">x4</tspan>
+            <tspan x="268" dy="17">oa</tspan>
+            <tspan x="268" dy="17">sc</tspan>
+            <tspan x="268" dy="17">' </tspan>
+            <tspan x="268" dy="17">./</tspan>
+            <tspan x="268" dy="17">0d</tspan>
+            <tspan x="268" dy="17">pt</tspan>
+            <tspan x="268" dy="17">"n</tspan>
+            <tspan x="268" dy="17">tt</tspan>
+          </text>
+          <text class="mono rain" x="322" y="0" fill="#5BE9C3" font-size="9" opacity=".13"
+                style="animation-duration:26.0s;animation-delay:-15.5s">
+            <tspan x="322" dy="17">X-</tspan>
+            <tspan x="322" dy="17">at</tspan>
+            <tspan x="322" dy="17">tl</tspan>
+            <tspan x="322" dy="17">n:</tspan>
+            <tspan x="322" dy="17">it</tspan>
+            <tspan x="322" dy="17">vi</tspan>
+            <tspan x="322" dy="17">41</tspan>
+            <tspan x="322" dy="17">on</tspan>
+            <tspan x="322" dy="17">%3</tspan>
+            <tspan x="322" dy="17">1-</tspan>
+            <tspan x="322" dy="17">wd</tspan>
+            <tspan x="322" dy="17">d0</tspan>
+            <tspan x="322" dy="17">e-</tspan>
+            <tspan x="322" dy="17">at</tspan>
+            <tspan x="322" dy="17">l </tspan>
+            <tspan x="322" dy="17">ee</tspan>
+          </text>
+          <text class="mono rain" x="806" y="0" fill="#5BE9C3" font-size="9" opacity=".13"
+                style="animation-duration:28.6s;animation-delay:-18.6s">
+            <tspan x="806" dy="17">fl</tspan>
+            <tspan x="806" dy="17"> 0</tspan>
+            <tspan x="806" dy="17">ti</tspan>
+            <tspan x="806" dy="17">pa</tspan>
+            <tspan x="806" dy="17">? </tspan>
+            <tspan x="806" dy="17">14</tspan>
+            <tspan x="806" dy="17">vg</tspan>
+            <tspan x="806" dy="17">%3</tspan>
+            <tspan x="806" dy="17"> 1</tspan>
+            <tspan x="806" dy="17">as</tspan>
+            <tspan x="806" dy="17">0a</tspan>
+            <tspan x="806" dy="17">ra</tspan>
+            <tspan x="806" dy="17">fl</tspan>
+            <tspan x="806" dy="17">0</tspan>
+            <tspan x="806" dy="17">: </tspan>
+            <tspan x="806" dy="17">&lt;i</tspan>
+          </text>
+          <text class="mono rain" x="856" y="0" fill="#5BE9C3" font-size="9" opacity=".13"
+                style="animation-duration:31.2s;animation-delay:-21.7s">
+            <tspan x="856" dy="17">tt</tspan>
+            <tspan x="856" dy="17">ne</tspan>
+            <tspan x="856" dy="17">e </tspan>
+            <tspan x="856" dy="17">om</tspan>
+            <tspan x="856" dy="17">41</tspan>
+            <tspan x="856" dy="17">&gt;&lt;</tspan>
+            <tspan x="856" dy="17">ip</tspan>
+            <tspan x="856" dy="17"> O</tspan>
+            <tspan x="856" dy="17">c/</tspan>
+            <tspan x="856" dy="17">a0</tspan>
+            <tspan x="856" dy="17">X-</tspan>
+            <tspan x="856" dy="17">n"</tspan>
+            <tspan x="856" dy="17">tl</tspan>
+            <tspan x="856" dy="17">io</tspan>
+            <tspan x="856" dy="17">it</tspan>
+            <tspan x="856" dy="17">? </tspan>
+          </text>
+          <circle class="mote" cx="351" cy="117" r="2.1" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:19s;animation-delay:-1s;transform-origin:351px 117px;transform-box:view-box"/>
+          <circle class="mote" cx="94" cy="314" r="0.9" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:14s;animation-delay:-18s;transform-origin:94px 314px;transform-box:view-box"/>
+          <circle class="mote" cx="79" cy="299" r="1.2" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:9s;animation-delay:-2s;transform-origin:79px 299px;transform-box:view-box"/>
+          <circle class="mote" cx="464" cy="254" r="0.9" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:12s;animation-delay:-2s;transform-origin:464px 254px;transform-box:view-box"/>
+          <circle class="mote" cx="584" cy="257" r="0.9" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:18s;animation-delay:-3s;transform-origin:584px 257px;transform-box:view-box"/>
+          <circle class="mote" cx="248" cy="362" r="0.9" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:18s;animation-delay:-18s;transform-origin:248px 362px;transform-box:view-box"/>
+          <circle class="mote" cx="426" cy="65" r="1.2" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:9s;animation-delay:-17s;transform-origin:426px 65px;transform-box:view-box"/>
+          <circle class="mote" cx="156" cy="188" r="2.1" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:11s;animation-delay:-17s;transform-origin:156px 188px;transform-box:view-box"/>
+          <circle class="mote" cx="140" cy="332" r="1.6" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:17s;animation-delay:-5s;transform-origin:140px 332px;transform-box:view-box"/>
+          <circle class="mote" cx="125" cy="337" r="1.2" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:14s;animation-delay:-3s;transform-origin:125px 337px;transform-box:view-box"/>
+          <circle class="mote" cx="580" cy="404" r="0.9" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:18s;animation-delay:-1s;transform-origin:580px 404px;transform-box:view-box"/>
+          <circle class="mote" cx="653" cy="145" r="2.1" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:19s;animation-delay:-17s;transform-origin:653px 145px;transform-box:view-box"/>
+          <circle class="mote" cx="457" cy="200" r="2.1" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:18s;animation-delay:-14s;transform-origin:457px 200px;transform-box:view-box"/>
+          <circle class="mote" cx="390" cy="193" r="1.2" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:11s;animation-delay:-7s;transform-origin:390px 193px;transform-box:view-box"/>
+          <circle class="mote" cx="103" cy="334" r="1.6" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:17s;animation-delay:-15s;transform-origin:103px 334px;transform-box:view-box"/>
+          <circle class="mote" cx="371" cy="413" r="2.1" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:13s;animation-delay:-2s;transform-origin:371px 413px;transform-box:view-box"/>
+          <circle class="mote" cx="140" cy="302" r="2.1" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:11s;animation-delay:-10s;transform-origin:140px 302px;transform-box:view-box"/>
+          <circle class="mote" cx="175" cy="290" r="2.1" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:9s;animation-delay:-2s;transform-origin:175px 290px;transform-box:view-box"/>
+          <circle class="mote" cx="591" cy="333" r="1.6" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:14s;animation-delay:-11s;transform-origin:591px 333px;transform-box:view-box"/>
+          <circle class="mote" cx="628" cy="294" r="2.1" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:10s;animation-delay:-2s;transform-origin:628px 294px;transform-box:view-box"/>
+          <circle class="mote" cx="296" cy="282" r="0.9" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:9s;animation-delay:-9s;transform-origin:296px 282px;transform-box:view-box"/>
+          <circle class="mote" cx="682" cy="335" r="2.1" fill="#B08CFF" opacity=".35"
+                  style="animation-duration:13s;animation-delay:-12s;transform-origin:682px 335px;transform-box:view-box"/>
+          <rect id="amb-scan" x="-40" y="0" width="880" height="2" fill="url(#gslit)" opacity="0"/>
+      </g>
+
+      <g id="stage">
+      <!-- offset plate: reads as lift, costs no raster the way a blur would -->
+      <rect class="plate" x="440" y="100" width="330" height="292" fill="rgba(0,0,0,.55)"/>
+      <rect class="plate" x="436" y="96" width="330" height="292" fill="none" stroke="rgba(176,140,255,.13)"/>
+      <g id="hud" class="seq">
+        <rect x="432" y="92" width="330" height="292" fill="rgba(10,10,18,.62)" stroke="rgba(255,255,255,.14)"/>
+        <path d="M432 107 h330" stroke="rgba(255,255,255,.10)"/>
+        <circle cx="442" cy="99.5" r="2.2" fill="#5BE9C3" opacity=".85"/>
+        <rect id="hud-rule" x="432" y="384" width="330" height="1.4" fill="#5BE9C3" opacity=".55"
+              style="transform-origin:432px 384px;transform-box:view-box"/>
+        <path d="M426 92 h6 v6" fill="none" stroke="#5BE9C3" stroke-width="1.2"/>
+        <path d="M768 384 h-6 v-6" fill="none" stroke="#5BE9C3" stroke-width="1.2"/>
+        <text id="s1-t" class="seq mono" x="452" y="103" fill="#9492BA" font-size="8" letter-spacing="1.3">dns enumeration</text>
+        <text id="s2-t" class="seq mono" x="452" y="103" fill="#9492BA" font-size="8" letter-spacing="1.3">surface scan</text>
+        <text id="s3-t" class="seq mono" x="452" y="103" fill="#9492BA" font-size="8" letter-spacing="1.3">bit discovery easm</text>
+        <text id="s4-t" class="seq mono" x="452" y="103" fill="#9492BA" font-size="8" letter-spacing="1.3">slowloris</text>
+        <text id="s5-t" class="seq mono" x="452" y="103" fill="#9492BA" font-size="8" letter-spacing="1.3">clickjacking</text>
+        <text id="s6-t" class="seq mono" x="452" y="103" fill="#9492BA" font-size="8" letter-spacing="1.3">intranet port hacking</text>
+        <text id="s7-t" class="seq mono" x="452" y="103" fill="#9492BA" font-size="8" letter-spacing="1.3">rfc1918 cache poisoning</text>
+        <text id="s8-t" class="seq mono" x="452" y="103" fill="#9492BA" font-size="8" letter-spacing="1.3">dns rebinding</text>
+        <text id="s9-t" class="seq mono" x="452" y="103" fill="#9492BA" font-size="8" letter-spacing="1.3">python nan injection</text>
+        <text id="s10-t" class="seq mono" x="452" y="103" fill="#9492BA" font-size="8" letter-spacing="1.3">magic hashes</text>
+        <text id="s11-t" class="seq mono" x="452" y="103" fill="#9492BA" font-size="8" letter-spacing="1.3">content security policy</text>
+      </g>
+
+      <!-- carry lines: each scene's result held into the head of the next -->
+      <text id="c0" class="seq mono" x="448" y="372" fill="#6A688C" font-size="8.5">6 hosts · 4 internal</text>
+      <text id="c1" class="seq mono" x="448" y="372" fill="#6A688C" font-size="8.5">7 live · 4 exposed</text>
+      <text id="c2" class="seq mono" x="448" y="372" fill="#6A688C" font-size="8.5">admin reachable in 3 hops</text>
+      <text id="c3" class="seq mono" x="448" y="372" fill="#6A688C" font-size="8.5">1000 sockets held open</text>
+      <text id="c4" class="seq mono" x="448" y="372" fill="#6A688C" font-size="8.5">click delivered to the hidden frame</text>
+      <text id="c5" class="seq mono" x="448" y="372" fill="#6A688C" font-size="8.5">3 internal hosts fingerprinted via the site</text>
+      <text id="c6" class="seq mono" x="448" y="372" fill="#6A688C" font-size="8.5">cache poisoned · now wait</text>
+      <text id="c7" class="seq mono" x="448" y="372" fill="#6A688C" font-size="8.5">same origin · different network</text>
+      <text id="c8" class="seq mono" x="448" y="372" fill="#6A688C" font-size="8.5">equality walked past</text>
+      <text id="c9" class="seq mono" x="448" y="372" fill="#6A688C" font-size="8.5">two different passwords · one hash</text>
+
+      <g id="s1" class="seq mono" font-size="10">
+        <text class="seq cmd" x="448" y="130" fill="#5BE9C3" font-size="10.5">$ fierce.pl -dns rsnake.com</text>
+        <rect id="caret" class="seq" x="448" y="121.5" width="5.5" height="10.5" fill="#5BE9C3"/>
+        <g class="host seq" style="animation-delay:-41.24s">
+          <text x="448" y="154" fill="#6A688C" font-size="9.5">ns1.rsnake.com</text>
+          <text x="576" y="154" fill="#F4F4F8" font-size="9.5">104.18.42.7</text>
+        </g>
+        <g class="host seq" style="animation-delay:-41.14s">
+          <text x="448" y="176" fill="#6A688C" font-size="9.5">mail.rsnake.com</text>
+          <text x="576" y="176" fill="#F4F4F8" font-size="9.5">104.18.42.9</text>
+        </g>
+        <g class="host seq" style="animation-delay:-41.04s">
+          <text x="448" y="198" fill="#6A688C" font-size="9.5">dev.rsnake.com</text>
+          <text x="576" y="198" fill="#F4F4F8" font-size="9.5">10.0.12.44</text>
+          <text x="666" y="198" fill="#FF6B8A" font-size="8.5">internal</text>
+        </g>
+        <g class="host seq" style="animation-delay:-40.94s">
+          <text x="448" y="220" fill="#6A688C" font-size="9.5">vpn.rsnake.com</text>
+          <text x="576" y="220" fill="#F4F4F8" font-size="9.5">10.0.12.51</text>
+          <text x="666" y="220" fill="#FF6B8A" font-size="8.5">internal</text>
+        </g>
+        <g class="host seq" style="animation-delay:-40.84s">
+          <text x="448" y="242" fill="#6A688C" font-size="9.5">stage.rsnake.com</text>
+          <text x="576" y="242" fill="#F4F4F8" font-size="9.5">10.0.12.63</text>
+          <text x="666" y="242" fill="#FF6B8A" font-size="8.5">internal</text>
+        </g>
+        <g class="host seq" style="animation-delay:-40.74s">
+          <text x="448" y="264" fill="#6A688C" font-size="9.5">legacy.rsnake.com</text>
+          <text x="576" y="264" fill="#F4F4F8" font-size="9.5">10.0.9.18</text>
+          <text x="666" y="264" fill="#FF6B8A" font-size="8.5">internal</text>
+        </g>
+      </g>
+
+      <g id="s2" class="seq">
+        <circle cx="597.0" cy="238.0" r="34" fill="none" stroke="rgba(255,255,255,.10)"/>
+        <circle cx="597.0" cy="238.0" r="66" fill="none" stroke="rgba(255,255,255,.10)"/>
+        <circle cx="597.0" cy="238.0" r="98" fill="none" stroke="rgba(255,255,255,.10)"/>
+        <path d="M495.0 238.0 h204 M597.0 136.0 v204" stroke="rgba(255,255,255,.07)"/>
+        <path id="sweep" class="seq" d="M597.0 238.0 L597.0 138.0 A100 100 0 0 1 668.0 167.0 Z" fill="url(#gsweep)" style="transform-origin:597.0px 238.0px;transform-box:view-box"/>
+        <circle class="blip seq" cx="545.0" cy="206.0" r="3.0" fill="#5BE9C3" style="transform-origin:545.0px 206.0px;transform-box:view-box;animation-delay:-41.23s"/>
+        <circle class="ring-r seq" cx="545.0" cy="206.0" r="12.0" fill="none" stroke="#5BE9C3" stroke-width=".8" style="transform-origin:545.0px 206.0px;transform-box:view-box;animation-delay:-41.23s"/>
+        <circle class="blip seq" cx="637.0" cy="180.0" r="2.4" fill="#5BE9C3" style="transform-origin:637.0px 180.0px;transform-box:view-box;animation-delay:-41.09s"/>
+        <circle class="ring-r seq" cx="637.0" cy="180.0" r="9.6" fill="none" stroke="#5BE9C3" stroke-width=".8" style="transform-origin:637.0px 180.0px;transform-box:view-box;animation-delay:-41.09s"/>
+        <circle class="blip seq" cx="669.0" cy="260.0" r="3.3" fill="#5BE9C3" style="transform-origin:669.0px 260.0px;transform-box:view-box;animation-delay:-40.95s"/>
+        <circle class="ring-r seq" cx="669.0" cy="260.0" r="13.2" fill="none" stroke="#5BE9C3" stroke-width=".8" style="transform-origin:669.0px 260.0px;transform-box:view-box;animation-delay:-40.95s"/>
+        <circle class="blip seq" cx="571.0" cy="298.0" r="2.2" fill="#5BE9C3" style="transform-origin:571.0px 298.0px;transform-box:view-box;animation-delay:-40.81s"/>
+        <circle class="ring-r seq" cx="571.0" cy="298.0" r="8.8" fill="none" stroke="#5BE9C3" stroke-width=".8" style="transform-origin:571.0px 298.0px;transform-box:view-box;animation-delay:-40.81s"/>
+        <circle class="blip seq" cx="617.0" cy="282.0" r="2.6" fill="#5BE9C3" style="transform-origin:617.0px 282.0px;transform-box:view-box;animation-delay:-40.67s"/>
+        <circle class="ring-r seq" cx="617.0" cy="282.0" r="10.4" fill="none" stroke="#5BE9C3" stroke-width=".8" style="transform-origin:617.0px 282.0px;transform-box:view-box;animation-delay:-40.67s"/>
+        <circle class="blip seq" cx="517.0" cy="250.0" r="2.0" fill="#5BE9C3" style="transform-origin:517.0px 250.0px;transform-box:view-box;animation-delay:-40.53s"/>
+        <circle class="ring-r seq" cx="517.0" cy="250.0" r="8.0" fill="none" stroke="#5BE9C3" stroke-width=".8" style="transform-origin:517.0px 250.0px;transform-box:view-box;animation-delay:-40.53s"/>
+        <circle class="blip seq" cx="653.0" cy="224.0" r="2.8" fill="#5BE9C3" style="transform-origin:653.0px 224.0px;transform-box:view-box;animation-delay:-40.39s"/>
+        <circle class="ring-r seq" cx="653.0" cy="224.0" r="11.2" fill="none" stroke="#5BE9C3" stroke-width=".8" style="transform-origin:653.0px 224.0px;transform-box:view-box;animation-delay:-40.39s"/>
+      </g>
+
+      <g id="s3" class="seq">
+        <path class="gedge seq" pathLength="1" d="M478 158 L556 138" fill="none" stroke="rgba(148,146,186,.5)" stroke-width="1" style="animation-delay:-41.23s"/>
+        <path class="gedge seq" pathLength="1" d="M478 158 L556 208" fill="none" stroke="rgba(148,146,186,.5)" stroke-width="1" style="animation-delay:-41.15s"/>
+        <path class="gedge seq" pathLength="1" d="M556 138 L640 176" fill="none" stroke="rgba(148,146,186,.5)" stroke-width="1" style="animation-delay:-41.07s"/>
+        <path class="gedge seq" pathLength="1" d="M556 208 L640 176" fill="none" stroke="rgba(148,146,186,.5)" stroke-width="1" style="animation-delay:-40.99s"/>
+        <path class="gedge seq" pathLength="1" d="M640 176 L640 262" fill="none" stroke="rgba(148,146,186,.5)" stroke-width="1" style="animation-delay:-40.91s"/>
+        <path class="gedge seq" pathLength="1" d="M640 176 L710 222" fill="none" stroke="rgba(148,146,186,.5)" stroke-width="1" style="animation-delay:-40.83s"/>
+        <path class="gedge seq" pathLength="1" d="M488 272 L556 208" fill="none" stroke="rgba(148,146,186,.5)" stroke-width="1" style="animation-delay:-40.75s"/>
+        <path class="gedge seq" pathLength="1" d="M566 306 L640 262" fill="none" stroke="rgba(148,146,186,.5)" stroke-width="1" style="animation-delay:-40.67s"/>
+        <path class="gedge seq" pathLength="1" d="M488 272 L566 306" fill="none" stroke="rgba(148,146,186,.5)" stroke-width="1" style="animation-delay:-40.59s"/>
+        <path id="gpath" class="seq" pathLength="1" d="M478 158 L556 208 L640 176 L710 222" fill="none" stroke="#FF6B8A" stroke-width="1.7"/>
+        <g class="gnode seq" style="transform-origin:478px 158px;transform-box:view-box;animation-delay:-41.24s">
+          <rect x="466" y="151.5" width="24" height="13" fill="#0A0A12" stroke="#5BE9C3" stroke-width="1"/>
+          <text class="mono" x="478" y="161" text-anchor="middle" fill="#9492BA" font-size="6.5">edge</text>
+        </g>
+        <g class="gnode seq" style="transform-origin:556px 138px;transform-box:view-box;animation-delay:-41.15s">
+          <rect x="544" y="131.5" width="24" height="13" fill="#0A0A12" stroke="#5BE9C3" stroke-width="1"/>
+          <text class="mono" x="556" y="141" text-anchor="middle" fill="#9492BA" font-size="6.5">waf</text>
+        </g>
+        <g class="gnode seq" style="transform-origin:556px 208px;transform-box:view-box;animation-delay:-41.06s">
+          <rect x="544" y="201.5" width="24" height="13" fill="#0A0A12" stroke="#5BE9C3" stroke-width="1"/>
+          <text class="mono" x="556" y="211" text-anchor="middle" fill="#9492BA" font-size="6.5">app</text>
+        </g>
+        <g class="gnode seq" style="transform-origin:640px 176px;transform-box:view-box;animation-delay:-40.97s">
+          <rect x="628" y="169.5" width="24" height="13" fill="#0A0A12" stroke="#5BE9C3" stroke-width="1"/>
+          <text class="mono" x="640" y="179" text-anchor="middle" fill="#9492BA" font-size="6.5">api</text>
+        </g>
+        <g class="gnode seq" style="transform-origin:640px 262px;transform-box:view-box;animation-delay:-40.88s">
+          <rect x="628" y="255.5" width="24" height="13" fill="#0A0A12" stroke="#5BE9C3" stroke-width="1"/>
+          <text class="mono" x="640" y="265" text-anchor="middle" fill="#9492BA" font-size="6.5">db</text>
+        </g>
+        <g class="gnode seq" style="transform-origin:710px 222px;transform-box:view-box;animation-delay:-40.79s">
+          <rect x="698" y="215.5" width="24" height="13" fill="#0A0A12" stroke="#5BE9C3" stroke-width="1"/>
+          <text class="mono" x="710" y="225" text-anchor="middle" fill="#9492BA" font-size="6.5">admin</text>
+        </g>
+        <g class="gnode seq" style="transform-origin:488px 272px;transform-box:view-box;animation-delay:-40.70s">
+          <rect x="476" y="265.5" width="24" height="13" fill="#0A0A12" stroke="#5BE9C3" stroke-width="1"/>
+          <text class="mono" x="488" y="275" text-anchor="middle" fill="#9492BA" font-size="6.5">vpn</text>
+        </g>
+        <g class="gnode seq" style="transform-origin:566px 306px;transform-box:view-box;animation-delay:-40.61s">
+          <rect x="554" y="299.5" width="24" height="13" fill="#0A0A12" stroke="#5BE9C3" stroke-width="1"/>
+          <text class="mono" x="566" y="309" text-anchor="middle" fill="#9492BA" font-size="6.5">ci</text>
+        </g>
+        <g id="gpwn" class="seq" style="transform-origin:710px 222px;transform-box:view-box">
+          <circle cx="710" cy="222" r="19" fill="none" stroke="#FF6B8A" stroke-width="1.2"/>
+          <text class="mono" x="700" y="256" text-anchor="middle" fill="#FF6B8A" font-size="8.5">unknown asset, reachable</text>
+        </g>
+      </g>
+
+      <g id="s4" class="seq">
+        <rect id="srv" class="seq" x="670" y="158" width="40" height="112" fill="#0A0A12" stroke="#5BE9C3" stroke-width="1.3"/>
+        <text class="mono" x="690" y="220" text-anchor="middle" fill="#9492BA" font-size="7.5">httpd</text>
+        <path class="sock seq" pathLength="1" d="M452 132 L670 166" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-41.24s"/>
+        <path class="sock seq" pathLength="1" d="M452 141 L670 171" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-41.20s"/>
+        <path class="sock seq" pathLength="1" d="M452 150 L670 176" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-41.15s"/>
+        <path class="sock seq" pathLength="1" d="M452 159 L670 181" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-41.11s"/>
+        <path class="sock seq" pathLength="1" d="M452 168 L670 186" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-41.06s"/>
+        <path class="sock seq" pathLength="1" d="M452 177 L670 191" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-41.02s"/>
+        <path class="sock seq" pathLength="1" d="M452 186 L670 196" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-40.97s"/>
+        <path class="sock seq" pathLength="1" d="M452 195 L670 201" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-40.93s"/>
+        <path class="sock seq" pathLength="1" d="M452 204 L670 206" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-40.88s"/>
+        <path class="sock seq" pathLength="1" d="M452 213 L670 211" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-40.84s"/>
+        <path class="sock seq" pathLength="1" d="M452 222 L670 217" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-40.79s"/>
+        <path class="sock seq" pathLength="1" d="M452 231 L670 222" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-40.75s"/>
+        <path class="sock seq" pathLength="1" d="M452 240 L670 227" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-40.70s"/>
+        <path class="sock seq" pathLength="1" d="M452 249 L670 232" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-40.66s"/>
+        <path class="sock seq" pathLength="1" d="M452 258 L670 237" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-40.61s"/>
+        <path class="sock seq" pathLength="1" d="M452 267 L670 242" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-40.57s"/>
+        <path class="sock seq" pathLength="1" d="M452 276 L670 247" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-40.52s"/>
+        <path class="sock seq" pathLength="1" d="M452 285 L670 252" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-40.48s"/>
+        <path class="sock seq" pathLength="1" d="M452 294 L670 257" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-40.43s"/>
+        <path class="sock seq" pathLength="1" d="M452 303 L670 262" fill="none" stroke="rgba(91,233,195,.5)" stroke-width=".9" style="animation-delay:-40.39s"/>
+        <text class="mono" x="448" y="330" fill="#6A688C" font-size="8.5">GET / HTTP/1.1</text>
+        <text class="mono" x="448" y="340" fill="#6A688C" font-size="8.5">X-a: b<tspan fill="#FF6B8A">   never completes</tspan></text>
+        <text class="mono" x="746" y="354" text-anchor="end" fill="#FF6B8A" font-size="9.5">sockets held: 1000</text>
+      </g>
+
+      <g id="s5" class="seq">
+        <rect x="458" y="132" width="272" height="150" fill="#0A0A12" stroke="rgba(255,255,255,.14)"/>
+        <text class="mono" x="470" y="152" fill="#9492BA" font-size="9">watch this video</text>
+        <rect x="470" y="164" width="76" height="26" fill="none" stroke="#5BE9C3" stroke-width="1.1"/>
+        <text class="mono" x="508" y="180" text-anchor="middle" fill="#5BE9C3" font-size="8.5">play</text>
+
+        <!-- The frame, its button, the hit ring and the pointer all travel as
+             one group. It starts exactly on top of play, then goes wherever
+             the pointer goes: whatever you aim at, you press their button. -->
+        <g id="cj-follow" class="seq">
+          <g id="cj-over" class="seq">
+            <rect x="462" y="158" width="170" height="40" fill="rgba(255,107,138,.08)"
+                  stroke="#FF6B8A" stroke-dasharray="4 3" stroke-width="1"/>
+            <text class="mono" x="554" y="180" fill="#FF6B8A" font-size="7">iframe  opacity 0</text>
+            <g id="cj-press" class="seq" style="transform-origin:508px 177px;transform-box:view-box">
+              <rect x="470" y="164" width="76" height="26" fill="#1A0A10" stroke="#FF6B8A" stroke-width="1.2"/>
+              <text class="mono" x="508" y="180" text-anchor="middle" fill="#FF6B8A" font-size="7">confirm transfer</text>
+            </g>
+          </g>
+          <circle id="cj-hit" class="seq" cx="508" cy="177" r="22" fill="none" stroke="#FF6B8A" stroke-width="1.4"
+                  style="transform-origin:508px 177px;transform-box:view-box"/>
+          <path d="M508 172 l0 19 l5 -5 l4 8 l4 -2 l-4 -8 l7 0 z" fill="#F4F4F8" stroke="#08080E" stroke-width=".8"/>
+        </g>
+        <text class="mono" x="448" y="338" fill="#6A688C" font-size="8.5">the frame tracks the pointer. wherever you</text>
+        <text class="mono" x="448" y="349" fill="#6A688C" font-size="8.5">aim, you press their button.</text>
+      </g>
+
+      <g id="s6" class="seq mono">
+        <text class="ph0 seq" x="448" y="132" fill="#5BE9C3" font-size="9.2">GET /avatar?url=</text>
+        <text class="ph1 seq" x="458" y="157" fill="#6A688C" font-size="8.2">http://192.168.0.11/icons/image2.gif</text>
+        <text class="ph2 seq" x="474" y="182" fill="#F4F4F8" font-size="9.2">200   apache</text>
+        <text class="ph3 seq" x="458" y="207" fill="#6A688C" font-size="8.2">http://192.168.0.12/wp-includes/.../icon_neutral.gif</text>
+        <text class="ph4 seq" x="474" y="232" fill="#FF6B8A" font-size="9.2">200   wordpress  ·  now exploitable</text>
+        <text x="448" y="330" fill="#6A688C" font-size="8.5">the website fetches it for you, from inside.</text>
+        <text x="448" y="341" fill="#6A688C" font-size="8.5">ports 80 · 8080 · 8888. no user required.</text>
+      </g>
+
+      <g id="s7" class="seq mono">
+        <text class="rc0 seq" x="448" y="134" fill="#6A688C" font-size="9.0">10.0.0.0/8   172.16.0.0/12   192.168.0.0/16</text>
+        <text class="rc1 seq" x="448" y="160" fill="#9492BA" font-size="9.0">most of it lives in five /24s</text>
+        <text class="rc2 seq" x="448" y="186" fill="#F4F4F8" font-size="9.5">256 × 5 = 1280 likely addresses</text>
+        <text class="rc3 seq" x="448" y="212" fill="#5BE9C3" font-size="9.0">vpn up   →  cache evil js at 192.168.1.1</text>
+        <text class="rc4 seq" x="448" y="238" fill="#FF6B8A" font-size="9.0">vpn down →  your 192.168.1.1 serves it</text>
+        <g id="rc-flip" class="seq" style="transform-origin:682px 288px;transform-box:view-box">
+          <rect x="638" y="272" width="96" height="30" fill="#0A0A12" stroke="#FF6B8A" stroke-width="1.1"/>
+          <text x="686" y="291" text-anchor="middle" fill="#FF6B8A" font-size="8">cached · persists</text>
+        </g>
+        <text x="448" y="338" fill="#6A688C" font-size="8.5">no need to break the same origin policy.</text>
+        <text x="448" y="349" fill="#6A688C" font-size="8.5">only to wait.</text>
+      </g>
+
+      <g id="s8" class="seq mono">
+        <rect x="452" y="128" width="62" height="28" fill="#0A0A12" stroke="#5BE9C3" stroke-width="1"/>
+        <text x="483" y="146" text-anchor="middle" fill="#9492BA" font-size="8">browser</text>
+        <rect x="566" y="128" width="66" height="28" fill="#0A0A12" stroke="#FF6B8A" stroke-width="1"/>
+        <text x="599" y="146" text-anchor="middle" fill="#FF6B8A" font-size="8">evil dns</text>
+        <path d="M514 142 L566 142" stroke="rgba(148,146,186,.5)" stroke-width="1"/>
+        <text class="rb0 seq" x="448" y="184" fill="#6A688C" font-size="9.5">A? evil.com</text>
+        <text class="rb1 seq" x="474" y="209" fill="#F4F4F8" font-size="9.5">203.0.113.9   ttl 0</text>
+        <text class="rb2 seq" x="448" y="234" fill="#6A688C" font-size="9.5">A? evil.com   (ttl expired)</text>
+        <text class="rb3 seq" x="474" y="259" fill="#FF6B8A" font-size="9.5">192.168.1.1   ttl 0</text>
+        <g id="rb-flip" class="seq" style="transform-origin:682px 256px;transform-box:view-box">
+          <rect x="644" y="240" width="82" height="30" fill="#0A0A12" stroke="#FF6B8A" stroke-width="1.1"/>
+          <text x="685" y="259" text-anchor="middle" fill="#FF6B8A" font-size="8">192.168.1.1</text>
+        </g>
+      </g>
+
+      <g id="s9" class="seq mono">
+        <text class="py0 seq" x="448" y="140" fill="#5BE9C3" font-size="10">&gt;&gt;&gt; n = float('nan')</text>
+        <text class="py1 seq" x="448" y="165" fill="#5BE9C3" font-size="10">&gt;&gt;&gt; n == n</text>
+        <text class="py2 seq" x="462" y="190" fill="#FF6B8A" font-size="10">False</text>
+        <text class="py3 seq" x="448" y="215" fill="#5BE9C3" font-size="10">&gt;&gt;&gt; n in [n]</text>
+        <text class="py4 seq" x="462" y="240" fill="#F4F4F8" font-size="10">True</text>
+        <text x="448" y="338" fill="#6A688C" font-size="8.5">not equal to itself, yet in the list.</text>
+        <text x="448" y="349" fill="#6A688C" font-size="8.5">identity, not equality.</text>
+      </g>
+
+      <g id="s10" class="seq mono">
+        <text class="mh0 seq" x="448" y="140" fill="#5BE9C3" font-size="9.5">php &gt; md5('240610708')</text>
+        <text class="mh1 seq" x="462" y="165" fill="#F4F4F8" font-size="9.0">0e462097431906509019562988736854</text>
+        <text class="mh2 seq" x="448" y="190" fill="#5BE9C3" font-size="9.5">php &gt; md5('240610708') == '0'</text>
+        <text class="mh3 seq" x="462" y="215" fill="#FF6B8A" font-size="9.5">true</text>
+        <text class="mh4 seq" x="448" y="240" fill="#FF6B8A" font-size="9.0">so any two 0e-and-digits hashes match</text>
+        <text x="448" y="338" fill="#6A688C" font-size="8.5">== reads "0e..." as scientific notation,</text>
+        <text x="448" y="349" fill="#6A688C" font-size="8.5">casts it to float zero, and compares equal.</text>
+      </g>
+
+      <g id="s11" class="seq mono">
+        <text x="448" y="172" fill="#6A688C" font-size="9">shipped in every browser since:</text>
+        <text id="csp-line" class="seq" x="448" y="198" fill="#5BE9C3" font-size="9.5">Content-Security-Policy: default-src 'self'</text>
+        <g id="signoff" class="seq">
+          <text x="448" y="266" fill="#F4F4F8" font-size="24" letter-spacing="5.5">RSNAKE</text>
+          <rect x="574" y="249" width="10" height="20" fill="#5BE9C3"/>
+          <text x="448" y="288" fill="#6A688C" font-size="8.5" letter-spacing="1.4">thirty one years of breaking it first</text>
+        </g>
+      </g>
+      </g>
+    </svg>
+  </div>
+
+  <div class="wrap hero-in">
+    <p class="eyebrow">Robert Hansen, Austin, Texas</p>
+    <h1>Finding what<br>everyone else<br><span class="accent">missed.</span></h1>
+    <p class="lede">
+      It started with Fierce, Slowloris, Clickjacking, XSS Cheat Sheet, and Content Security Policy.
+      Thirty one years on, it's become a venture portfolio, a vulnerability platform willing to put millions behind its
+      findings, and a weekly intelligence report for people who need the signal amongst the noise.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="/report/">
+        Read the Report
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="btn btn-ghost" href="#work">See the work</a>
+    </div>
+  </div>
+
+  <a class="scroll-hint" href="#record" aria-label="Scroll to the record"><i></i> Scroll</a>
+</section>
+
+<!-- KNOWN FOR -->
+<div class="strip">
+  <div class="wrap strip-in">
+    <div class="strip-item"><b>Slowloris</b>Author</div>
+    <div class="strip-item"><b>Clickjacking</b>Co-discovered</div>
+    <div class="strip-item"><b>Content Security Policy</b>Contributor</div>
+    <div class="strip-item"><b>Fierce</b>Author</div>
+    <div class="strip-item"><b>ha.ckers.org</b>Founder</div>
+  </div>
+</div>
+
+<!-- THE RECORD -->
+<section id="record" class="pad defer">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <div>
+        <p class="eyebrow">The record</p>
+        <h2>More than thirty years,<br>abbreviated.</h2>
+      </div>
+      <p>Techniques, tools, disclosures and companies that make up RSnake's complicated and storied career.</p>
+    </div>
+    <div class="record rise">
+        <div class="rec"><div class="rec-y">1996</div><div class="rec-b"><b>EHAP</b><span>Co-founded Ethical Hackers Against Pedophilia, which successfully identified online predators.</span></div></div>
+        <div class="rec"><div class="rec-y">1996</div><div class="rec-b"><b>WebFringe.com</b><span>A self healing top 100 list, built because webrings broke as soon as enough sites went offline.</span></div></div>
+        <div class="rec"><div class="rec-y">2001</div><div class="rec-b"><b>Hardening .htaccess</b><span>First Black Hat Briefings talk, on identifying and thwarting automated brute force attacks.</span></div></div>
+        <div class="rec"><div class="rec-y">2001</div><div class="rec-b"><b>Peekabooty</b><span>Architecture work with Bronc Buster on censorship evasion software, a precursor to Tor.</span></div></div>
+        <div class="rec"><div class="rec-y">2004</div><div class="rec-b"><b>Intranet port hacking</b><span>Researched with Jeremiah Grossman. The browser's access to the internal network becomes the conduit to attack.</span></div></div>
+        <div class="rec"><div class="rec-y">2005</div><div class="rec-b"><b>Content Security Policy</b><span>Invented at eBay to defeat stored and reflected cross site scripting. Now in every browser.</span></div></div>
+        <div class="rec"><div class="rec-y">2005</div><div class="rec-b"><b>ha.ckers.org / sla.ckers.org</b><span>A web application security lab and the forum that grew around it. 1,000 posts before it closed.</span></div></div>
+        <div class="rec"><div class="rec-y">2006</div><div class="rec-b"><b>SecTheory</b><span>Founded with James Flom. Consultancy, research lab, and the home of many research papers.</span></div></div>
+        <div class="rec"><div class="rec-y">2007</div><div class="rec-b"><b>XSS cheat sheet</b><span>The filter evasion reference, built to show why blacklisting cross site scripting does not work.</span></div></div>
+        <div class="rec"><div class="rec-y">2007</div><div class="rec-b"><b>Death by 1000 Cutts</b><span>Google Desktop exploit, CVE-2007-3150, and a paper on chaining small issues against one person.</span></div></div>
+        <div class="rec"><div class="rec-y">2008</div><div class="rec-b"><b>Clickjacking</b><span>Researched with Jeremiah Grossman. Disclosure delayed at Adobe's request. CVE-2008-4503, CWE-1021.</span></div></div>
+        <div class="rec"><div class="rec-y">2008</div><div class="rec-b"><b>Xploiting Google Gadgets</b><span>DEF CON, with Tom Stracener. Malicious gadgets to phish users and leak data.</span></div></div>
+        <div class="rec"><div class="rec-y">2009</div><div class="rec-b"><b>Slowloris</b><span>Partial HTTP requests held in parallel lead to three CVEs. Used during the Iranian Green Revolution protests.</span></div></div>
+        <div class="rec"><div class="rec-y">2009</div><div class="rec-b"><b>Fierce</b><span>DNS enumeration by brute force, to find the assets a target does not know it has.</span></div></div>
+        <div class="rec"><div class="rec-y">2009</div><div class="rec-b"><b>DNS rebinding</b><span>Research on turning a browser into a route onto the network behind it.</span></div></div>
+        <div class="rec"><div class="rec-y">2009</div><div class="rec-b"><b>RFC1918 cache poisoning</b><span>Everyone shares the same private ranges. Poison a cache on one network, wait, collect data on another.</span></div></div>
+        <div class="rec"><div class="rec-y">2010</div><div class="rec-b"><b>HTTPS Can Byte Me</b><span>Black Hat, with Josh Sokol. Two dozen seperate side channel attacks against HTTPS.</span></div></div>
+        <div class="rec"><div class="rec-y">2010</div><div class="rec-b"><b>Falling Rock Networks</b><span>With James Flom. Productized the ha.ckers.org stack on BSD chroot jails. Patented.</span></div></div>
+        <div class="rec"><div class="rec-y">2012</div><div class="rec-b"><b>Stratfor</b><span>Incident response work after the Anonymous breach.</span></div></div>
+        <div class="rec"><div class="rec-y">2015</div><div class="rec-b"><b>Magic hashes</b><span>PHP's == sometimes casts a hash beginning "0e" plus digits to float zero, so unrelated hashes compare equal.</span></div></div>
+        <div class="rec"><div class="rec-y">2017</div><div class="rec-b"><b>Bit Discovery</b><span>Co-founded the attack surface management platform acquired by Tenable, where he became Deputy CTO.</span></div></div>
+        <div class="rec"><div class="rec-y">2019</div><div class="rec-b"><b>Detecting Malice</b><span>A book on fraud and abuse. How to read a request and know who is behind it.</span></div></div>
+        <div class="rec"><div class="rec-y">2024</div><div class="rec-b"><b>AI's Best Friend</b><span>On what happens to people, work and truth when the machine gets good enough to be believed.</span></div></div>
+        <div class="rec"><div class="rec-y">2025</div><div class="rec-b"><b>Grossman Ventures</b><span>Managing Partner. Finding the best early-stage companies focused on loss prevention and bringing them to market.</span></div></div>
+        <div class="rec"><div class="rec-y">2025</div><div class="rec-b"><b>Root Evidence</b><span>CTO. A vulnerability platform willing to put money behind its findings.</span></div></div>
+        <div class="rec"><div class="rec-y">2026</div><div class="rec-b"><b>The End of Guessing</b><span>With Jeremiah Grossman. Against an industry that scores risk without ever proving it.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work" class="pad defer">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <div>
+        <p class="eyebrow">Currently</p>
+        <h2>Building, investing,<br>and breaking things.</h2>
+      </div>
+      <p>Four places RSnake focuses: product and architecture, capital, data, and a running argument with the industry about what matters.</p>
+    </div>
+
+    <div class="grid grid-2 rise">
+      <a class="card" href="https://www.rootevidence.com/" rel="noopener">
+        <span class="role">Chief Technology Officer</span>
+        <h3>Root Evidence</h3>
+        <p>The first vulnerability management platform willing to back its findings with a multi-million dollar warranty. Product, technical and architectural direction for pricing risk.</p>
+        <span class="go">rootevidence.com &rsaquo;</span>
+      </a>
+      <a class="card" href="https://grossman.vc/" rel="noopener">
+        <span class="role">Managing Director</span>
+        <h3>Grossman Ventures</h3>
+        <p>Backing and advising early security founders, the ones solving problems the market hasn't adopted... yet.</p>
+        <span class="go">grossman.vc &rsaquo;</span>
+      </a>
+      <a class="card" href="https://cvedata.com" rel="noopener">
+        <span class="role">Research</span>
+        <h3>CVEData</h3>
+        <p>A dissection of how CVSS actually behaves against VulnCheck KEV, CISA KEV and EPSS, and where the scoring quietly misleads the industry.</p>
+        <span class="go">cvedata.com &rsaquo;</span>
+      </a>
+      <a class="card" href="https://revenuedefender.com/" rel="noopener">
+        <span class="role">Founder</span>
+        <h3>Revenue Defender</h3>
+        <p>Build a security stack that pays for itself. Which controls actually cut risk and claims, ranked by what underwriters see and known breach data.</p>
+        <span class="go">revenuedefender.com &rsaquo;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- WRITING -->
+<section id="writing" class="pad defer">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <div>
+        <p class="eyebrow">Writing</p>
+        <h2>Three books, all<br>still arguing.</h2>
+      </div>
+    </div>
+    <div class="books rise">
+      <a class="book book-lead" href="https://www.amazon.com/End-Guessing-Jeremiah-Grossman/dp/B0H8W5PTHF" rel="noopener">
+        <span class="badge">New</span>
+        <div class="book-cover book-cover--paper">
+          <img src="assets/images/end-of-guessing.webp"
+               alt="The End of Guessing, cover: a wall of CVE identifiers with one highlighted"
+               width="800" height="1200" loading="lazy" decoding="async" fetchpriority="low">
         </div>
-    </section>
+        <span class="meta">New, with Jeremiah Grossman</span>
+        <h3>The End of Guessing</h3>
+        <p>The case against a security industry that scores, ranks and estimates risk without ever proving it.</p>
+        <span class="go">Amazon &rsaquo;</span>
+      </a>
 
-    <!-- Book Promotion Section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-4 mb-4 mb-lg-0">
-                    <img src="./assets/images/aibf.webp" alt="AI's Best Friend book cover" class="img-fluid rounded shadow">
-                </div>
-                <div class="col-lg-8">
-                    <h2 class="display-5 mb-4">AI's Best Friend</h2>
-                    <p class="lead mb-4">A groundbreaking exploration of artificial intelligence and its impact on society, written by Robert "RSnake" Hansen.</p>
-                    <a href="https://www.amazon.com/Best-Friend-Robert-RSnake-Hansen/dp/B0CWKY91WM/ref=tmm_pap_swatch_0?_encoding=UTF8&qid=&sr=" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                        Get the Book on Amazon
-                    </a>
-                </div>
-            </div>
+      <a class="book" href="https://www.amazon.com/Best-Friend-Robert-RSnake-Hansen/dp/B0CWKY91WM/" rel="noopener">
+        <div class="book-cover">
+          <img src="assets/images/aibf.webp" alt="AI's Best Friend, book cover" width="400" height="600" loading="lazy" decoding="async" fetchpriority="low">
         </div>
-    </section>
+        <span class="meta">Book</span>
+        <h3>AI's Best Friend</h3>
+        <p>What happens to people, work and truth when the machine gets too good.</p>
+        <span class="go">Amazon &rsaquo;</span>
+      </a>
 
-    <!-- cvedata.com promotion section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-4 mb-4 mb-lg-0">
-                    <img src="./assets/images/cvedata.png" alt="CVEdata.com interface" class="img-fluid rounded shadow">
-                </div>
-                <div class="col-lg-8">
-                    <h2 class="display-5 mb-4">CVEdata.com</h2>
-                    <p class="lead mb-4">A comprehensive dissection of how CVSS applies to Vulncheck KEV, CISA KEV, and EPSS. Understand vulnerability scoring and its real-world impact.</p>
-                    <a href="https://cvedata.com" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                        Explore CVEData.com
-                    </a>
-                </div>
-            </div>
+      <a class="book" href="/detectingmalice.html">
+        <div class="book-cover book-cover--paper">
+          <img src="assets/images/3d_lay-med.jpg" alt="Detecting Malice, book cover" width="400" height="300" loading="lazy" decoding="async" fetchpriority="low">
         </div>
-    </section>
+        <span class="meta">Free e-book</span>
+        <h3>Detecting Malice</h3>
+        <p>The fraud and abuse eBook. How to read a request and know who is behind it.</p>
+        <span class="go">Download &rsaquo;</span>
+      </a>
+    </div>
+  </div>
+</section>
 
-    <!-- Grossman Ventures section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-4 mb-4 mb-lg-0">
-                    <img src="./assets/images/grossmanventures.png" alt="Grossman Ventures logo" class="img-fluid rounded shadow">
-                </div>
-                <div class="col-lg-8">
-                    <h2 class="display-5 mb-4">Grossman Ventures</h2>
-                    <p class="lead mb-4">As Managing Director, I help shape the future of technology through strategic investments and guidance for innovative security startups.</p>
-                    <a href="https://grossman.vc/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                        Visit Grossman Ventures
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- REPORT -->
+<section class="pad defer">
+  <div class="wrap work rise">
+    <div>
+      <p class="eyebrow">The RSnake Report</p>
+      <h2 style="font-size:clamp(26px,4.2vw,44px);margin-bottom:16px">Weekly, high quality OSINT geopolitical newsletter.</h2>
+      <p style="color:var(--muted);max-width:48ch;margin:0 0 26px">
+        Geopolitics, technology, cybersecurity and business, assembled from primary
+        sources, annotated, and sent every week. Highly acclaimed by the people who read it.
+      </p>
+      <a class="btn btn-ghost" href="/report/">
+        Browse 139 issues
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="shot">
+      <img src="assets/images/rsnakereport.png" alt="A recent issue of the RSnake Report"
+           width="1200" height="750" loading="lazy" decoding="async" fetchpriority="low">
+    </div>
+  </div>
+</section>
 
-    <!-- Root Evidence section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-4 mb-4 mb-lg-0">
-                    <img src="./assets/images/evidence.png" alt="Root Evidence logo" class="img-fluid rounded shadow">
-                </div>
-                <div class="col-lg-8">
-                    <h2 class="display-5 mb-4">Root Evidence</h2>
-                    <p class="lead mb-4">As the CTO RSnake guides all product, technical and architectural decisions.</p>
-                    <a href="https://www.rootevidence.com/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                        Visit Root Evidence
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- SUBSCRIBE -->
+<section class="pad defer" id="subscribe">
+  <div class="wrap">
+    <div class="sub rise">
+      <p class="eyebrow">Free, weekly</p>
+      <h2>Get the Report.</h2>
+      <p>One email a week. Stay up to date, and learn how RSnake sees the threat landscape.</p>
+      <form id="sub-form" novalidate>
+        <input type="email" id="sub-email" name="email" placeholder="you@example.com" required autocomplete="email" aria-label="Email address">
+        <button type="submit" id="sub-btn">Subscribe</button>
+        <div class="ts-slot"><div id="sub-turnstile"></div></div>
+      </form>
+      <p class="sub-msg" id="sub-msg" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
 
-    <!-- Detecting Malice section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-4 mb-4 mb-lg-0">
-                    <img src="assets/images/3d_lay-med.jpg" alt="Detecting Malice" class="img-fluid rounded shadow">
-                </div>
-                <div class="col-lg-8">
-                    <h2 class="display-5 mb-4">Detecting Malice</h2>
-                    <p class="lead mb-4">The fraud loss detection e-book. Now FREE.</p>
-                    <a href="https://rsnake.com/detectingmalice.html" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                        Download Detecting Malice
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- SHOW, deliberately quiet -->
+<section class="pad defer" style="padding-block:clamp(40px,6vw,70px)">
+  <div class="wrap rise">
+    <div class="quiet">
+      <a class="thumb" href="https://youtube.com/@thersnakeshow" rel="noopener" aria-label="Watch The RSnake Show">
+        <img src="assets/images/hero.webp" alt="" width="2110" height="877" loading="lazy" decoding="async" fetchpriority="low">
+        <svg viewBox="0 0 120 120" fill="none" aria-hidden="true">
+          <circle cx="60" cy="60" r="44" stroke="rgba(255,255,255,.4)" stroke-width="2"/>
+          <path d="M52 46l24 14-24 14V46z" fill="#F4F4F8"/>
+        </svg>
+      </a>
+      <div class="txt">
+        <h3>The RSnake Show (now offline)</h3>
+        <p>Look up old episodes here. Long, unhurried interviews about technology, security, power and where the internet is actually heading.</p>
+      </div>
+      <div class="links">
+        <a href="https://youtube.com/@thersnakeshow" rel="noopener">YouTube &rsaquo;</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
 
-    <!-- AIISDOINGGREAT.COM section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-4 mb-4 mb-lg-0">
-                    <img src="assets/images/aiisdoinggreat.png" alt="AI is doing great" class="img-fluid rounded shadow">
-                </div>
-                <div class="col-lg-8">
-                    <h2 class="display-5 mb-4">AIISDOINGGREAT.com</h2>
-                    <p class="lead mb-4">RSnake's proof that AI/LLM usage is going great and definitely well thought through.</p>
-                    <a href="https://aiisdoinggreat.com/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">AIISDOINGGREAT.COM</a>
-                </div>
-            </div>
-        </div>
-    </section>
+<footer>
+  <div class="wrap foot">
+    <span>&copy; <span id="yr">2026</span> Robert Hansen. All rights reserved, all wrongs observed.</span>
+    <nav class="social" aria-label="Elsewhere">
+      <a href="https://twitter.com/rsnake" rel="noopener" aria-label="X">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-7.3 8.3L23 22h-6.8l-5.3-6.9L4.8 22H1.7l7.8-8.9L1 2h6.9l4.8 6.3L18.9 2zm-1.2 18h1.7L7.4 3.8H5.6L17.7 20z"/></svg>
+      </a>
+      <a href="https://youtube.com/@thersnakeshow" rel="noopener" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 12s0-3.2-.4-4.7a2.5 2.5 0 0 0-1.8-1.8C19.3 5 12 5 12 5s-7.3 0-8.8.5A2.5 2.5 0 0 0 1.4 7.3C1 8.8 1 12 1 12s0 3.2.4 4.7a2.5 2.5 0 0 0 1.8 1.8C4.7 19 12 19 12 19s7.3 0 8.8-.5a2.5 2.5 0 0 0 1.8-1.8C23 15.2 23 12 23 12zM9.8 15.3V8.7l6.1 3.3-6.1 3.3z"/></svg>
+      </a>
+      <a href="https://open.spotify.com/show/4wHHBk84wU9MQ7loDha7BK" rel="noopener" aria-label="Spotify">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 14.4a.8.8 0 0 1-1.1.3c-3-1.8-6.7-2.2-11.1-1.2a.8.8 0 1 1-.3-1.5c4.8-1.1 8.9-.6 12.2 1.4.4.2.5.7.3 1zm1.2-2.8a1 1 0 0 1-1.3.3c-3.4-2.1-8.6-2.7-12.6-1.5a1 1 0 0 1-.6-1.9c4.6-1.4 10.3-.7 14.2 1.7.4.3.6.9.3 1.4zm.1-2.9C14 8.2 7.6 8 4.2 9a1.2 1.2 0 1 1-.7-2.3C7.5 5.5 14.5 5.7 18.9 8.3a1.2 1.2 0 0 1-1 2.4z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/TheRSnakeShow/" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+      </a>
+    </nav>
+  </div>
+</footer>
 
-    <!-- RSnake Report newsletter section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-4 mb-4 mb-lg-0">
-                    <img src="assets/images/rsnakereport.png" alt="RSnake Report" class="img-fluid rounded shadow">
-                </div>
-                <div class="col-lg-8">
-                    <h2 class="display-5 mb-4">The RSnake Report</h2>
-                    <p class="lead mb-4">Stay informed with my weekly newsletter on security, technology, and the future of the internet.</p>
-                    
-                    <!-- Subscribe form (posts to Cloudflare Worker on rsnake.com/api) -->
-                    <form id="subscribe-form" class="mb-3" style="max-width:480px;">
-                      <div class="d-flex gap-2">
-                        <input type="email" id="subscribe-email" name="email" class="form-control" placeholder="you@example.com" required autocomplete="email">
-                        <button type="submit" class="btn btn-primary" id="subscribe-submit">Subscribe</button>
-                      </div>
-                      <div id="subscribe-turnstile" class="cf-turnstile mt-2" data-sitekey="0x4AAAAAAFB91HwlWcZKQOMA" data-theme="auto"></div>
-                    </form>
-                    <p id="subscribe-msg" class="small mb-3" style="min-height:1.25em;color:#9492ba;"></p>
+<!-- Speculation rules, Chromium. Only same-origin destinations: the
+     off-site links are somebody else's bandwidth and privacy. -->
+<script type="speculationrules">
+{
+ "prerender": [
+  {
+   "where": {
+    "href_matches": "/report/"
+   },
+   "eagerness": "moderate"
+  },
+  {
+   "where": {
+    "href_matches": "/about.html"
+   },
+   "eagerness": "moderate"
+  }
+ ],
+ "prefetch": [
+  {
+   "where": {
+    "href_matches": "/detectingmalice.html"
+   },
+   "eagerness": "moderate"
+  },
+  {
+   "where": {
+    "href_matches": "/"
+   },
+   "eagerness": "conservative"
+  }
+ ]
+}
+</script>
 
-                    <p class="mb-0">
-                        <a href="/report/" class="btn btn-primary">Browse the archive</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
+<script>
+(function(){
+  "use strict";
+  document.getElementById("yr").textContent = new Date().getFullYear();
 
-    <!-- Footer -->
-    <footer class="py-5">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 text-center">
-                    <!-- Navigation Links -->
-                    <nav class="mb-4">
-                        <ul class="list-inline">
-                            <li class="list-inline-item"><a href="/about.html" class="text-decoration-none text-white">About</a></li>
-                            <li class="list-inline-item"><a href="/report/" class="text-decoration-none text-white">Newsletter</a></li>
-                            <li class="list-inline-item"><a href="https://youtube.com/@thersnakeshow" class="text-decoration-none text-white">Podcast</a></li>
-                        </ul>
-                    </nav>
+  /* Speculation rules are Chromium only. Everywhere else, take the same
+     intent signal (hover or touch) and drop in a plain prefetch link once
+     per destination. Skipped when the browser already speculates, when the
+     user asked to save data, or on a slow connection. */
+  (function(){
+    if (HTMLScriptElement.supports && HTMLScriptElement.supports("speculationrules")) return;
+    var c = navigator.connection || {};
+    if (c.saveData || /2g/.test(c.effectiveType || "")) return;
+    var done = {};
+    function warm(href){
+      if (!href || done[href]) return;
+      done[href] = 1;
+      var l = document.createElement("link");
+      l.rel = "prefetch"; l.href = href; l.as = "document";
+      document.head.appendChild(l);
+    }
+    document.querySelectorAll('a[href^="/"]:not([href^="//"])').forEach(function(a){
+      if (a.getAttribute("href").charAt(0) === "#") return;
+      ["pointerenter","touchstart","focus"].forEach(function(ev){
+        a.addEventListener(ev, function(){ warm(a.href); }, {once:true, passive:true});
+      });
+    });
+  })();
 
-                    <!-- Social Links -->
-                    <div class="social-links mb-4">
-                        <a href="https://www.facebook.com/TheRSnakeShow/" class="text-white me-3" aria-label="Facebook"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12c0-5.5-4.5-10-10-10z"/></svg></a>
-                        <a href="https://www.instagram.com/TheRSnakeShow/" class="text-white me-3" aria-label="Instagram"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.012-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
-                        <a href="https://twitter.com/rsnake" class="text-white me-3" aria-label="X (Twitter)"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M13.982 10.622 20.54 3h-1.554l-5.693 6.618L8.745 3H3.5l6.876 10.007L3.5 21h1.554l6.012-6.989L15.868 21h5.245l-7.131-10.378Zm-2.128 2.474-.697-.997-5.543-7.93H8l4.474 6.4.697.996 5.815 8.318h-2.387l-4.745-6.787Z"/></svg></a>
-                        <a href="https://open.spotify.com/show/4wHHBk84wU9MQ7loDha7BK" class="text-white" aria-label="Spotify"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10c0-5.523-4.477-10-10-10zm4.586 14.424c-.18.295-.563.387-.857.207-2.348-1.435-5.304-1.76-8.785-.964-.335.077-.67-.133-.746-.469-.077-.335.132-.67.469-.746 3.809-.871 7.077-.496 9.713 1.115.295.18.387.563.207.857zm1.224-2.724c-.226.367-.706.482-1.072.257-2.687-1.652-6.785-2.131-9.965-1.166-.415.125-.85-.111-.975-.524-.125-.415.111-.85.524-.975 3.632-1.102 8.147-.568 11.234 1.328.367.226.482.706.257 1.072zm.111-2.835c-3.223-1.914-8.54-2.09-11.618-1.156-.515.156-.85-.111-1.006-.626-.156-.515.111-.85.626-1.006 3.532-1.072 9.404-.865 13.115 1.338.445.264.59.838.327 1.282-.264.445-.838.59-1.282.327z"/></svg></a>
-                    </div>
 
-                    <!-- Copyright -->
-                    <p class="small mb-0">Copyright <span id="copy-year">2025</span>. All Rights Reserved, All Wrongs Observed.</p>
-                    <script>document.getElementById('copy-year').textContent=new Date().getFullYear();</script>
-                </div>
-            </div>
-        </div>
-    </footer>
+  var rise = document.querySelectorAll(".rise");
+  if ("IntersectionObserver" in window && rise.length){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    },{rootMargin:"0px 0px -8% 0px",threshold:.08});
+    rise.forEach(function(el){ io.observe(el); });
+  } else {
+    rise.forEach(function(el){ el.classList.add("in"); });
+  }
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback&render=explicit" async defer></script>
-    <script>
-      (function () {
-        var form = document.getElementById('subscribe-form');
-        var msg = document.getElementById('subscribe-msg');
-        var btn = document.getElementById('subscribe-submit');
-        var input = document.getElementById('subscribe-email');
-        if (!form) return;
+  document.querySelectorAll(".card").forEach(function(card){
+    card.addEventListener("pointermove", function(e){
+      var r = card.getBoundingClientRect();
+      card.style.setProperty("--mx", ((e.clientX - r.left)/r.width*100) + "%");
+      card.style.setProperty("--my", ((e.clientY - r.top)/r.height*100) + "%");
+    }, {passive:true});
+  });
 
-        // Render explicitly so we hold the widget id: a token is single-use,
-        // so a failed or repeated submit needs its own fresh one.
-        var widget = null;
-        window.onloadTurnstileCallback = function () {
-          widget = window.turnstile.render('#subscribe-turnstile', {
-            sitekey: '0x4AAAAAAFB91HwlWcZKQOMA',
-            theme: 'auto'
-          });
-        };
-        form.addEventListener('submit', function (e) {
-          e.preventDefault();
-          var email = (input.value || '').trim();
-          if (!email) return;
-          btn.disabled = true;
-          msg.textContent = 'Sending confirmation...';
-          msg.style.color = '#9492ba';
-          var token = '';
-          try {
-            token = window.turnstile ? window.turnstile.getResponse(widget) : '';
-          } catch (err) { token = ''; }
-          if (!token) {
-            msg.textContent = 'Please complete the "I am human" check above.';
-            msg.style.color = '#e08c8c';
-            btn.disabled = false;
-            return;
-          }
-          fetch('/api/subscribe', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: email, turnstile: token })
-          }).then(function (r) {
-            return r.json().catch(function () { return { ok: r.ok }; });
-          }).then(function (j) {
-            try { if (window.turnstile && widget !== null) window.turnstile.reset(widget); } catch (err) {}
-            if (j && j.ok) {
-              msg.textContent = 'Check your inbox — click the link to confirm.';
-              msg.style.color = '#9492ba';
-              input.value = '';
-            } else {
-              msg.textContent = (j && j.error) || 'Something went wrong. Try again?';
-              msg.style.color = '#d88';
-            }
-          }).catch(function () {
-            msg.textContent = 'Network error. Try again in a moment.';
-            msg.style.color = '#d88';
-          }).finally(function () {
-            btn.disabled = false;
-          });
-        });
-      })();
-    </script>
+  /* Turnstile is fetched only when the form is nearly in view, or on focus.
+     Most visitors never reach it, and third party JS on first load is the
+     most expensive thing a page like this can do. */
+  var SITEKEY = "0x4AAAAAAFB91HwlWcZKQOMA";
+  var form = document.getElementById("sub-form");
+  var email = document.getElementById("sub-email");
+  var btn = document.getElementById("sub-btn");
+  var msg = document.getElementById("sub-msg");
+  var widget = null, loading = false;
+
+  function say(text, state){ msg.textContent = text; msg.dataset.state = state || ""; }
+
+  window.onTurnstileReady = function(){
+    widget = window.turnstile.render("#sub-turnstile", {sitekey:SITEKEY, theme:"dark"});
+  };
+
+  function loadTurnstile(){
+    if (loading) return; loading = true;
+    var pre = document.createElement("link");
+    pre.rel = "preconnect"; pre.href = "https://challenges.cloudflare.com"; pre.crossOrigin = "";
+    document.head.appendChild(pre);
+    var s = document.createElement("script");
+    s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileReady&render=explicit";
+    s.async = true; s.defer = true;
+    document.head.appendChild(s);
+  }
+
+  if ("IntersectionObserver" in window){
+    var formIo = new IntersectionObserver(function(entries){
+      if (entries[0].isIntersecting){ loadTurnstile(); formIo.disconnect(); }
+    },{rootMargin:"400px"});
+    formIo.observe(form);
+  } else { loadTurnstile(); }
+  email.addEventListener("focus", loadTurnstile, {once:true});
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var value = (email.value || "").trim();
+    if (!value || value.indexOf("@") < 1){ say("That email does not look right.", "err"); return; }
+
+    var token = "";
+    try { token = window.turnstile && widget !== null ? window.turnstile.getResponse(widget) : ""; } catch(err){}
+    if (!token){ say("One moment, finishing the human check.", ""); loadTurnstile(); return; }
+
+    btn.disabled = true; say("Sending confirmation...", "");
+    fetch("/api/subscribe", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({email:value, turnstile:token})
+    }).then(function(r){
+      return r.json().catch(function(){ return {ok:r.ok}; });
+    }).then(function(j){
+      try { if (window.turnstile && widget !== null) window.turnstile.reset(widget); } catch(err){}
+      btn.disabled = false;
+      if (j && j.ok){ say("Check your inbox and click the link to confirm.", "ok"); email.value = ""; }
+      else { say("That did not go through. Try again in a moment.", "err"); }
+    }).catch(function(){
+      btn.disabled = false;
+      say("Network trouble. Try again in a moment.", "err");
+    });
+  });
+})();
+</script>
 </body>
 </html>
