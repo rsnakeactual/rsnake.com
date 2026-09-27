@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Sat, 26 Sep 2026 23:04:08 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 27 Sep 2026 19:59:30 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20260927</title>
+    <link>https://rsnake.com/report/p/jev-and-structured-llms-tax-hikes-in-russia-etc</link>
+    <guid>https://rsnake.com/report/p/jev-and-structured-llms-tax-hikes-in-russia-etc</guid>
+    <pubDate>Sun, 27 Sep 2026 19:59:27 GMT</pubDate>
+    <description>Jev and structured LLMs, tax hikes in Russia, etc.</description>
+  </item>
   <item>
     <title>RSnake Report 20260920</title>
     <link>https://rsnake.com/report/p/moscow-refinery-hit-saudi-arabia-seeks-help-against-houthis-etc</link>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/iran-attacks-peers-mass-shooting-in-austin</guid>
     <pubDate>Sat, 07 Mar 2026 23:46:25 GMT</pubDate>
     <description>Iran attacks peers, Mass shooting in Austin, etc</description>
-  </item>
-  <item>
-    <title>RSnake Report 20260228</title>
-    <link>https://rsnake.com/report/p/iran-attacked-by-us-and-israel-cartels-attack-mexico</link>
-    <guid>https://rsnake.com/report/p/iran-attacked-by-us-and-israel-cartels-attack-mexico</guid>
-    <pubDate>Sun, 01 Mar 2026 03:18:13 GMT</pubDate>
-    <description>Iran attacked by US and Israel, Cartels attack Mexico, etc</description>
   </item>
 </channel>
 </rss>
