@@ -2,72 +2,76 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd http://www.google.com/schemas/sitemap-image/1.1 http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>https://rsnake.com/</loc>
-		<lastmod>2026-09-27T19:59:27+00:00</lastmod>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
 		<image:image>
 			<image:loc>https://rsnake.com/assets/images/hero.webp</image:loc>
 		</image:image>
 	</url>
 	<url>
 		<loc>https://rsnake.com/about.html</loc>
-		<lastmod>2026-09-27T19:59:27+00:00</lastmod>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
 	</url>
 	<url>
 		<loc>https://rsnake.com/detectingmalice.html</loc>
-		<lastmod>2026-09-27T19:59:27+00:00</lastmod>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
 		<image:image>
 			<image:loc>https://rsnake.com/assets/images/3d_lay-med.jpg</image:loc>
 		</image:image>
 	</url>
 	<url>
 		<loc>https://rsnake.com/report/</loc>
-		<lastmod>2026-09-27T19:59:27+00:00</lastmod>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
 		<image:image>
 			<image:loc>https://rsnake.com/assets/images/rsnakereport.png</image:loc>
 		</image:image>
 	</url>
 	<url>
 		<loc>https://rsnake.com/report/page-2.html</loc>
-		<lastmod>2026-09-27T19:59:27+00:00</lastmod>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
 	</url>
 	<url>
 		<loc>https://rsnake.com/report/page-3.html</loc>
-		<lastmod>2026-09-27T19:59:27+00:00</lastmod>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
 	</url>
 	<url>
 		<loc>https://rsnake.com/report/page-4.html</loc>
-		<lastmod>2026-09-27T19:59:27+00:00</lastmod>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
 	</url>
 	<url>
 		<loc>https://rsnake.com/report/page-5.html</loc>
-		<lastmod>2026-09-27T19:59:27+00:00</lastmod>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
 	</url>
 	<url>
 		<loc>https://rsnake.com/report/page-6.html</loc>
-		<lastmod>2026-09-27T19:59:27+00:00</lastmod>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
 	</url>
 	<url>
 		<loc>https://rsnake.com/report/page-7.html</loc>
-		<lastmod>2026-09-27T19:59:27+00:00</lastmod>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
 	</url>
 	<url>
 		<loc>https://rsnake.com/report/page-8.html</loc>
-		<lastmod>2026-09-27T19:59:27+00:00</lastmod>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
 	</url>
 	<url>
 		<loc>https://rsnake.com/report/page-9.html</loc>
-		<lastmod>2026-09-27T19:59:27+00:00</lastmod>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
 	</url>
 	<url>
 		<loc>https://rsnake.com/report/page-10.html</loc>
-		<lastmod>2026-09-27T19:59:27+00:00</lastmod>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
 	</url>
 	<url>
 		<loc>https://rsnake.com/report/page-11.html</loc>
-		<lastmod>2026-09-27T19:59:27+00:00</lastmod>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
 	</url>
 	<url>
 		<loc>https://rsnake.com/report/page-12.html</loc>
-		<lastmod>2026-09-27T19:59:27+00:00</lastmod>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
+	</url>
+	<url>
+		<loc>https://rsnake.com/report/p/plague-outbreak-in-russia-flydubai-terrorist-attempt-etc</loc>
+		<lastmod>2026-10-04T18:48:09+00:00</lastmod>
 	</url>
 	<url>
 		<loc>https://rsnake.com/report/p/jev-and-structured-llms-tax-hikes-in-russia-etc</loc>
