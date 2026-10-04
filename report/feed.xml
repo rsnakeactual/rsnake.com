@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Sun, 27 Sep 2026 20:03:56 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 04 Oct 2026 18:48:12 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20261004</title>
+    <link>https://rsnake.com/report/p/plague-outbreak-in-russia-flydubai-terrorist-attempt-etc</link>
+    <guid>https://rsnake.com/report/p/plague-outbreak-in-russia-flydubai-terrorist-attempt-etc</guid>
+    <pubDate>Sun, 04 Oct 2026 18:48:09 GMT</pubDate>
+    <description>Plague outbreak in Russia, Flydubai terrorist attempt, etc</description>
+  </item>
   <item>
     <title>RSnake Report 20260927</title>
     <link>https://rsnake.com/report/p/jev-and-structured-llms-tax-hikes-in-russia-etc</link>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/terrorist-in-the-us-oil-prices-rising</guid>
     <pubDate>Sat, 14 Mar 2026 21:26:34 GMT</pubDate>
     <description>Terrorist in the US, Oil prices rising, etc</description>
-  </item>
-  <item>
-    <title>RSnake Report 20260307</title>
-    <link>https://rsnake.com/report/p/iran-attacks-peers-mass-shooting-in-austin</link>
-    <guid>https://rsnake.com/report/p/iran-attacks-peers-mass-shooting-in-austin</guid>
-    <pubDate>Sat, 07 Mar 2026 23:46:25 GMT</pubDate>
-    <description>Iran attacks peers, Mass shooting in Austin, etc</description>
   </item>
 </channel>
 </rss>
