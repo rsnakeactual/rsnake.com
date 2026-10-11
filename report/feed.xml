@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Sun, 04 Oct 2026 18:51:50 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 11 Oct 2026 19:10:57 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20261011</title>
+    <link>https://rsnake.com/report/p/us-buying-fuel-from-russia-nfa-act-neutered-etc</link>
+    <guid>https://rsnake.com/report/p/us-buying-fuel-from-russia-nfa-act-neutered-etc</guid>
+    <pubDate>Sun, 11 Oct 2026 19:10:55 GMT</pubDate>
+    <description>US buying fuel from Russia, NFA act neutered, etc</description>
+  </item>
   <item>
     <title>RSnake Report 20261004</title>
     <link>https://rsnake.com/report/p/plague-outbreak-in-russia-flydubai-terrorist-attempt-etc</link>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/iran-s-range-reaches-4k-km-10m-rial-iranian-rial-notes</guid>
     <pubDate>Sat, 21 Mar 2026 18:30:39 GMT</pubDate>
     <description>Iran's range reaches 4k km, 10M Rial Iranian Rial notes, etc</description>
-  </item>
-  <item>
-    <title>RSnake Report 20260314</title>
-    <link>https://rsnake.com/report/p/terrorist-in-the-us-oil-prices-rising</link>
-    <guid>https://rsnake.com/report/p/terrorist-in-the-us-oil-prices-rising</guid>
-    <pubDate>Sat, 14 Mar 2026 21:26:34 GMT</pubDate>
-    <description>Terrorist in the US, Oil prices rising, etc</description>
   </item>
 </channel>
 </rss>
