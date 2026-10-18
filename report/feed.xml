@@ -6,7 +6,14 @@
   <description>Geopolitical, technology, cybersecurity, and business news for people in the know.</description>
   <atom:link href="https://rsnake.com/report/feed.xml" rel="self" type="application/rss+xml" />
   <language>en-us</language>
-  <lastBuildDate>Sun, 11 Oct 2026 19:13:32 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 18 Oct 2026 21:11:36 GMT</lastBuildDate>
+  <item>
+    <title>RSnake Report 20261018</title>
+    <link>https://rsnake.com/report/p/france-ablaze-tesla-roadster-kickflip-etc</link>
+    <guid>https://rsnake.com/report/p/france-ablaze-tesla-roadster-kickflip-etc</guid>
+    <pubDate>Sun, 18 Oct 2026 21:11:33 GMT</pubDate>
+    <description>France ablaze, Tesla Roadster kickflip, etc.</description>
+  </item>
   <item>
     <title>RSnake Report 20261011</title>
     <link>https://rsnake.com/report/p/us-buying-fuel-from-russia-nfa-act-neutered-etc</link>
@@ -209,13 +216,6 @@
     <guid>https://rsnake.com/report/p/tsa-refunded-us-loses-e-3-awacs</guid>
     <pubDate>Sun, 29 Mar 2026 19:30:10 GMT</pubDate>
     <description>TSA refunded, US loses E-3 AWACS, etc.</description>
-  </item>
-  <item>
-    <title>RSnake Report 20260321</title>
-    <link>https://rsnake.com/report/p/iran-s-range-reaches-4k-km-10m-rial-iranian-rial-notes</link>
-    <guid>https://rsnake.com/report/p/iran-s-range-reaches-4k-km-10m-rial-iranian-rial-notes</guid>
-    <pubDate>Sat, 21 Mar 2026 18:30:39 GMT</pubDate>
-    <description>Iran's range reaches 4k km, 10M Rial Iranian Rial notes, etc</description>
   </item>
 </channel>
 </rss>
