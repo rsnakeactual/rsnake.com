@@ -2,9 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url contentType="structuredData/schema.org">
 		<loc>https://rsnake.com/report/</loc>
-		<lastmod>2026-10-11T19:10:55+00:00</lastmod>
+		<lastmod>2026-10-18T21:11:33+00:00</lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>0.9</priority>
+	</url>
+	<url contentType="structuredData/schema.org">
+		<loc>https://rsnake.com/report/p/france-ablaze-tesla-roadster-kickflip-etc</loc>
+		<lastmod>2026-10-18T21:11:33+00:00</lastmod>
+		<changefreq>yearly</changefreq>
+		<priority>0.7</priority>
 	</url>
 	<url contentType="structuredData/schema.org">
 		<loc>https://rsnake.com/report/p/us-buying-fuel-from-russia-nfa-act-neutered-etc</loc>
